@@ -3,30 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Platform - Login</title>
+  <title>Blox Platform - Avvio</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #0b0b0e; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; }
-    .card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 320px; text-align: center; }
-    h2 { margin-bottom: 20px; color: #a855f7; }
-    input { width: 100%; padding: 10px; margin-bottom: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; outline: none; }
-    button { width: 100%; padding: 10px; background: #9333ea; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
-    button:hover { background: #7e22ce; }
+    .card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 340px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    h2 { margin-bottom: 10px; color: #a855f7; font-size: 26px; }
+    p { font-size: 14px; color: #9aa4b8; margin-bottom: 20px; }
+    input { width: 100%; padding: 12px; margin-bottom: 15px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; text-align: center; font-size: 15px; outline: none; }
+    button { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: transform 0.1s; }
+    button:hover { transform: scale(1.02); }
   </style>
 </head>
 <body>
 
 <div class="card">
   <h2>Blox Platform</h2>
-  <input type="text" id="username" placeholder="Nome utente...">
-  <button onclick="login()">Gioca ora</button>
+  <p>Inserisci il tuo nome per entrare</p>
+  <input type="text" id="username" placeholder="Inserisci Nickname..." value="Giocatore">
+  <button onclick="entraNelGioco()">GIOCA ORA</button>
 </div>
 
 <script>
-  function login() {
-    const user = document.getElementById('username').value.trim() || 'Ospite';
+  function entraNelGioco() {
+    const user = document.getElementById('username').value.trim() || 'Giocatore';
     
-    // Salva sessione e crea l'utente se non esiste
+    // Salva l'utente
     localStorage.setItem('bloxi_session', user);
     
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
@@ -35,8 +37,8 @@
       localStorage.setItem('bloxi_users', JSON.stringify(users));
     }
 
-    // Entra nell'Hub
-    window.location.href = "./hub.html";
+    // Va all'Hub
+    window.location.href = "hub.html";
   }
 </script>
 
