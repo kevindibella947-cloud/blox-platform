@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blox Arena - Multiplayer 3D</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { overflow: hidden; background-color: #0b0b0e; font-family: 'Segoe UI', sans-serif; color: white; }
+
+    #mp-overlay {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 10;
+      background: rgba(22, 22, 30, 0.85);
+      border: 1px solid #272736;
+      border-radius: 12px;
+      padding: 15px;
+      width: 280px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    h3 { font-size: 16px; margin-bottom: 8px; color: #a855f7; }
+    p { font-size: 12px; color: #94a3b8; margin-bottom: 10px; }
+
+    .id-box {
+      background: #0b0b0e;
+      border: 1px solid #272736;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #3b82f6;
+      word-break: break-all;
+      margin-bottom: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      background: #0b0b0e;
+      border: 1px solid #272736;
+      border-radius: 6px;
+      color: white;
+      font-size: 12px;
+      margin-bottom: 8px;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      background: #9333ea;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    button:hover { background: #7e22ce; }
+
+    #status { font-size: 11px; margin-top: 8px; color: #22c55e; }
+
+    #controls-hint {
+      position: absolute;
+      bottom: 15px;
+      width: 100%;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 13px;
+      pointer-events: none;
+    }
+  </style>
+  <!-- Three.js per il 3D e PeerJS per il Multiplayer -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+</head>
+<body>
+
+  <div id="mp-overlay">
+    <h3>Multiplayer (PeerJS)</h3>
+    <p>Il tuo ID Stanza:</p>
+    <div id="my-id" class="id-box">Connessione in corso...</div>
+
+    <p>Connettiti a un amico:</p>
+    <input type="text" id="remote-id" placeholder="Incolla l'ID dell'amico">
+    <button onclick="connectToPeer()">Connetti</button>
+    <div id="status"></div>
+  </div>
+
+  <div id="controls-hint">Usa <b>WASD</b> o le <b>Frecce</b> per muoverti nell'arena 3D!</div>
+
+  <script>
+    // --- 1. SETUP SCENA 3D ---
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0b0b0e);
+    scene.fog = new THREE.Fog(0x0b0b0e, 10, 60);
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // LUCI
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(10, 30, 10);
+    scene.add(dirLight);
+
+    // ARENA (Mappa 3D)
+    const floorGeo = new THREE.BoxGeometry(40, 0.5, 40);
+    const floorMat = new THREE.MeshStandardMaterial({ color: 0x16161e, roughness: 0.8 });
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.position.y = -0.25;
+    scene.add(floor);
+
+    // Griglia visiva sull'arena
+    const grid = new THREE.GridHelper(40, 20, 0x9333ea, 0x272736);
+    grid.position.y = 0.01;
+    scene.add(grid);
+
+    // GIOCATORE LOCALE (Sfera Viola)
+    const playerGeo = new THREE.SphereGeometry(0.8, 32, 32);
+    const playerMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, roughness: 0.2 });
+    const localPlayer = new THREE.Mesh(playerGeo, playerMat);
+    localPlayer.position.set(0, 0.8, 0);
+    scene.add(localPlayer);
+
+    // Occhi per dare direzione al giocatore
+    const eyeGeo = new THREE.BoxGeometry(0.2, 0.2, 0.4);
+    const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const eyes = new THREE.Mesh(eyeGeo, eyeMat);
+    eyes.position.set(0, 0.2, -0.6);
+    localPlayer.add(eyes);
+
+    // GIOCATORI REMOTI (Mappa degli altri utenti connessi)
+    const remotePlayers = {};
+
+    function createRemotePlayer(id) {
+      const geo = new THREE.SphereGeometry(0.8, 32, 32);
+      const mat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.2 }); // Sfera Blu per gli avversari
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(0, 0.8, 0);
+      scene.add(mesh);
+      remotePlayers[id] = mesh;
+    }
+
+    // CONTROLLI MOVIMENTO
+    const keys = { w: false, a: false, s: false, d: false };
+    window.addEventListener('keydown', (e) => {
+      const k = e.key.toLowerCase();
+      if (k === 'w' || k === 'arrowup') keys.w = true;
+      if (k === 'a' || k === 'arrowleft') keys.a = true;
+      if (k === 's' || k === 'arrowdown') keys.s = true;
+      if (k === 'd' || k === 'arrowright') keys.d = true;
+    });
+    window.addEventListener('keyup', (e) => {
+      const k = e.key.toLowerCase();
+      if (k === 'w' || k === 'arrowup') keys.w = false;
+      if (k === 'a' || k === 'arrowleft') keys.a = false;
+      if (k === 's' || k === 'arrowdown') keys.s = false;
+      if (k === 'd' || k === 'arrowright') keys.d = false;
+    });
+
+    // --- 2. MULTIPLAYER CON PEERJS ---
+    let peer = null;
+    let connections = [];
+
+    // Inizializza PeerJS
+    peer = new Peer();
+
+    peer.on('open', (id) => {
+      document.getElementById('my-id').textContent = id;
+    });
+
+    // Quando un altro giocatore si connette a noi
+    peer.on('connection', (conn) => {
+      setupConnection(conn);
+    });
+
+    function connectToPeer() {
+      const remoteId = document.getElementById('remote-id').value.trim();
+      if (!remoteId) return;
+      document.getElementById('status').textContent = "Connessione in corso...";
+      const conn = peer.connect(remoteId);
+      setupConnection(conn);
+    }
+
+    function setupConnection(conn) {
+      conn.on('open', () => {
+        document.getElementById('status').textContent = "Connesso con successo!";
+        connections.push(conn);
+        createRemotePlayer(conn.peer);
+
+        // Invia subito la propria posizione iniziale
+        conn.send({
+          type: 'position',
+          x: localPlayer.position.x,
+          z: localPlayer.position.z
+        });
+      });
+
+      conn.on('data', (data) => {
+        if (data.type === 'position') {
+          if (!remotePlayers[conn.peer]) {
+            createRemotePlayer(conn.peer);
+          }
+          // Aggiorna posizione dell'altro giocatore
+          remotePlayers[conn.peer].position.x = data.x;
+          remotePlayers[conn.peer].position.z = data.z;
+        }
+      });
+
+      conn.on('close', () => {
+        document.getElementById('status').textContent = "Giocatore disconnesso.";
+        if (remotePlayers[conn.peer]) {
+          scene.remove(remotePlayers[conn.peer]);
+          delete remotePlayers[conn.peer];
+        }
+      });
+    }
+
+    function broadcastPosition() {
+      const posData = {
+        type: 'position',
+        x: localPlayer.position.x,
+        z: localPlayer.position.z
+      };
+      connections.forEach(conn => {
+        if (conn.open) conn.send(posData);
+      });
+    }
+
+    // --- 3. LOOP DI GIOCO ---
+    const speed = 0.15;
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      let moved = false;
+      if (keys.w && localPlayer.position.z > -19) { localPlayer.position.z -= speed; moved = true; }
+      if (keys.s && localPlayer.position.z < 19) { localPlayer.position.z += speed; moved = true; }
+      if (keys.a && localPlayer.position.x > -19) { localPlayer.position.x -= speed; moved = true; }
+      if (keys.d && localPlayer.position.x < 19) { localPlayer.position.x += speed; moved = true; }
+
+      // Se il giocatore si è mosso, trasmetti la nuova posizione agli altri
+      if (moved) {
+        broadcastPosition();
+      }
+
+      // La telecamera segue il giocatore locale
+      camera.position.set(localPlayer.position.x, localPlayer.position.y + 12, localPlayer.position.z + 14);
+      camera.lookAt(localPlayer.position);
+
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    animate();
+  </script>
+</body>
+</html>
