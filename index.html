@@ -3,218 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Platform - Accesso</title>
+  <title>Blox Platform - Login</title>
   <style>
-    :root {
-      --bg-main: #0b0b0e;
-      --bg-card: #16161e;
-      --border-color: #272736;
-      --accent-purple: #9333ea;
-      --accent-purple-hover: #7e22ce;
-      --text-main: #ffffff;
-      --text-muted: #94a3b8;
-      --error-color: #ef4444;
-      --success-color: #22c55e;
-    }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .auth-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 35px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    }
-
-    .logo {
-      font-size: 28px;
-      font-weight: 800;
-      text-align: center;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 14px;
-      margin-bottom: 25px;
-    }
-
-    .form-group { margin-bottom: 18px; }
-
-    label {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 6px;
-      color: var(--text-muted);
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      background: #0b0b0e;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      color: var(--text-main);
-      font-size: 14px;
-      outline: none;
-    }
-
-    input:focus { border-color: var(--accent-purple); }
-
-    .btn-submit {
-      width: 100%;
-      background: var(--accent-purple);
-      color: #fff;
-      border: none;
-      padding: 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .btn-submit:hover { background: var(--accent-purple-hover); }
-
-    .toggle-box {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-
-    .toggle-btn {
-      color: #3b82f6;
-      cursor: pointer;
-      font-weight: bold;
-      text-decoration: underline;
-      margin-left: 5px;
-    }
-
-    .message {
-      font-size: 13px;
-      text-align: center;
-      margin-top: 15px;
-      display: none;
-    }
-
-    .message.error { color: var(--error-color); display: block; }
-    .message.success { color: var(--success-color); display: block; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0b0b0e; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; }
+    .card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 320px; text-align: center; }
+    h2 { margin-bottom: 20px; color: #a855f7; }
+    input { width: 100%; padding: 10px; margin-bottom: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; outline: none; }
+    button { width: 100%; padding: 10px; background: #9333ea; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
+    button:hover { background: #7e22ce; }
   </style>
 </head>
 <body>
 
-  <div class="auth-card">
-    <div class="logo">BLOX PLATFORM</div>
-    <div id="formSubtitle" class="subtitle">Accedi al tuo account</div>
+<div class="card">
+  <h2>Blox Platform</h2>
+  <input type="text" id="username" placeholder="Nome utente...">
+  <button onclick="login()">Gioca ora</button>
+</div>
 
-    <form id="authForm" onsubmit="handleAuth(event)">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" required placeholder="Inserisci username">
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" required placeholder="••••••••">
-      </div>
-
-      <button type="submit" id="submitBtn" class="btn-submit">Accedi</button>
-    </form>
-
-    <div id="msgBox" class="message"></div>
-
-    <div class="toggle-box">
-      <span id="toggleText">Non hai un account?</span>
-      <span id="toggleBtn" class="toggle-btn" onclick="switchMode()">Registrati</span>
-    </div>
-  </div>
-
-  <script>
-    var isLoginMode = true;
-
-    window.onload = function() {
-      if (!localStorage.getItem('userStore')) {
-        var initialStore = { "admin": { password: "admin", coins: 500 } };
-        localStorage.setItem('userStore', JSON.stringify(initialStore));
-      }
-
-      var loggedUser = localStorage.getItem('currentUser');
-      if (loggedUser) {
-        window.location.href = "hub.html?user=" + encodeURIComponent(loggedUser);
-      }
-    };
-
-    function switchMode() {
-      isLoginMode = !isLoginMode;
-      document.getElementById('msgBox').className = "message";
-      if (isLoginMode) {
-        document.getElementById('formSubtitle').textContent = "Accedi al tuo account";
-        document.getElementById('submitBtn').textContent = "Accedi";
-        document.getElementById('toggleText').textContent = "Non hai un account?";
-        document.getElementById('toggleBtn').textContent = "Registrati";
-      } else {
-        document.getElementById('formSubtitle').textContent = "Crea un nuovo account";
-        document.getElementById('submitBtn').textContent = "Crea Account";
-        document.getElementById('toggleText').textContent = "Hai già un account?";
-        document.getElementById('toggleBtn').textContent = "Accedi";
-      }
+<script>
+  function login() {
+    const user = document.getElementById('username').value.trim() || 'Ospite';
+    
+    // Salva sessione e crea l'utente se non esiste
+    localStorage.setItem('bloxi_session', user);
+    
+    let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
+    if (!users[user]) {
+      users[user] = { coins: 100 };
+      localStorage.setItem('bloxi_users', JSON.stringify(users));
     }
 
-    function handleAuth(event) {
-      event.preventDefault();
-      var user = document.getElementById('username').value.trim();
-      var pass = document.getElementById('password').value.trim();
-      var msgBox = document.getElementById('msgBox');
-      var userStore = JSON.parse(localStorage.getItem('userStore'));
-
-      if (isLoginMode) {
-        if (userStore[user] && userStore[user].password === pass) {
-          msgBox.className = "message success";
-          msgBox.textContent = "Accesso effettuato!";
-          localStorage.setItem('currentUser', user);
-          setTimeout(function() {
-            window.location.href = "hub.html?user=" + encodeURIComponent(user);
-          }, 600);
-        } else {
-          msgBox.className = "message error";
-          msgBox.textContent = "Username o Password errati!";
-        }
-      } else {
-        if (userStore[user]) {
-          msgBox.className = "message error";
-          msgBox.textContent = "Username già esistente!";
-        } else {
-          userStore[user] = { password: pass, coins: 100 };
-          localStorage.setItem('userStore', JSON.stringify(userStore));
-          localStorage.setItem('coins_' + user, 100);
-          localStorage.setItem('currentUser', user);
-
-          msgBox.className = "message success";
-          msgBox.textContent = "Account creato!";
-          setTimeout(function() {
-            window.location.href = "hub.html?user=" + encodeURIComponent(user);
-          }, 600);
-        }
-      }
-    }
-  </script>
+    // Entra nell'Hub
+    window.location.href = "./hub.html";
+  }
+</script>
 
 </body>
 </html>
