@@ -1,271 +1,545 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Arena - Multiplayer 3D</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { overflow: hidden; background-color: #0b0b0e; font-family: 'Segoe UI', sans-serif; color: white; }
+<meta charset="UTF-8">
+<title>Blocky Arena — Combattimento 3D</title>
+<style>
+  html,body{margin:0;padding:0;overflow:hidden;background:#0a0e14;font-family:'Segoe UI',Arial,sans-serif;}
+  canvas{display:block;}
 
-    #mp-overlay {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      z-index: 10;
-      background: rgba(22, 22, 30, 0.85);
-      border: 1px solid #272736;
-      border-radius: 12px;
-      padding: 15px;
-      width: 280px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    }
+  #hud{position:fixed;inset:0;pointer-events:none;color:#eaeef5;}
 
-    h3 { font-size: 16px; margin-bottom: 8px; color: #a855f7; }
-    p { font-size: 12px; color: #94a3b8; margin-bottom: 10px; }
+  .bar-wrap{position:absolute;top:22px;width:340px;}
+  #playerWrap{left:22px;}
+  #enemyWrap{right:22px;}
+  .bar-name{font-weight:700;font-size:15px;letter-spacing:.5px;margin-bottom:4px;display:flex;justify-content:space-between;}
+  #enemyWrap .bar-name{flex-direction:row-reverse;}
+  .bar-track{height:20px;border-radius:10px;background:#1b2130;border:2px solid #333c4e;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,.5);}
+  .bar-fill{height:100%;border-radius:8px;transition:width .12s ease-out;}
+  #playerFill{background:linear-gradient(90deg,#3ddc84,#1fa35c);margin-left:0;}
+  #enemyFill{background:linear-gradient(90deg,#ff5a5f,#c41e2c);float:right;}
+  .hp-num{font-size:12px;color:#9aa4b8;margin-top:3px;}
 
-    .id-box {
-      background: #0b0b0e;
-      border: 1px solid #272736;
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 13px;
-      color: #3b82f6;
-      word-break: break-all;
-      margin-bottom: 10px;
-    }
+  #combo{position:absolute;top:70px;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:opacity .15s, transform .15s;}
+  #combo.show{opacity:1;}
+  #combo .num{font-size:46px;font-weight:800;color:#ffd23f;text-shadow:0 0 14px rgba(255,180,20,.8),0 2px 0 #7a4a00;line-height:1;}
+  #combo .label{font-size:13px;color:#ffd23f;letter-spacing:2px;font-weight:600;}
 
-    input {
-      width: 100%;
-      padding: 8px;
-      background: #0b0b0e;
-      border: 1px solid #272736;
-      border-radius: 6px;
-      color: white;
-      font-size: 12px;
-      margin-bottom: 8px;
-      outline: none;
-    }
+  #koText{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%) scale(.6);font-size:64px;font-weight:900;color:#ff5a5f;text-shadow:0 0 20px rgba(255,60,60,.9);opacity:0;transition:opacity .2s, transform .2s;}
+  #koText.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
 
-    button {
-      width: 100%;
-      background: #9333ea;
-      color: white;
-      border: none;
-      padding: 8px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 12px;
-    }
+  #moveBar{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:10px;}
+  .move-chip{background:rgba(20,24,34,.75);border:2px solid #333c4e;border-radius:10px;padding:8px 14px;text-align:center;min-width:74px;}
+  .move-chip .k{font-weight:800;font-size:16px;color:#ffd23f;}
+  .move-chip .n{font-size:11px;color:#b8c0d0;margin-top:2px;}
+  .move-chip.active{border-color:#ffd23f;box-shadow:0 0 12px rgba(255,210,63,.6);}
 
-    button:hover { background: #7e22ce; }
+  #hint{position:absolute;bottom:78px;left:50%;transform:translateX(-50%);font-size:12px;color:#7f8aa0;text-align:center;letter-spacing:.3px;}
 
-    #status { font-size: 11px; margin-top: 8px; color: #22c55e; }
-
-    #controls-hint {
-      position: absolute;
-      bottom: 15px;
-      width: 100%;
-      text-align: center;
-      color: #94a3b8;
-      font-size: 13px;
-      pointer-events: none;
-    }
-  </style>
-  <!-- Three.js per il 3D e PeerJS per il Multiplayer -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  #title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-size:14px;font-weight:700;letter-spacing:3px;color:#4d5871;}
+</style>
 </head>
 <body>
 
-  <div id="mp-overlay">
-    <h3>Multiplayer (PeerJS)</h3>
-    <p>Il tuo ID Stanza:</p>
-    <div id="my-id" class="id-box">Connessione in corso...</div>
+<div id="hud">
+  <div id="title">BLOCKY ARENA</div>
 
-    <p>Connettiti a un amico:</p>
-    <input type="text" id="remote-id" placeholder="Incolla l'ID dell'amico">
-    <button onclick="connectToPeer()">Connetti</button>
-    <div id="status"></div>
+  <div class="bar-wrap" id="playerWrap">
+    <div class="bar-name"><span>TU</span><span id="pNum">100</span></div>
+    <div class="bar-track"><div class="bar-fill" id="playerFill" style="width:100%"></div></div>
   </div>
 
-  <div id="controls-hint">Usa <b>WASD</b> o le <b>Frecce</b> per muoverti nell'arena 3D!</div>
+  <div class="bar-wrap" id="enemyWrap">
+    <div class="bar-name"><span>RIVALE</span><span id="eNum">100</span></div>
+    <div class="bar-track"><div class="bar-fill" id="enemyFill" style="width:100%"></div></div>
+  </div>
 
-  <script>
-    // --- 1. SETUP SCENA 3D ---
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0b0b0e);
-    scene.fog = new THREE.Fog(0x0b0b0e, 10, 60);
+  <div id="combo"><div class="num" id="comboNum">0</div><div class="label">COMBO</div></div>
+  <div id="koText">K.O.!</div>
 
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+  <div id="hint">WASD muovi · mouse trascina per ruotare la camera · SPAZIO salta</div>
+  <div id="moveBar">
+    <div class="move-chip" id="chip1"><div class="k">1</div><div class="n">Calcio MMA</div></div>
+    <div class="move-chip" id="chip2"><div class="k">2</div><div class="n">Gancio</div></div>
+    <div class="move-chip" id="chip3"><div class="k">3</div><div class="n">Calcio</div></div>
+    <div class="move-chip" id="chip4"><div class="k">4</div><div class="n">Rotante</div></div>
+  </div>
+</div>
 
-    // LUCI
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    dirLight.position.set(10, 30, 10);
-    scene.add(dirLight);
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ---------------------------------------------------------------
+   BLOCKY ARENA — mini fighting game, Roblox-style blocky avatars
+--------------------------------------------------------------- */
 
-    // ARENA (Mappa 3D)
-    const floorGeo = new THREE.BoxGeometry(40, 0.5, 40);
-    const floorMat = new THREE.MeshStandardMaterial({ color: 0x16161e, roughness: 0.8 });
-    const floor = new THREE.Mesh(floorGeo, floorMat);
-    floor.position.y = -0.25;
-    scene.add(floor);
-
-    // Griglia visiva sull'arena
-    const grid = new THREE.GridHelper(40, 20, 0x9333ea, 0x272736);
-    grid.position.y = 0.01;
-    scene.add(grid);
-
-    // GIOCATORE LOCALE (Sfera Viola)
-    const playerGeo = new THREE.SphereGeometry(0.8, 32, 32);
-    const playerMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, roughness: 0.2 });
-    const localPlayer = new THREE.Mesh(playerGeo, playerMat);
-    localPlayer.position.set(0, 0.8, 0);
-    scene.add(localPlayer);
-
-    // Occhi per dare direzione al giocatore
-    const eyeGeo = new THREE.BoxGeometry(0.2, 0.2, 0.4);
-    const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const eyes = new THREE.Mesh(eyeGeo, eyeMat);
-    eyes.position.set(0, 0.2, -0.6);
-    localPlayer.add(eyes);
-
-    // GIOCATORI REMOTI (Mappa degli altri utenti connessi)
-    const remotePlayers = {};
-
-    function createRemotePlayer(id) {
-      const geo = new THREE.SphereGeometry(0.8, 32, 32);
-      const mat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.2 }); // Sfera Blu per gli avversari
-      const mesh = new THREE.Mesh(geo, mat);
-      mesh.position.set(0, 0.8, 0);
-      scene.add(mesh);
-      remotePlayers[id] = mesh;
-    }
-
-    // CONTROLLI MOVIMENTO
-    const keys = { w: false, a: false, s: false, d: false };
-    window.addEventListener('keydown', (e) => {
-      const k = e.key.toLowerCase();
-      if (k === 'w' || k === 'arrowup') keys.w = true;
-      if (k === 'a' || k === 'arrowleft') keys.a = true;
-      if (k === 's' || k === 'arrowdown') keys.s = true;
-      if (k === 'd' || k === 'arrowright') keys.d = true;
-    });
-    window.addEventListener('keyup', (e) => {
-      const k = e.key.toLowerCase();
-      if (k === 'w' || k === 'arrowup') keys.w = false;
-      if (k === 'a' || k === 'arrowleft') keys.a = false;
-      if (k === 's' || k === 'arrowdown') keys.s = false;
-      if (k === 'd' || k === 'arrowright') keys.d = false;
-    });
-
-    // --- 2. MULTIPLAYER CON PEERJS ---
-    let peer = null;
-    let connections = [];
-
-    // Inizializza PeerJS
-    peer = new Peer();
-
-    peer.on('open', (id) => {
-      document.getElementById('my-id').textContent = id;
-    });
-
-    // Quando un altro giocatore si connette a noi
-    peer.on('connection', (conn) => {
-      setupConnection(conn);
-    });
-
-    function connectToPeer() {
-      const remoteId = document.getElementById('remote-id').value.trim();
-      if (!remoteId) return;
-      document.getElementById('status').textContent = "Connessione in corso...";
-      const conn = peer.connect(remoteId);
-      setupConnection(conn);
-    }
-
-    function setupConnection(conn) {
-      conn.on('open', () => {
-        document.getElementById('status').textContent = "Connesso con successo!";
-        connections.push(conn);
-        createRemotePlayer(conn.peer);
-
-        // Invia subito la propria posizione iniziale
-        conn.send({
-          type: 'position',
-          x: localPlayer.position.x,
-          z: localPlayer.position.z
-        });
-      });
-
-      conn.on('data', (data) => {
-        if (data.type === 'position') {
-          if (!remotePlayers[conn.peer]) {
-            createRemotePlayer(conn.peer);
-          }
-          // Aggiorna posizione dell'altro giocatore
-          remotePlayers[conn.peer].position.x = data.x;
-          remotePlayers[conn.peer].position.z = data.z;
-        }
-      });
-
-      conn.on('close', () => {
-        document.getElementById('status').textContent = "Giocatore disconnesso.";
-        if (remotePlayers[conn.peer]) {
-          scene.remove(remotePlayers[conn.peer]);
-          delete remotePlayers[conn.peer];
-        }
-      });
-    }
-
-    function broadcastPosition() {
-      const posData = {
-        type: 'position',
-        x: localPlayer.position.x,
-        z: localPlayer.position.z
-      };
-      connections.forEach(conn => {
-        if (conn.open) conn.send(posData);
-      });
-    }
-
-    // --- 3. LOOP DI GIOCO ---
-    const speed = 0.15;
-
-    function animate() {
-      requestAnimationFrame(animate);
-
-      let moved = false;
-      if (keys.w && localPlayer.position.z > -19) { localPlayer.position.z -= speed; moved = true; }
-      if (keys.s && localPlayer.position.z < 19) { localPlayer.position.z += speed; moved = true; }
-      if (keys.a && localPlayer.position.x > -19) { localPlayer.position.x -= speed; moved = true; }
-      if (keys.d && localPlayer.position.x < 19) { localPlayer.position.x += speed; moved = true; }
-
-      // Se il giocatore si è mosso, trasmetti la nuova posizione agli altri
-      if (moved) {
-        broadcastPosition();
+// --- COLLEGAMENTO ALL'HUB (SISTEMA MONETE) ---
+function addCoinsToHub(amount) {
+  try {
+    let currentUser = localStorage.getItem('bloxi_session') || 'Guest';
+    let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
+    if (users[currentUser]) {
+      users[currentUser].coins = (users[currentUser].coins || 0) + amount;
+      localStorage.setItem('bloxi_users', JSON.stringify(users));
+      
+      // Invia un messaggio all'Hub per aggiornare la grafica delle monete subito
+      if (window.parent) {
+        window.parent.postMessage({ type: 'UPDATE_COINS', coins: users[currentUser].coins }, '*');
       }
-
-      // La telecamera segue il giocatore locale
-      camera.position.set(localPlayer.position.x, localPlayer.position.y + 12, localPlayer.position.z + 14);
-      camera.lookAt(localPlayer.position);
-
-      renderer.render(scene, camera);
     }
+  } catch(e) {
+    console.log("Errore aggiornamento monete:", e);
+  }
+}
 
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x8fd0ff);
+scene.fog = new THREE.Fog(0x8fd0ff, 22, 55);
 
-    animate();
-  </script>
+const camera = new THREE.PerspectiveCamera(58, window.innerWidth/window.innerHeight, 0.1, 200);
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+window.addEventListener('resize', ()=>{
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ---------- Lighting ----------
+scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+const sun = new THREE.DirectionalLight(0xfff3d8, 1.05);
+sun.position.set(8,16,6);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048,2048);
+sun.shadow.camera.left=-16; sun.shadow.camera.right=16;
+sun.shadow.camera.top=16; sun.shadow.camera.bottom=-16;
+scene.add(sun);
+const fillLight = new THREE.DirectionalLight(0xbcd8ff, 0.3);
+fillLight.position.set(-8,10,-6);
+scene.add(fillLight);
+
+// ---------- Ground: checkerboard like Roblox baseplate ----------
+function checkerTexture(){
+  const c = document.createElement('canvas'); c.width=c.height=256;
+  const ctx = c.getContext('2d');
+  const n=8, s=256/n;
+  for(let y=0;y<n;y++) for(let x=0;x<n;x++){
+    ctx.fillStyle = (x+y)%2===0 ? '#5fae46' : '#549f3d';
+    ctx.fillRect(x*s,y*s,s,s);
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(10,10);
+  return tex;
+}
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(80,80),
+  new THREE.MeshStandardMaterial({map:checkerTexture()})
+);
+ground.rotation.x = -Math.PI/2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// low ring wall (arena feel)
+const ringMat = new THREE.MeshStandardMaterial({color:0xffffff});
+const ringGeo = new THREE.BoxGeometry(0.4,0.8,20);
+for(let i=0;i<4;i++){
+  const post = new THREE.Mesh(ringGeo.clone(), i%2===0? ringMat : new THREE.MeshStandardMaterial({color:0xff5a5f}));
+  const angle = i*Math.PI/2;
+  post.position.set(Math.sin(angle)*13, 0.4, Math.cos(angle)*13);
+  post.rotation.y = angle;
+  post.castShadow = true;
+  scene.add(post);
+}
+
+// ---------- Character factory ----------
+function box(w,h,d,color){
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), new THREE.MeshStandardMaterial({color}));
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+
+function createCharacter(colors){
+  const root = new THREE.Group(); // handles facing / world position
+
+  const hips = new THREE.Group();
+  hips.position.y = 1.0;
+  root.add(hips);
+
+  const torso = box(1.0,1.2,0.6, colors.shirt);
+  torso.position.y = 0.6;
+  hips.add(torso);
+
+  const headPivot = new THREE.Group();
+  headPivot.position.y = 0.6;
+  torso.add(headPivot);
+  const head = box(0.72,0.72,0.72, colors.skin);
+  head.position.y = 0.36;
+  headPivot.add(head);
+  // simple face
+  const eyeMat = new THREE.MeshStandardMaterial({color:0x1c1c1c});
+  const eyeGeo = new THREE.BoxGeometry(0.08,0.08,0.02);
+  const eyeL = new THREE.Mesh(eyeGeo,eyeMat); eyeL.position.set(-0.15,0.05,0.37); head.add(eyeL);
+  const eyeR = new THREE.Mesh(eyeGeo,eyeMat); eyeR.position.set(0.15,0.05,0.37); head.add(eyeR);
+
+  function makeArm(sign){
+    const pivot = new THREE.Group();
+    pivot.position.set(sign*0.65, 0.5, 0);
+    torso.add(pivot);
+    const arm = box(0.28,0.9,0.28, colors.skin);
+    arm.position.y = -0.45;
+    pivot.add(arm);
+    return pivot;
+  }
+  const armL = makeArm(1);
+  const armR = makeArm(-1);
+
+  function makeLeg(sign){
+    const pivot = new THREE.Group();
+    pivot.position.set(sign*0.26, 0, 0);
+    hips.add(pivot);
+    const leg = box(0.34,1.0,0.34, colors.pants);
+    leg.position.y = -0.5;
+    pivot.add(leg);
+    return pivot;
+  }
+  const legL = makeLeg(1);
+  const legR = makeLeg(-1);
+
+  return {root, hips, torso, headPivot, armL, armR, legL, legR, spinOffset:0, baseY:0};
+}
+
+const player = createCharacter({shirt:0x2f7dd6, pants:0x2b3040, skin:0xffcf7a});
+player.root.position.set(0,0,3.2);
+scene.add(player.root);
+
+const enemy = createCharacter({shirt:0xd63b3b, pants:0x2b3040, skin:0xffcf7a});
+enemy.root.position.set(0,0,-3.2);
+enemy.root.rotation.y = Math.PI;
+scene.add(enemy.root);
+
+// ---------- Idle bob ----------
+let idleT = 0;
+
+// ---------- Movement / camera ----------
+const keys = {};
+window.addEventListener('keydown', e=>{ keys[e.key.toLowerCase()]=true; handleAttackKey(e.key); });
+window.addEventListener('keyup', e=>{ keys[e.key.toLowerCase()]=false; });
+
+let camYaw = 0, camPitch = 0.35, camDist = 6.5;
+let dragging=false, lastX=0,lastY=0;
+renderer.domElement.addEventListener('mousedown', e=>{dragging=true; lastX=e.clientX; lastY=e.clientY;});
+window.addEventListener('mouseup', ()=>dragging=false);
+window.addEventListener('mousemove', e=>{
+  if(!dragging) return;
+  camYaw -= (e.clientX-lastX)*0.006;
+  camPitch = Math.max(0.08, Math.min(1.15, camPitch - (e.clientY-lastY)*0.005));
+  lastX=e.clientX; lastY=e.clientY;
+});
+renderer.domElement.addEventListener('wheel', e=>{
+  camDist = Math.max(3.5, Math.min(12, camDist + e.deltaY*0.003));
+});
+
+let playerFacing = Math.PI; // radians, character forward = -Z at rotation 0... using this as target
+let velY = 0, grounded = true;
+
+function updateMovement(dt){
+  const forward = new THREE.Vector3(-Math.sin(camYaw), 0, -Math.cos(camYaw));
+  const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0,1,0)).normalize();
+  const move = new THREE.Vector3();
+  if(keys['w']) move.add(forward);
+  if(keys['s']) move.sub(forward);
+  if(keys['d']) move.add(right);
+  if(keys['a']) move.sub(right);
+
+  const moving = move.lengthSq() > 0.0001;
+  if(moving){
+    move.normalize();
+    const speed = 4.4;
+    player.root.position.x += move.x*speed*dt;
+    player.root.position.z += move.z*speed*dt;
+    player.root.position.x = Math.max(-11.5, Math.min(11.5, player.root.position.x));
+    player.root.position.z = Math.max(-11.5, Math.min(11.5, player.root.position.z));
+    playerFacing = Math.atan2(move.x, move.z);
+  }
+
+  // jump / gravity
+  if(keys[' '] && grounded){ velY = 5.6; grounded=false; }
+  velY -= 16*dt;
+  player.baseY += velY*dt;
+  if(player.baseY <= 0){ player.baseY = 0; velY = 0; grounded = true; }
+  player.root.position.y = player.baseY;
+
+  // smooth facing turn (slerp yaw) unless mid-attack lock
+  if(!attackState.locked){
+    let cur = player.root.rotation.y;
+    let diff = ((playerFacing - cur + Math.PI*3) % (Math.PI*2)) - Math.PI;
+    player.root.rotation.y = cur + diff*Math.min(1, dt*10) + player.spinOffset;
+  } else {
+    player.root.rotation.y = attackState.lockedYaw + player.spinOffset;
+  }
+
+  // walk bob on legs when moving and not attacking
+  if(moving && !attackState.locked && grounded){
+    const w = performance.now()*0.011;
+    player.legL.rotation.x = Math.sin(w)*0.55;
+    player.legR.rotation.x = -Math.sin(w)*0.55;
+    player.armL.rotation.x = -Math.sin(w)*0.4;
+    player.armR.rotation.x = Math.sin(w)*0.4;
+  } else if(!attackState.locked){
+    player.legL.rotation.x = lerp(player.legL.rotation.x,0,dt*8);
+    player.legR.rotation.x = lerp(player.legR.rotation.x,0,dt*8);
+    player.armL.rotation.x = lerp(player.armL.rotation.x,0,dt*8);
+    player.armR.rotation.x = lerp(player.armR.rotation.x,0,dt*8);
+  }
+}
+
+function updateCamera(){
+  const target = player.root.position.clone().add(new THREE.Vector3(0,1.6,0));
+  const offset = new THREE.Vector3(
+    Math.sin(camYaw)*Math.cos(camPitch),
+    Math.sin(camPitch),
+    Math.cos(camYaw)*Math.cos(camPitch)
+  ).multiplyScalar(camDist);
+  camera.position.copy(target).add(offset);
+  camera.lookAt(target);
+}
+
+function lerp(a,b,t){ return a + (b-a)*t; }
+function easeOutCubic(t){ return 1-Math.pow(1-t,3); }
+function easeInOutQuad(t){ return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
+
+// ---------- Attack system ----------
+const MOVES = {
+  '1': { name:'Calcio MMA', dur:0.62, damage:18, range:2.7, part:'legR', axis:'x', torso:'x',
+         keys:[{t:0,v:0},{t:0.18,v:-18},{t:0.38,v:-10},{t:0.62,v:108},{t:0.82,v:70},{t:1,v:0}],
+         tkeys:[{t:0,v:0},{t:0.18,v:0.06},{t:0.38,v:0.04},{t:0.62,v:-0.2},{t:1,v:0}], hitAt:0.62 },
+  '2': { name:'Gancio', dur:0.46, damage:12, range:2.3, part:'armL', axis:'x', torso:'y',
+         keys:[{t:0,v:0},{t:0.16,v:-16},{t:0.42,v:102},{t:1,v:0}],
+         tkeys:[{t:0,v:0},{t:0.16,v:0.18},{t:0.42,v:-0.3},{t:1,v:0}], hitAt:0.42 },
+  '3': { name:'Calcio', dur:0.5, damage:15, range:2.7, part:'legR', axis:'x', torso:'x',
+         keys:[{t:0,v:0},{t:0.2,v:-22},{t:0.45,v:105},{t:1,v:0}],
+         tkeys:[{t:0,v:0},{t:0.2,v:0.08},{t:0.45,v:-0.16},{t:1,v:0}], hitAt:0.45 },
+  '4': { name:'Rotante', dur:0.75, damage:22, range:2.9, part:'legL', axis:'x', spin:true,
+         keys:[{t:0,v:0},{t:0.55,v:0},{t:0.8,v:115},{t:1,v:0}], hitAt:0.8 },
+};
+
+const attackState = { active:false, move:null, t:0, hitDone:false, locked:false, lockedYaw:0, queued:null };
+let comboCount = 0, comboTimer = 0;
+const COMBO_WINDOW = 1.4;
+
+function deg(d){ return d*Math.PI/180; }
+function sampleKeys(keys, u){
+  for(let i=0;i<keys.length-1;i++){
+    const a=keys[i], b=keys[i+1];
+    if(u>=a.t && u<=b.t){
+      const local = (b.t-a.t)>0 ? (u-a.t)/(b.t-a.t) : 1;
+      return lerp(a.v,b.v, easeInOutQuad(local));
+    }
+  }
+  return keys[keys.length-1].v;
+}
+
+function handleAttackKey(k){
+  if(!MOVES[k]) return;
+  if(attackState.active){
+    attackState.queued = k; // buffer next move for fluid combos
+    return;
+  }
+  startAttack(k);
+}
+
+function startAttack(k){
+  const move = MOVES[k];
+  attackState.active = true;
+  attackState.move = move;
+  attackState.t = 0;
+  attackState.hitDone = false;
+  attackState.locked = true;
+  attackState.lockedYaw = player.root.rotation.y - player.spinOffset;
+  flashChip(k);
+}
+
+function flashChip(k){
+  const chip = document.getElementById('chip'+k);
+  chip.classList.add('active');
+  setTimeout(()=>chip.classList.remove('active'), 220);
+}
+
+function updateAttack(dt){
+  if(!attackState.active) return;
+  const move = attackState.move;
+  attackState.t += dt;
+  const u = Math.min(1, attackState.t/move.dur);
+
+  const angle = deg(-sampleKeys(move.keys, u));
+  player[move.part].rotation[move.axis] = angle;
+
+  if(move.torso){
+    const tval = sampleKeys(move.tkeys, u);
+    player.torso.rotation[move.torso] = move.torso==='y' ? tval : tval;
+  }
+  if(move.spin){
+    player.spinOffset = easeInOutQuad(Math.min(1,u/0.85)) * Math.PI*2 % (Math.PI*2);
+  }
+
+  if(!attackState.hitDone && u >= move.hitAt){
+    attackState.hitDone = true;
+    tryHit(move);
+  }
+
+  if(u>=1){
+    player[move.part].rotation[move.axis] = 0;
+    if(move.torso) player.torso.rotation[move.torso] = 0;
+    if(move.spin) player.spinOffset = 0;
+    attackState.active = false;
+    attackState.locked = false;
+
+    if(attackState.queued){
+      const nk = attackState.queued;
+      attackState.queued = null;
+      startAttack(nk);
+    }
+  }
+}
+
+function tryHit(move){
+  const dist = player.root.position.distanceTo(enemy.root.position);
+  if(dist <= move.range){
+    // combo bookkeeping
+    if(comboTimer > 0) comboCount++; else comboCount = 1;
+    comboTimer = COMBO_WINDOW;
+    let dmg = move.damage;
+    if(comboCount>0 && comboCount % 4 === 0) dmg += 10; // combo bonus every 4 hits
+    damageEnemy(dmg);
+    showCombo();
+    knockback(enemy, player.root.position);
+  }
+}
+
+function showCombo(){
+  const el = document.getElementById('combo');
+  document.getElementById('comboNum').textContent = comboCount;
+  el.classList.add('show');
+  el.style.transform = 'translateX(-50%) scale(1.15)';
+  setTimeout(()=>{ el.style.transform='translateX(-50%) scale(1)'; }, 120);
+}
+
+function knockback(char, fromPos){
+  const dir = new THREE.Vector3().subVectors(char.root.position, fromPos);
+  dir.y = 0; dir.normalize();
+  char.knockVel = dir.multiplyScalar(3.2);
+  char.hitFlash = 0.18;
+}
+
+// ---------- Health ----------
+let playerHP = 100, enemyHP = 100;
+let enemyDown = false, enemyRespawnT = 0;
+
+function damageEnemy(d){
+  if(enemyDown) return;
+  enemyHP = Math.max(0, enemyHP - d);
+  document.getElementById('enemyFill').style.width = enemyHP+'%';
+  document.getElementById('eNum').textContent = Math.round(enemyHP);
+  if(enemyHP<=0){
+    enemyDown = true;
+    enemyRespawnT = 2.2;
+    document.getElementById('koText').classList.add('show');
+    
+    // Assegna +25 monete all'account nell'Hub per il K.O.
+    addCoinsToHub(25);
+  }
+}
+
+function resetEnemy(){
+  enemyHP = 100;
+  enemyDown = false;
+  document.getElementById('enemyFill').style.width='100%';
+  document.getElementById('eNum').textContent='100';
+  document.getElementById('koText').classList.remove('show');
+  enemy.root.position.set((Math.random()-0.5)*8, 0, -3.2 - Math.random()*2);
+}
+
+// ---------- Enemy simple behaviour ----------
+function updateEnemy(dt){
+  if(enemyDown){
+    enemy.root.rotation.z = lerp(enemy.root.rotation.z, Math.PI/2, dt*6);
+    enemyRespawnT -= dt;
+    if(enemyRespawnT<=0) resetEnemy();
+    return;
+  }
+  enemy.root.rotation.z = lerp(enemy.root.rotation.z, 0, dt*6);
+
+  const toPlayer = new THREE.Vector3().subVectors(player.root.position, enemy.root.position);
+  const dist = toPlayer.length();
+  toPlayer.y = 0;
+  if(dist > 2.4){
+    toPlayer.normalize();
+    enemy.root.position.x += toPlayer.x*1.5*dt;
+    enemy.root.position.z += toPlayer.z*1.5*dt;
+    const w = performance.now()*0.011;
+    enemy.legL.rotation.x = Math.sin(w)*0.45;
+    enemy.legR.rotation.x = -Math.sin(w)*0.45;
+  } else {
+    enemy.legL.rotation.x = lerp(enemy.legL.rotation.x,0,dt*8);
+    enemy.legR.rotation.x = lerp(enemy.legR.rotation.x,0,dt*8);
+  }
+  const targetYaw = Math.atan2(-toPlayer.x, -toPlayer.z);
+  let diff = ((targetYaw - enemy.root.rotation.y + Math.PI*3)%(Math.PI*2))-Math.PI;
+  enemy.root.rotation.y += diff*Math.min(1,dt*4);
+}
+
+function applyKnockbacks(dt, char){
+  if(char.knockVel){
+    char.root.position.x += char.knockVel.x*dt;
+    char.root.position.z += char.knockVel.z*dt;
+    char.knockVel.multiplyScalar(Math.max(0,1-dt*4));
+    if(char.knockVel.length()<0.02) char.knockVel=null;
+  }
+  if(char.hitFlash>0){
+    char.hitFlash -= dt;
+    const s = 1 + Math.max(0,char.hitFlash)*0.4;
+    char.torso.scale.setScalar(1); // keep shape stable, tint instead
+  }
+}
+
+// ---------- Main loop ----------
+const clock = new THREE.Clock();
+function animate(){
+  requestAnimationFrame(animate);
+  const dt = Math.min(0.05, clock.getDelta());
+  idleT += dt;
+
+  updateMovement(dt);
+  updateAttack(dt);
+  updateEnemy(dt);
+  applyKnockbacks(dt, enemy);
+  applyKnockbacks(dt, player);
+  updateCamera();
+
+  // idle head/torso micro-bob for life-like feel when idle
+  if(!attackState.locked){
+    player.headPivot.rotation.x = Math.sin(idleT*1.6)*0.03;
+  }
+  enemy.headPivot.rotation.x = Math.sin(idleT*1.4+1)*0.03;
+
+  if(comboTimer>0){
+    comboTimer -= dt;
+    if(comboTimer<=0){
+      comboCount = 0;
+      document.getElementById('combo').classList.remove('show');
+    }
+  }
+
+  document.getElementById('pNum').textContent = Math.round(playerHP);
+
+  renderer.render(scene, camera);
+}
+animate();
+</script>
 </body>
 </html>
