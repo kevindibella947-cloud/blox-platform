@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blox Platform - Hub</title>
+  <style>
+    :root {
+      --bg-main: #0b0b0e;
+      --bg-card: #16161e;
+      --border-color: #272736;
+      --accent-purple: #9333ea;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #a855f7, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .coin-badge {
+      background: rgba(147, 51, 234, 0.2);
+      border: 1px solid var(--accent-purple);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #c084fc;
+    }
+
+    .btn-logout {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .game-container {
+      flex: 1;
+      width: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">BLOX PLATFORM</div>
+    <div class="user-info">
+      <span id="displayUser" style="font-weight: bold;">Caricamento...</span>
+      <div class="coin-badge">💰 Monete: <span id="displayCoins">0</span></div>
+      <button class="btn-logout" onclick="logout()">Esci</button>
+    </div>
+  </header>
+
+  <!-- IFRAME DEL GIOCO INNESTATO -->
+  <iframe id="gameFrame" class="game-container" src=""></iframe>
+
+  <script>
+    window.onload = function() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var currentUser = urlParams.get('user') || localStorage.getItem('currentUser');
+
+      if (!currentUser) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      localStorage.setItem('currentUser', currentUser);
+      document.getElementById('displayUser').textContent = currentUser;
+
+      var userStore = JSON.parse(localStorage.getItem('userStore')) || {};
+      var coins = userStore[currentUser] ? userStore[currentUser].coins : (localStorage.getItem('coins_' + currentUser) || 100);
+
+      document.getElementById('displayCoins').textContent = coins;
+
+      // Inserisci qui l'URL del tuo gioco (es. GitHub Pages / Itch.io)
+      var gameUrl = "https://playcanv.as/p/2O2U85YF/"; // URL dimostrativo
+      document.getElementById('gameFrame').src = gameUrl;
+    };
+
+    function logout() {
+      localStorage.removeItem('currentUser');
+      window.location.href = "index.html";
+    }
+  </script>
+
+</body>
+</html>
