@@ -3,22 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Platform - Login / Registrazione</title>
+  <title>Blox Platform - Login</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #0b0b0e; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; }
-    .card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    .card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 340px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     h2 { margin-bottom: 8px; color: #a855f7; font-size: 26px; }
-    p { font-size: 13px; color: #9aa4b8; margin-bottom: 20px; }
+    p.subtitle { font-size: 13px; color: #9aa4b8; margin-bottom: 20px; }
     .input-group { text-align: left; margin-bottom: 14px; }
-    label { display: block; font-size: 12px; color: #a855f7; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+    label { display: block; font-size: 11px; color: #a855f7; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
     input { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; font-size: 14px; outline: none; }
     input:focus { border-color: #a855f7; }
-    .button-group { display: flex; gap: 10px; margin-top: 15px; }
-    button { flex: 1; padding: 12px; border: none; border-radius: 6px; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: transform 0.1s, opacity 0.2s; }
-    button:hover { opacity: 0.9; transform: scale(1.02); }
-    .btn-login { background: linear-gradient(135deg, #9333ea, #3b82f6); }
-    .btn-register { background: #22c55e; }
+    
+    .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; transition: opacity 0.2s; }
+    .btn-main:hover { opacity: 0.9; }
+
+    /* TESTO IN BASSO CON LINK CLICCABILE */
+    .switch-mode { margin-top: 20px; font-size: 13px; color: #9aa4b8; }
+    .switch-link { color: #3b82f6; font-weight: bold; cursor: pointer; text-decoration: underline; margin-left: 4px; }
+    .switch-link:hover { color: #60a5fa; }
+
     #msg { font-size: 13px; margin-top: 15px; display: none; padding: 8px; border-radius: 6px; }
     .error { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
     .success { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
@@ -27,8 +31,8 @@
 <body>
 
 <div class="card">
-  <h2>Blox Platform</h2>
-  <p>Accedi o registrati per giocare</p>
+  <h2 id="title">BLOX PLATFORM</h2>
+  <p class="subtitle" id="subtitle">Inserisci le tue credenziali per accedere</p>
   
   <div class="input-group">
     <label for="username">Nickname</label>
@@ -40,15 +44,40 @@
     <input type="password" id="password" placeholder="Inserisci password...">
   </div>
 
-  <div class="button-group">
-    <button class="btn-login" onclick="accedi()">ACCEDI</button>
-    <button class="btn-register" onclick="registrati()">REGISTRATI</button>
+  <button class="btn-main" id="submitBtn" onclick="inviaForm()">ACCEDI</button>
+
+  <!-- SCRITTA CLICCABILE -->
+  <div class="switch-mode" id="switchText">
+    Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>
   </div>
 
   <div id="msg"></div>
 </div>
 
 <script>
+  let isLoginMode = true;
+
+  function cambiaModalita() {
+    isLoginMode = !isLoginMode;
+    const title = document.getElementById('title');
+    const subtitle = document.getElementById('subtitle');
+    const submitBtn = document.getElementById('submitBtn');
+    const switchText = document.getElementById('switchText');
+    const msgEl = document.getElementById('msg');
+    
+    msgEl.style.display = "none";
+
+    if (isLoginMode) {
+      subtitle.textContent = "Inserisci le tue credenziali per accedere";
+      submitBtn.textContent = "ACCEDI";
+      switchText.innerHTML = 'Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>';
+    } else {
+      subtitle.textContent = "Crea un nuovo account per iniziare";
+      submitBtn.textContent = "REGISTRATI";
+      switchText.innerHTML = 'Hai già un account? <span class="switch-link" onclick="cambiaModalita()">Accedi</span>';
+    }
+  }
+
   function mostraMessaggio(testo, tipo) {
     const msgEl = document.getElementById('msg');
     msgEl.textContent = testo;
@@ -56,7 +85,7 @@
     msgEl.style.display = "block";
   }
 
-  function accedi() {
+  function inviaForm() {
     const user = document.getElementById('username').value.trim();
     const pass = document.getElementById('password').value.trim();
 
@@ -67,51 +96,35 @@
 
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
 
-    if (!users[user]) {
-      mostraMessaggio("Utente non trovato! Clicca su Registrati.", "error");
-      return;
+    if (isLoginMode) {
+      // ACCESSO
+      if (!users[user]) {
+        mostraMessaggio("Utente non trovato! Clicca su Registrati.", "error");
+        return;
+      }
+      if (users[user].password !== pass) {
+        mostraMessaggio("Password errata!", "error");
+        return;
+      }
+
+      localStorage.setItem('bloxi_session', user);
+      mostraMessaggio("Accesso in corso...", "success");
+      setTimeout(() => { window.location.href = "./hub.html"; }, 600);
+
+    } else {
+      // REGISTRAZIONE
+      if (users[user]) {
+        mostraMessaggio("Nickname già in uso! Scegline un altro.", "error");
+        return;
+      }
+
+      users[user] = { password: pass, coins: 100 };
+      localStorage.setItem('bloxi_users', JSON.stringify(users));
+      localStorage.setItem('bloxi_session', user);
+
+      mostraMessaggio("Account creato! Entro...", "success");
+      setTimeout(() => { window.location.href = "./hub.html"; }, 800);
     }
-
-    if (users[user].password !== pass) {
-      mostraMessaggio("Password errata!", "error");
-      return;
-    }
-
-    // Login effettuato con successo
-    localStorage.setItem('bloxi_session', user);
-    window.location.href = "hub.html";
-  }
-
-  function registrati() {
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-
-    if (!user || !pass) {
-      mostraMessaggio("Compila entrambi i campi per registrarti!", "error");
-      return;
-    }
-
-    let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
-
-    if (users[user]) {
-      mostraMessaggio("Questo Nickname esiste già! Scegline un altro.", "error");
-      return;
-    }
-
-    // Creazione nuovo account
-    users[user] = {
-      password: pass,
-      coins: 100
-    };
-
-    localStorage.setItem('bloxi_users', JSON.stringify(users));
-    localStorage.setItem('bloxi_session', user);
-    
-    mostraMessaggio("Registrazione completata! Entro nell'Hub...", "success");
-
-    setTimeout(() => {
-      window.location.href = "hub.html";
-    }, 1000);
   }
 </script>
 
