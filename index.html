@@ -3,41 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Platform - Avvio</title>
+  <title>Blox Platform - Accedi</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #0b0b0e; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; }
     .card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 340px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    h2 { margin-bottom: 10px; color: #a855f7; font-size: 26px; }
-    p { font-size: 14px; color: #9aa4b8; margin-bottom: 20px; }
-    input { width: 100%; padding: 12px; margin-bottom: 15px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; text-align: center; font-size: 15px; outline: none; }
-    button { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: transform 0.1s; }
+    h2 { margin-bottom: 8px; color: #a855f7; font-size: 26px; }
+    p { font-size: 13px; color: #9aa4b8; margin-bottom: 20px; }
+    .input-group { text-align: left; margin-bottom: 14px; }
+    label { display: block; font-size: 12px; color: #a855f7; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+    input { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; font-size: 14px; outline: none; }
+    input:focus { border-color: #a855f7; }
+    button { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; transition: transform 0.1s; }
     button:hover { transform: scale(1.02); }
+    #errorMsg { color: #ef4444; font-size: 12px; margin-top: 12px; display: none; }
   </style>
 </head>
 <body>
 
 <div class="card">
   <h2>Blox Platform</h2>
-  <p>Inserisci il tuo nome per entrare</p>
-  <input type="text" id="username" placeholder="Inserisci Nickname..." value="Giocatore">
-  <button onclick="entraNelGioco()">GIOCA ORA</button>
+  <p>Accedi o crea un account per giocare</p>
+  
+  <div class="input-group">
+    <label for="username">Nickname</label>
+    <input type="text" id="username" placeholder="Inserisci il tuo nickname...">
+  </div>
+
+  <div class="input-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Inserisci la password...">
+  </div>
+
+  <button onclick="gestisciLogin()">GIOCA ORA</button>
+  <div id="errorMsg"></div>
 </div>
 
 <script>
-  function entraNelGioco() {
-    const user = document.getElementById('username').value.trim() || 'Giocatore';
-    
-    // Salva l'utente
-    localStorage.setItem('bloxi_session', user);
-    
+  function gestisciLogin() {
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
+    const errorEl = document.getElementById('errorMsg');
+
+    if (!user || !pass) {
+      errorEl.textContent = "Compila sia il Nickname che la Password!";
+      errorEl.style.display = "block";
+      return;
+    }
+
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
-    if (!users[user]) {
-      users[user] = { coins: 100 };
+
+    // Se l'utente esiste già, controlla la password
+    if (users[user]) {
+      if (users[user].password !== pass) {
+        errorEl.textContent = "Password errata!";
+        errorEl.style.display = "block";
+        return;
+      }
+    } else {
+      // Se è un nuovo utente, lo crea e salva la password
+      users[user] = { 
+        password: pass, 
+        coins: 100 
+      };
       localStorage.setItem('bloxi_users', JSON.stringify(users));
     }
 
-    // Va all'Hub
+    // Salva la sessione ed entra nell'Hub
+    localStorage.setItem('bloxi_session', user);
     window.location.href = "hub.html";
   }
 </script>
