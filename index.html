@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Platform - Login Admin System</title>
+  <title>Blox Platform - Login Admin</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #0b0b0e; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; position: relative; overflow: hidden; }
     
-    /* PULSANTE ADMIN IN ALTO A SINISTRA */
+    /* PULSANTE SUPERVISIONE IN ALTO A SINISTRA */
     .admin-top-btn {
       position: absolute;
       top: 15px;
@@ -25,6 +25,7 @@
       align-items: center;
       gap: 6px;
       transition: background 0.2s;
+      z-index: 5;
     }
     .admin-top-btn:hover { background: #3b82f6; color: white; }
 
@@ -47,7 +48,28 @@
     .error { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
     .success { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
 
-    /* MODALE SUPERVISIONE ACCOUNT (ADMIN) */
+    /* CAPTCHA MODALE PER ADMIN */
+    .captcha-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .captcha-card {
+      background: #16161e;
+      border: 2px solid #eab308;
+      padding: 25px;
+      border-radius: 12px;
+      width: 320px;
+      text-align: center;
+    }
+    .captcha-card h3 { color: #eab308; margin-bottom: 10px; }
+    .captcha-card p { font-size: 13px; color: #9aa4b8; margin-bottom: 15px; }
+
+    /* MODALE SUPERVISIONE ACCOUNT */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -98,12 +120,6 @@
       <input type="password" id="password" placeholder="Inserisci password...">
     </div>
 
-    <!-- CAMPO CAPTCHA/PIN PER ADMIN (Inizialmente nascosto) -->
-    <div class="input-group" id="captchaGroup" style="display: none;">
-      <label for="captchaPin" style="color: #eab308;">🔒 Codice Sicurezza Admin (Captcha)</label>
-      <input type="password" id="captchaPin" placeholder="Inserisci PIN segreto...">
-    </div>
-
     <button class="btn-main" id="submitBtn" onclick="inviaForm()">ACCEDI</button>
 
     <div class="switch-mode" id="switchText">
@@ -113,6 +129,17 @@
     <div id="msg"></div>
   </div>
 
+  <!-- MODALE CAPTCHA PER ADMIN -->
+  <div class="captcha-overlay" id="captchaModal">
+    <div class="captcha-card">
+      <h3>🤖 CAPTCHA ADMIN</h3>
+      <p>Inserisci il codice segreto di verifica per procedere:</p>
+      <input type="password" id="captchaInput" placeholder="Inserisci codice...">
+      <button class="btn-main" style="background: #eab308; color: #000; margin-top: 15px;" onclick="verificaCaptcha()">CONFERMA CODICE</button>
+      <div id="captchaError" style="color: #ef4444; font-size: 12px; margin-top: 10px; display: none;">Codice Errato!</div>
+    </div>
+  </div>
+
   <!-- PANNELLO MODALE ADMIN (SUPERVISIONE ACCOUNT) -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal">
@@ -120,40 +147,26 @@
         <h3>📊 Lista Account Registrati</h3>
         <button class="btn-close" onclick="chiudiSupervisione()">✕</button>
       </div>
-      <div class="account-list" id="accountListContainer">
-        <!-- Gli account vengono inseriti qui via JS -->
-      </div>
+      <div class="account-list" id="accountListContainer"></div>
     </div>
   </div>
 
 <script>
   let isLoginMode = true;
   const ADMIN_NAME = "huggy_huggy223";
+  const ADMIN_PASS = "Kevindibella18";
   const SECRET_PIN = "947947";
 
-  // INIZIALIZZAZIONE AUTOMATICA ACCOUNT ADMIN SE NON ESISTE
+  // AGGIORNA E FORZA L'ACCOUNT ADMIN CON LA NUOVA PASSWORD
   (function initAdmin() {
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
-    if (!users[ADMIN_NAME]) {
-      users[ADMIN_NAME] = {
-        password: "admin",
-        coins: 999999,
-        role: "admin"
-      };
-      localStorage.setItem('bloxi_users', JSON.stringify(users));
-    }
+    users[ADMIN_NAME] = {
+      password: ADMIN_PASS,
+      coins: 999999,
+      role: "admin"
+    };
+    localStorage.setItem('bloxi_users', JSON.stringify(users));
   })();
-
-  // RILEVA IN TEMPO REALE SE SI STA DIGITANDO L'ACCOUNT ADMIN
-  document.getElementById('username').addEventListener('input', function(e) {
-    const val = e.target.value.trim();
-    const captchaGroup = document.getElementById('captchaGroup');
-    if (val === ADMIN_NAME) {
-      captchaGroup.style.display = "block";
-    } else {
-      captchaGroup.style.display = "none";
-    }
-  });
 
   function cambiaModalita() {
     isLoginMode = !isLoginMode;
@@ -184,19 +197,10 @@
   function inviaForm() {
     const user = document.getElementById('username').value.trim();
     const pass = document.getElementById('password').value.trim();
-    const pin = document.getElementById('captchaPin').value.trim();
 
     if (!user || !pass) {
       mostraMessaggio("Inserisci sia Nickname che Password!", "error");
       return;
-    }
-
-    // CONTROLLO DI SICUREZZA PIN/CAPTCHA PER ADMIN
-    if (user === ADMIN_NAME) {
-      if (pin !== SECRET_PIN) {
-        mostraMessaggio("Codice di sicurezza Admin (PIN) Errato!", "error");
-        return;
-      }
     }
 
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
@@ -212,9 +216,14 @@
         return;
       }
 
-      localStorage.setItem('bloxi_session', user);
-      mostraMessaggio("Accesso effettuato! Reindirizzamento...", "success");
-      setTimeout(() => { window.location.href = "./hub.html"; }, 600);
+      // SE È L'ACCOUNT ADMIN MOSTRA IL CAPTCHA
+      if (user === ADMIN_NAME) {
+        document.getElementById('captchaInput').value = "";
+        document.getElementById('captchaError').style.display = "none";
+        document.getElementById('captchaModal').style.display = "flex";
+      } else {
+        completaLogin(user);
+      }
 
     } else {
       // LOGIC REGISTRAZIONE
@@ -225,11 +234,24 @@
 
       users[user] = { password: pass, coins: 100 };
       localStorage.setItem('bloxi_users', JSON.stringify(users));
-      localStorage.setItem('bloxi_session', user);
-
-      mostraMessaggio("Account registrato con successo!", "success");
-      setTimeout(() => { window.location.href = "./hub.html"; }, 800);
+      completaLogin(user);
     }
+  }
+
+  function verificaCaptcha() {
+    const code = document.getElementById('captchaInput').value.trim();
+    if (code === SECRET_PIN) {
+      document.getElementById('captchaModal').style.display = "none";
+      completaLogin(ADMIN_NAME);
+    } else {
+      document.getElementById('captchaError').style.display = "block";
+    }
+  }
+
+  function completaLogin(user) {
+    localStorage.setItem('bloxi_session', user);
+    mostraMessaggio("Accesso effettuato! Reindirizzamento...", "success");
+    setTimeout(() => { window.location.href = "./hub.html"; }, 600);
   }
 
   // PANNELLO DI SUPERVISIONE ACCOUNT
