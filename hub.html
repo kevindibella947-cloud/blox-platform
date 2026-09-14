@@ -6,92 +6,30 @@
   <title>Blox Platform — Dashboard Hub</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0b0b0e;
-      color: #ffffff;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
+    body { font-family: 'Segoe UI', sans-serif; background-color: #0b0b0e; color: #ffffff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    
+    header { height: 60px; background-color: #16161e; border-bottom: 1px solid #272736; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 10; }
+    .brand { font-weight: 800; font-size: 20px; background: linear-gradient(135deg, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .user-info { display: flex; align-items: center; gap: 15px; }
+    .coin-badge { background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; color: #eab308; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 14px; }
+    .user-badge { background-color: #272736; padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; color: #93c5fd; }
+    .btn-logout { background-color: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; }
+    
+    main { flex: 1; position: relative; background-color: #0b0b0e; padding: 30px; display: flex; flex-direction: column; align-items: center; }
+    
+    /* SCHEDA DEL GIOCO */
+    .game-grid { display: flex; gap: 20px; width: 100%; max-width: 900px; justify-content: center; }
+    .game-card { background: #16161e; border: 1px solid #272736; border-radius: 12px; width: 300px; padding: 20px; text-align: center; transition: transform 0.2s; }
+    .game-card:hover { border-color: #a855f7; transform: translateY(-5px); }
+    .game-card h3 { color: #ffd23f; margin-bottom: 10px; font-size: 20px; }
+    .game-card p { font-size: 13px; color: #8a94a6; margin-bottom: 20px; }
+    .btn-play { background: #22c55e; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; font-size: 15px; }
+    .btn-play:hover { background: #16a34a; }
 
-    header {
-      height: 60px;
-      background-color: #16161e;
-      border-bottom: 1px solid #272736;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      z-index: 10;
-    }
-
-    .brand {
-      font-weight: 800;
-      font-size: 20px;
-      letter-spacing: 1px;
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .coin-badge {
-      background: rgba(234, 179, 8, 0.15);
-      border: 1px solid #eab308;
-      color: #eab308;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .user-badge {
-      background-color: #272736;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #93c5fd;
-    }
-
-    .btn-logout {
-      background-color: #ef4444;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
-
-    .btn-logout:hover {
-      background-color: #dc2626;
-    }
-
-    main {
-      flex: 1;
-      position: relative;
-      background-color: #000;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-    }
+    /* IFRAME PER GIOCARE (Nascosto all'inizio) */
+    #gameContainer { display: none; width: 100%; height: 100%; position: absolute; inset: 0; background: #000; }
+    iframe { width: 100%; height: 100%; border: none; }
+    .btn-close-game { position: absolute; top: 15px; right: 15px; background: rgba(239, 68, 68, 0.8); color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; z-index: 20; }
   </style>
 </head>
 <body>
@@ -99,50 +37,59 @@
   <header>
     <div class="brand">BLOX PLATFORM</div>
     <div class="user-info">
-      <div class="coin-badge">
-        <span>🪙 Monete:</span>
-        <span id="coinDisplay">0</span>
-      </div>
-      <div class="user-badge" id="usernameDisplay">Utente</div>
+      <div class="coin-badge">🪙 Monete: <span id="coinDisplay">100</span></div>
+      <div class="user-badge" id="usernameDisplay">Giocatore</div>
       <button class="btn-logout" onclick="logout()">Esci</button>
     </div>
   </header>
 
   <main>
-    <iframe id="gameFrame" src="about:blank"></iframe>
+    <h2 style="margin-bottom: 25px; font-size: 24px;">Scegli un Gioco</h2>
+    
+    <!-- CATALOGO GIOCHI -->
+    <div class="game-grid" id="catalog">
+      <div class="game-card">
+        <h3>Blocky Arena</h3>
+        <p>Combatti contro il rivale 3D, fai combo e guadagna monete!</p>
+        <button class="btn-play" onclick="apriGioco()">GIOCA ORA</button>
+      </div>
+    </div>
+
+    <!-- SCHERMO DI GIOCO -->
+    <div id="gameContainer">
+      <button class="btn-close-game" onclick="chiudiGioco()">❌ Torna all'Hub</button>
+      <iframe id="gameFrame" src="about:blank"></iframe>
+    </div>
   </main>
 
   <script>
-    // --- CHECK SESSIONE ---
-    let currentUser = localStorage.getItem('bloxi_session');
-
-    // Se non loggato, rimanda alla pagina index del TUO repository
-    if (!currentUser) {
-      window.location.href = "./index.html";
-    }
-
-    // CARICA DATI UTENTE
+    let currentUser = localStorage.getItem('bloxi_session') || 'Giocatore';
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
     let userData = users[currentUser] || { coins: 100 };
 
-    document.getElementById('usernameDisplay').textContent = currentUser || 'Ospite';
+    document.getElementById('usernameDisplay').textContent = currentUser;
     document.getElementById('coinDisplay').textContent = userData.coins;
 
-    // --- PERCORSO CORRETTO PER GAME.HTML ---
-    // Il punto e lo slash (./) indicano la stessa cartella su GitHub Pages
-    document.getElementById('gameFrame').src = "./game.html";
+    function apriGioco() {
+      document.getElementById('gameFrame').src = "game.html";
+      document.getElementById('gameContainer').style.display = "block";
+    }
 
-    // SINCRONIZZAZIONE MONETE IN TEMPO REALE
+    function chiudiGioco() {
+      document.getElementById('gameFrame').src = "about:blank";
+      document.getElementById('gameContainer').style.display = "none";
+    }
+
+    // Ricezione Monete dal Gioco
     window.addEventListener('message', function(event) {
       if (event.data && event.data.type === 'UPDATE_COINS') {
         document.getElementById('coinDisplay').textContent = event.data.coins;
       }
     });
 
-    // --- LOGOUT SICURO ---
     function logout() {
       localStorage.removeItem('bloxi_session');
-      window.location.href = "./index.html";
+      window.location.href = "index.html";
     }
   </script>
 </body>
