@@ -3,11 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Platform - Login</title>
+  <title>Blox Platform - Login Admin System</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: #0b0b0e; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; }
-    .card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 340px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    body { font-family: 'Segoe UI', sans-serif; background: #0b0b0e; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; position: relative; overflow: hidden; }
+    
+    /* PULSANTE ADMIN IN ALTO A SINISTRA */
+    .admin-top-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: #272736;
+      border: 1px solid #3b82f6;
+      color: #60a5fa;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .admin-top-btn:hover { background: #3b82f6; color: white; }
+
+    /* CARD DI LOGIN */
+    .card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 2; }
     h2 { margin-bottom: 8px; color: #a855f7; font-size: 26px; }
     p.subtitle { font-size: 13px; color: #9aa4b8; margin-bottom: 20px; }
     .input-group { text-align: left; margin-bottom: 14px; }
@@ -18,53 +40,127 @@
     .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; transition: opacity 0.2s; }
     .btn-main:hover { opacity: 0.9; }
 
-    /* TESTO IN BASSO CON LINK CLICCABILE */
     .switch-mode { margin-top: 20px; font-size: 13px; color: #9aa4b8; }
     .switch-link { color: #3b82f6; font-weight: bold; cursor: pointer; text-decoration: underline; margin-left: 4px; }
-    .switch-link:hover { color: #60a5fa; }
 
     #msg { font-size: 13px; margin-top: 15px; display: none; padding: 8px; border-radius: 6px; }
     .error { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
     .success { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
+
+    /* MODALE SUPERVISIONE ACCOUNT (ADMIN) */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal {
+      background: #16161e;
+      border: 1px solid #a855f7;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 450px;
+      padding: 20px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #272736; padding-bottom: 10px; }
+    .modal-header h3 { color: #a855f7; font-size: 18px; }
+    .btn-close { background: none; border: none; color: #ef4444; font-size: 18px; font-weight: bold; cursor: pointer; }
+    .account-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; padding-right: 5px; }
+    .account-item { background: #0b0b0e; border: 1px solid #272736; padding: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+    .account-item .badge-admin { background: #9333ea; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <h2 id="title">BLOX PLATFORM</h2>
-  <p class="subtitle" id="subtitle">Inserisci le tue credenziali per accedere</p>
-  
-  <div class="input-group">
-    <label for="username">Nickname</label>
-    <input type="text" id="username" placeholder="Inserisci nickname...">
+  <!-- PULSANTE SUPERVISIONE IN ALTO A SINISTRA -->
+  <button class="admin-top-btn" onclick="apriSupervisione()">
+    🔍 Supervisione Account
+  </button>
+
+  <!-- CARD LOGIN / REGISTRAZIONE -->
+  <div class="card">
+    <h2 id="title">BLOX PLATFORM</h2>
+    <p class="subtitle" id="subtitle">Inserisci le tue credenziali per accedere</p>
+    
+    <div class="input-group">
+      <label for="username">Nickname</label>
+      <input type="text" id="username" placeholder="Inserisci nickname...">
+    </div>
+
+    <div class="input-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Inserisci password...">
+    </div>
+
+    <!-- CAMPO CAPTCHA/PIN PER ADMIN (Inizialmente nascosto) -->
+    <div class="input-group" id="captchaGroup" style="display: none;">
+      <label for="captchaPin" style="color: #eab308;">🔒 Codice Sicurezza Admin (Captcha)</label>
+      <input type="password" id="captchaPin" placeholder="Inserisci PIN segreto...">
+    </div>
+
+    <button class="btn-main" id="submitBtn" onclick="inviaForm()">ACCEDI</button>
+
+    <div class="switch-mode" id="switchText">
+      Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>
+    </div>
+
+    <div id="msg"></div>
   </div>
 
-  <div class="input-group">
-    <label for="password">Password</label>
-    <input type="password" id="password" placeholder="Inserisci password...">
+  <!-- PANNELLO MODALE ADMIN (SUPERVISIONE ACCOUNT) -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>📊 Lista Account Registrati</h3>
+        <button class="btn-close" onclick="chiudiSupervisione()">✕</button>
+      </div>
+      <div class="account-list" id="accountListContainer">
+        <!-- Gli account vengono inseriti qui via JS -->
+      </div>
+    </div>
   </div>
-
-  <button class="btn-main" id="submitBtn" onclick="inviaForm()">ACCEDI</button>
-
-  <!-- SCRITTA CLICCABILE -->
-  <div class="switch-mode" id="switchText">
-    Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>
-  </div>
-
-  <div id="msg"></div>
-</div>
 
 <script>
   let isLoginMode = true;
+  const ADMIN_NAME = "huggy_huggy223";
+  const SECRET_PIN = "947947";
+
+  // INIZIALIZZAZIONE AUTOMATICA ACCOUNT ADMIN SE NON ESISTE
+  (function initAdmin() {
+    let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
+    if (!users[ADMIN_NAME]) {
+      users[ADMIN_NAME] = {
+        password: "admin",
+        coins: 999999,
+        role: "admin"
+      };
+      localStorage.setItem('bloxi_users', JSON.stringify(users));
+    }
+  })();
+
+  // RILEVA IN TEMPO REALE SE SI STA DIGITANDO L'ACCOUNT ADMIN
+  document.getElementById('username').addEventListener('input', function(e) {
+    const val = e.target.value.trim();
+    const captchaGroup = document.getElementById('captchaGroup');
+    if (val === ADMIN_NAME) {
+      captchaGroup.style.display = "block";
+    } else {
+      captchaGroup.style.display = "none";
+    }
+  });
 
   function cambiaModalita() {
     isLoginMode = !isLoginMode;
-    const title = document.getElementById('title');
     const subtitle = document.getElementById('subtitle');
     const submitBtn = document.getElementById('submitBtn');
     const switchText = document.getElementById('switchText');
     const msgEl = document.getElementById('msg');
-    
     msgEl.style.display = "none";
 
     if (isLoginMode) {
@@ -88,16 +184,25 @@
   function inviaForm() {
     const user = document.getElementById('username').value.trim();
     const pass = document.getElementById('password').value.trim();
+    const pin = document.getElementById('captchaPin').value.trim();
 
     if (!user || !pass) {
       mostraMessaggio("Inserisci sia Nickname che Password!", "error");
       return;
     }
 
+    // CONTROLLO DI SICUREZZA PIN/CAPTCHA PER ADMIN
+    if (user === ADMIN_NAME) {
+      if (pin !== SECRET_PIN) {
+        mostraMessaggio("Codice di sicurezza Admin (PIN) Errato!", "error");
+        return;
+      }
+    }
+
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
 
     if (isLoginMode) {
-      // ACCESSO
+      // LOGIC ACCESSO
       if (!users[user]) {
         mostraMessaggio("Utente non trovato! Clicca su Registrati.", "error");
         return;
@@ -108,13 +213,13 @@
       }
 
       localStorage.setItem('bloxi_session', user);
-      mostraMessaggio("Accesso in corso...", "success");
+      mostraMessaggio("Accesso effettuato! Reindirizzamento...", "success");
       setTimeout(() => { window.location.href = "./hub.html"; }, 600);
 
     } else {
-      // REGISTRAZIONE
+      // LOGIC REGISTRAZIONE
       if (users[user]) {
-        mostraMessaggio("Nickname già in uso! Scegline un altro.", "error");
+        mostraMessaggio("Nickname già occupato!", "error");
         return;
       }
 
@@ -122,9 +227,44 @@
       localStorage.setItem('bloxi_users', JSON.stringify(users));
       localStorage.setItem('bloxi_session', user);
 
-      mostraMessaggio("Account creato! Entro...", "success");
+      mostraMessaggio("Account registrato con successo!", "success");
       setTimeout(() => { window.location.href = "./hub.html"; }, 800);
     }
+  }
+
+  // PANNELLO DI SUPERVISIONE ACCOUNT
+  function apriSupervisione() {
+    const pinVerifica = prompt("Inserisci la chiave segreta per la supervisione:");
+    if (pinVerifica !== SECRET_PIN) {
+      alert("Accesso Negato: Chiave di sicurezza errata!");
+      return;
+    }
+
+    const container = document.getElementById('accountListContainer');
+    container.innerHTML = "";
+    
+    let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
+    
+    Object.keys(users).forEach(u => {
+      const item = document.createElement('div');
+      item.className = "account-item";
+      const isAdmin = u === ADMIN_NAME;
+      
+      item.innerHTML = `
+        <div>
+          <strong>${u}</strong> ${isAdmin ? '<span class="badge-admin">ADMIN</span>' : ''}
+          <div style="font-size:11px; color:#8a94a6;">Pass: ${users[u].password}</div>
+        </div>
+        <div style="color:#eab308; font-weight:bold;">🪙 ${users[u].coins || 0}</div>
+      `;
+      container.appendChild(item);
+    });
+
+    document.getElementById('adminModal').style.display = "flex";
+  }
+
+  function chiudiSupervisione() {
+    document.getElementById('adminModal').style.display = "none";
   }
 </script>
 
