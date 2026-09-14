@@ -16,7 +16,6 @@
       overflow: hidden;
     }
 
-    /* TOP BAR / HEADER */
     header {
       height: 60px;
       background-color: #16161e;
@@ -81,7 +80,6 @@
       background-color: #dc2626;
     }
 
-    /* MAIN CONTENT AREA */
     main {
       flex: 1;
       position: relative;
@@ -98,7 +96,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header>
     <div class="brand">BLOX PLATFORM</div>
     <div class="user-info">
@@ -111,44 +108,41 @@
     </div>
   </header>
 
-  <!-- GAME CONTAINER -->
   <main>
     <iframe id="gameFrame" src="about:blank"></iframe>
   </main>
 
   <script>
-    // --- GESTIONE UTENTE E SESSIONE ---
+    // --- CHECK SESSIONE ---
     let currentUser = localStorage.getItem('bloxi_session');
 
-    // Se non c'è una sessione attiva, torna al Login (index.html)
+    // Se non loggato, rimanda alla pagina index del TUO repository
     if (!currentUser) {
-      window.location.href = "index.html";
+      window.location.href = "./index.html";
     }
 
-    // Carica dati utente dal localStorage DataStore
+    // CARICA DATI UTENTE
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
     let userData = users[currentUser] || { coins: 100 };
 
-    // Mostra dati nella barra in alto
-    document.getElementById('usernameDisplay').textContent = currentUser;
+    document.getElementById('usernameDisplay').textContent = currentUser || 'Ospite';
     document.getElementById('coinDisplay').textContent = userData.coins;
 
-    // --- CARICAMENTO GIOCO ---
-    var gameUrl = "game.html"; 
-    document.getElementById('gameFrame').src = gameUrl;
+    // --- PERCORSO CORRETTO PER GAME.HTML ---
+    // Il punto e lo slash (./) indicano la stessa cartella su GitHub Pages
+    document.getElementById('gameFrame').src = "./game.html";
 
-    // --- ASCOLTATORE PER AGGIORNAMENTO MONETE IN TEMPO REALE ---
+    // SINCRONIZZAZIONE MONETE IN TEMPO REALE
     window.addEventListener('message', function(event) {
       if (event.data && event.data.type === 'UPDATE_COINS') {
-        // Aggiorna la grafica dell'Hub all'istante quando il gioco invia nuove monete
         document.getElementById('coinDisplay').textContent = event.data.coins;
       }
     });
 
-    // --- LOGOUT ---
+    // --- LOGOUT SICURO ---
     function logout() {
       localStorage.removeItem('bloxi_session');
-      window.location.href = "index.html";
+      window.location.href = "./index.html";
     }
   </script>
 </body>
