@@ -3,41 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Platform - Hub</title>
+  <title>Blox Platform — Dashboard Hub</title>
   <style>
-    :root {
-      --bg-main: #0b0b0e;
-      --bg-card: #16161e;
-      --border-color: #272736;
-      --accent-purple: #9333ea;
-      --text-main: #ffffff;
-      --text-muted: #94a3b8;
-    }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-main);
-      color: var(--text-main);
+      background-color: #0b0b0e;
+      color: #ffffff;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      height: 100vh;
       overflow: hidden;
     }
 
+    /* TOP BAR / HEADER */
     header {
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border-color);
-      padding: 12px 20px;
+      height: 60px;
+      background-color: #16161e;
+      border-bottom: 1px solid #272736;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 10;
     }
 
-    .logo {
-      font-size: 20px;
+    .brand {
       font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 1px;
       background: linear-gradient(135deg, #a855f7, #3b82f6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -50,75 +44,112 @@
     }
 
     .coin-badge {
-      background: rgba(147, 51, 234, 0.2);
-      border: 1px solid var(--accent-purple);
-      padding: 5px 12px;
+      background: rgba(234, 179, 8, 0.15);
+      border: 1px solid #eab308;
+      color: #eab308;
+      padding: 6px 14px;
       border-radius: 20px;
-      font-size: 13px;
-      font-weight: bold;
-      color: #c084fc;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .user-badge {
+      background-color: #272736;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #93c5fd;
     }
 
     .btn-logout {
-      background: #ef4444;
+      background-color: #ef4444;
       color: white;
       border: none;
       padding: 6px 12px;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: bold;
+      transition: background 0.2s;
     }
 
-    .game-container {
+    .btn-logout:hover {
+      background-color: #dc2626;
+    }
+
+    /* MAIN CONTENT AREA */
+    main {
       flex: 1;
+      position: relative;
+      background-color: #000;
+    }
+
+    iframe {
       width: 100%;
+      height: 100%;
       border: none;
+      display: block;
     }
   </style>
 </head>
 <body>
 
+  <!-- HEADER -->
   <header>
-    <div class="logo">BLOX PLATFORM</div>
+    <div class="brand">BLOX PLATFORM</div>
     <div class="user-info">
-      <span id="displayUser" style="font-weight: bold;">Caricamento...</span>
-      <div class="coin-badge">💰 Monete: <span id="displayCoins">0</span></div>
+      <div class="coin-badge">
+        <span>🪙 Monete:</span>
+        <span id="coinDisplay">0</span>
+      </div>
+      <div class="user-badge" id="usernameDisplay">Utente</div>
       <button class="btn-logout" onclick="logout()">Esci</button>
     </div>
   </header>
 
-  <!-- IFRAME DEL GIOCO INNESTATO -->
-  <iframe id="gameFrame" class="game-container" src=""></iframe>
+  <!-- GAME CONTAINER -->
+  <main>
+    <iframe id="gameFrame" src="about:blank"></iframe>
+  </main>
 
   <script>
-    window.onload = function() {
-      var urlParams = new URLSearchParams(window.location.search);
-      var currentUser = urlParams.get('user') || localStorage.getItem('currentUser');
+    // --- GESTIONE UTENTE E SESSIONE ---
+    let currentUser = localStorage.getItem('bloxi_session');
 
-      if (!currentUser) {
-        window.location.href = "index.html";
-        return;
+    // Se non c'è una sessione attiva, torna al Login (index.html)
+    if (!currentUser) {
+      window.location.href = "index.html";
+    }
+
+    // Carica dati utente dal localStorage DataStore
+    let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
+    let userData = users[currentUser] || { coins: 100 };
+
+    // Mostra dati nella barra in alto
+    document.getElementById('usernameDisplay').textContent = currentUser;
+    document.getElementById('coinDisplay').textContent = userData.coins;
+
+    // --- CARICAMENTO GIOCO ---
+    var gameUrl = "game.html"; 
+    document.getElementById('gameFrame').src = gameUrl;
+
+    // --- ASCOLTATORE PER AGGIORNAMENTO MONETE IN TEMPO REALE ---
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'UPDATE_COINS') {
+        // Aggiorna la grafica dell'Hub all'istante quando il gioco invia nuove monete
+        document.getElementById('coinDisplay').textContent = event.data.coins;
       }
+    });
 
-      localStorage.setItem('currentUser', currentUser);
-      document.getElementById('displayUser').textContent = currentUser;
-
-      var userStore = JSON.parse(localStorage.getItem('userStore')) || {};
-      var coins = userStore[currentUser] ? userStore[currentUser].coins : (localStorage.getItem('coins_' + currentUser) || 100);
-
-      document.getElementById('displayCoins').textContent = coins;
-
-      // Inserisci qui l'URL del tuo gioco (es. GitHub Pages / Itch.io)
-      var gameUrl = "https://playcanv.as/p/2O2U85YF/"; // URL dimostrativo
-      document.getElementById('gameFrame').src = gameUrl;
-    };
-
+    // --- LOGOUT ---
     function logout() {
-      localStorage.removeItem('currentUser');
+      localStorage.removeItem('bloxi_session');
       window.location.href = "index.html";
     }
   </script>
-
 </body>
 </html>
