@@ -56,7 +56,12 @@
     .btn-close { background: none; border: none; color: #ef4444; font-size: 18px; font-weight: bold; cursor: pointer; }
     .search-box { margin-bottom: 12px; }
     .account-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 6px; }
-    .account-item { background: #0b0b0e; border: 1px solid #272736; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .account-item { background: #0b0b0e; border: 1px solid #272736; padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
+    .giveaway-controls { display: flex; gap: 6px; align-items: center; background: #16161e; padding: 8px; border-radius: 6px; flex-wrap: wrap; }
+    .giveaway-controls input { width: 90px; padding: 6px; background: #0b0b0e; border: 1px solid #272736; border-radius: 4px; color: white; font-size: 12px; }
+    .btn-give { padding: 6px 10px; border: none; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; flex: 1; }
+    .btn-give-coin { background: #eab308; color: black; }
+    .btn-give-pbux { background: #3b82f6; color: white; }
   </style>
 </head>
 <body>
@@ -125,11 +130,11 @@
     </div>
   </main>
 
-  <!-- MODALE SUPERVISIONE ADMIN -->
+  <!-- MODALE SUPERVISIONE ADMIN E DONAZIONI -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal">
       <div class="modal-header">
-        <h3 style="color:#a855f7;">👑 Supervisione Account Blox Platform</h3>
+        <h3 style="color:#a855f7;" id="modalTitle">👑 Pannello Admin</h3>
         <button class="btn-close" onclick="chiudiSupervisione()">✕</button>
       </div>
       <div class="search-box">
@@ -152,12 +157,12 @@
   function getDB() {
     let db = JSON.parse(localStorage.getItem('bloxi_platform_db')) || {};
     
-    // Account Admin Principale (huggy_huggy223)
+    // Account Owner/Admin con donazioni (huggy_huggy223)
     if (!db[ADMIN_NAME]) {
-      db[ADMIN_NAME] = { password: ADMIN_PASS, coins: 100, platabux: 0, role: "admin" };
+      db[ADMIN_NAME] = { password: ADMIN_PASS, coins: 100, platabux: 0, role: "owner" };
     }
     
-    // Nuovo Account per tuo cugino (Exegreen4999) con targa Admin e SENZA trucchi/soldi infiniti
+    // Account Admin senza donazioni (Exegreen4999)
     if (!db["Exegreen4999"]) {
       db["Exegreen4999"] = { password: "Exegreen4999", coins: 100, platabux: 0, role: "admin" };
     }
@@ -200,7 +205,7 @@
       if (!db[user] || db[user].password !== pass) {
         return mostraMessaggio("Credenziali errate!", "error");
       }
-      if (db[user].role === "admin") {
+      if (db[user].role === "owner" || db[user].role === "admin") {
         const pin = prompt("Inserisci il PIN Admin per il controllo:");
         if (pin !== SECRET_PIN) return alert("PIN Errato!");
       }
@@ -242,8 +247,8 @@
     document.getElementById('coinDisplay').textContent = (db[currentUser].coins || 0).toLocaleString();
     document.getElementById('platabuxDisplay').textContent = (db[currentUser].platabux || 0).toLocaleString();
 
-    // Mostra il badge speciale e il pulsante per gli Admin (huggy_huggy223 ed Exegreen4999)
-    if (db[currentUser].role === "admin") {
+    // Mostra il badge speciale e il pulsante Admin
+    if (db[currentUser].role === "owner" || db[currentUser].role === "admin") {
       document.getElementById('adminBtn').style.display = "inline-block";
       document.getElementById('adminTagDisplay').style.display = "inline-block";
     } else {
@@ -283,18 +288,50 @@
     keys.forEach(u => {
       const item = document.createElement('div');
       item.className = "account-item";
+      
+      // Controlli per accreditare Monete/Platabux (solo per l'account owner huggy_huggy223)
+      let giveawayControlsHTML = "";
+      if (currentUser === ADMIN_NAME) {
+        giveawayControlsHTML = `
+          <div class="giveaway-controls">
+            <input type="number" id="amt_${u}" value="1000" min="1">
+            <button class="btn-give btn-give-coin" onclick="donare('${u}', 'coins')">+🪙 Monete</button>
+            <button class="btn-give btn-give-pbux" onclick="donare('${u}', 'platabux')">+💎 Platabux</button>
+          </div>
+        `;
+      }
+
       item.innerHTML = `
-        <div>
-          <strong>${u}</strong> ${db[u].role === "admin" ? '<span class="admin-badge">👑 ADMIN</span>' : ''}
-          <div style="font-size:11px; color:#8a94a6;">Password: ${db[u].password}</div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <strong>${u}</strong> ${(db[u].role === "owner" || db[u].role === "admin") ? '<span class="admin-badge">👑 ADMIN</span>' : ''}
+            <div style="font-size:11px; color:#8a94a6;">Password: ${db[u].password}</div>
+          </div>
+          <div>
+            <span style="color:#eab308; font-weight:bold; margin-right:8px;">🪙 ${(db[u].coins || 0).toLocaleString()}</span>
+            <span style="color:#3b82f6; font-weight:bold;">💎 ${(db[u].platabux || 0).toLocaleString()}</span>
+          </div>
         </div>
-        <div>
-          <span style="color:#eab308; font-weight:bold; margin-right:8px;">🪙 ${(db[u].coins || 0).toLocaleString()}</span>
-          <span style="color:#3b82f6; font-weight:bold;">💎 ${(db[u].platabux || 0).toLocaleString()}</span>
-        </div>
+        ${giveawayControlsHTML}
       `;
       container.appendChild(item);
     });
+  }
+
+  function donare(targetUser, tipo) {
+    const inputEl = document.getElementById(`amt_${targetUser}`);
+    const val = parseInt(inputEl.value);
+    if (isNaN(val) || val <= 0) return alert("Inserisci una quantità valida!");
+
+    let db = getDB();
+    if (!db[targetUser]) return;
+
+    db[targetUser][tipo] = (db[targetUser][tipo] || 0) + val;
+    saveDB(db);
+
+    alert(`Accreditati ${val} ${tipo === 'coins' ? 'Monete 🪙' : 'Platabux 💎'} a ${targetUser}!`);
+    renderAccountList();
+    caricaInterfaccia();
   }
 
   function chiudiSupervisione() {
