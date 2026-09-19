@@ -3,31 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Platform - Login Admin</title>
+  <title>Blox Platform - Login</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #0b0b0e; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; position: relative; overflow: hidden; }
-    
-    /* PULSANTE SUPERVISIONE IN ALTO A SINISTRA */
-    .admin-top-btn {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background: #272736;
-      border: 1px solid #3b82f6;
-      color: #60a5fa;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.2s;
-      z-index: 5;
-    }
-    .admin-top-btn:hover { background: #3b82f6; color: white; }
 
     /* CARD DI LOGIN */
     .card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 2; }
@@ -68,42 +47,9 @@
     }
     .captcha-card h3 { color: #eab308; margin-bottom: 10px; }
     .captcha-card p { font-size: 13px; color: #9aa4b8; margin-bottom: 15px; }
-
-    /* MODALE SUPERVISIONE ACCOUNT */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal {
-      background: #16161e;
-      border: 1px solid #a855f7;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 450px;
-      padding: 20px;
-      max-height: 80vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #272736; padding-bottom: 10px; }
-    .modal-header h3 { color: #a855f7; font-size: 18px; }
-    .btn-close { background: none; border: none; color: #ef4444; font-size: 18px; font-weight: bold; cursor: pointer; }
-    .account-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; padding-right: 5px; }
-    .account-item { background: #0b0b0e; border: 1px solid #272736; padding: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-    .account-item .badge-admin { background: #9333ea; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
   </style>
 </head>
 <body>
-
-  <!-- PULSANTE SUPERVISIONE IN ALTO A SINISTRA -->
-  <button class="admin-top-btn" onclick="apriSupervisione()">
-    🔍 Supervisione Account
-  </button>
 
   <!-- CARD LOGIN / REGISTRAZIONE -->
   <div class="card">
@@ -140,29 +86,19 @@
     </div>
   </div>
 
-  <!-- PANNELLO MODALE ADMIN (SUPERVISIONE ACCOUNT) -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>📊 Lista Account Registrati</h3>
-        <button class="btn-close" onclick="chiudiSupervisione()">✕</button>
-      </div>
-      <div class="account-list" id="accountListContainer"></div>
-    </div>
-  </div>
-
 <script>
   let isLoginMode = true;
   const ADMIN_NAME = "huggy_huggy223";
   const ADMIN_PASS = "Kevindibella18";
   const SECRET_PIN = "947947";
 
-  // AGGIORNA E FORZA L'ACCOUNT ADMIN CON LA NUOVA PASSWORD
+  // INIZIALIZZA L'ACCOUNT ADMIN CON LA TUA PASSWORD E I PLATABUX
   (function initAdmin() {
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
     users[ADMIN_NAME] = {
       password: ADMIN_PASS,
       coins: 999999,
+      platabux: 999999,
       role: "admin"
     };
     localStorage.setItem('bloxi_users', JSON.stringify(users));
@@ -206,7 +142,6 @@
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
 
     if (isLoginMode) {
-      // LOGIC ACCESSO
       if (!users[user]) {
         mostraMessaggio("Utente non trovato! Clicca su Registrati.", "error");
         return;
@@ -216,7 +151,7 @@
         return;
       }
 
-      // SE È L'ACCOUNT ADMIN MOSTRA IL CAPTCHA
+      // SE È L'ACCOUNT ADMIN RICHIEDE IL CAPTCHA
       if (user === ADMIN_NAME) {
         document.getElementById('captchaInput').value = "";
         document.getElementById('captchaError').style.display = "none";
@@ -226,13 +161,12 @@
       }
 
     } else {
-      // LOGIC REGISTRAZIONE
       if (users[user]) {
         mostraMessaggio("Nickname già occupato!", "error");
         return;
       }
 
-      users[user] = { password: pass, coins: 100 };
+      users[user] = { password: pass, coins: 100, platabux: 0 };
       localStorage.setItem('bloxi_users', JSON.stringify(users));
       completaLogin(user);
     }
@@ -252,41 +186,6 @@
     localStorage.setItem('bloxi_session', user);
     mostraMessaggio("Accesso effettuato! Reindirizzamento...", "success");
     setTimeout(() => { window.location.href = "./hub.html"; }, 600);
-  }
-
-  // PANNELLO DI SUPERVISIONE ACCOUNT
-  function apriSupervisione() {
-    const pinVerifica = prompt("Inserisci la chiave segreta per la supervisione:");
-    if (pinVerifica !== SECRET_PIN) {
-      alert("Accesso Negato: Chiave di sicurezza errata!");
-      return;
-    }
-
-    const container = document.getElementById('accountListContainer');
-    container.innerHTML = "";
-    
-    let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
-    
-    Object.keys(users).forEach(u => {
-      const item = document.createElement('div');
-      item.className = "account-item";
-      const isAdmin = u === ADMIN_NAME;
-      
-      item.innerHTML = `
-        <div>
-          <strong>${u}</strong> ${isAdmin ? '<span class="badge-admin">ADMIN</span>' : ''}
-          <div style="font-size:11px; color:#8a94a6;">Pass: ${users[u].password}</div>
-        </div>
-        <div style="color:#eab308; font-weight:bold;">🪙 ${users[u].coins || 0}</div>
-      `;
-      container.appendChild(item);
-    });
-
-    document.getElementById('adminModal').style.display = "flex";
-  }
-
-  function chiudiSupervisione() {
-    document.getElementById('adminModal').style.display = "none";
   }
 </script>
 
