@@ -37,18 +37,38 @@
     .btn-play { width: 100%; padding: 10px; background: #22c55e; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
 
     /* MODALE SUPERVISIONE & GIVEAWAY ADMIN */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; }
-    .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 95%; max-width: 550px; padding: 20px; max-height: 85vh; display: flex; flex-direction: column; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #272736; padding-bottom: 10px; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; padding: 10px; }
+    .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 580px; padding: 20px; height: 80vh; max-height: 600px; display: flex; flex-direction: column; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #272736; padding-bottom: 10px; }
     .modal-header h3 { color: #a855f7; font-size: 18px; }
     .btn-close { background: none; border: none; color: #ef4444; font-size: 18px; font-weight: bold; cursor: pointer; }
     
-    .account-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 5px; }
+    /* BARRA DI RICERCA */
+    .search-box { margin-bottom: 12px; }
+    .search-input { width: 100%; padding: 10px; background: #0b0b0e; border: 1px solid #a855f7; border-radius: 6px; color: white; font-size: 13px; outline: none; }
+    .search-input:focus { box-shadow: 0 0 8px rgba(168, 85, 247, 0.4); }
+
+    /* CONTENITORE CON SCROLL DEDICATO (ALTO E BASSO) */
+    .account-list { 
+      overflow-y: scroll; 
+      flex: 1; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+      padding-right: 5px;
+      -webkit-overflow-scrolling: touch; /* Scroll fluido da mobile */
+    }
+    
+    /* Personalizzazione barra di scorrimento */
+    .account-list::-webkit-scrollbar { width: 8px; }
+    .account-list::-webkit-scrollbar-track { background: #0b0b0e; border-radius: 4px; }
+    .account-list::-webkit-scrollbar-thumb { background: #9333ea; border-radius: 4px; }
+
     .account-item { background: #0b0b0e; border: 1px solid #272736; padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
     .account-info { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-    .giveaway-controls { display: flex; gap: 6px; align-items: center; background: #16161e; padding: 8px; border-radius: 6px; }
+    .giveaway-controls { display: flex; gap: 6px; align-items: center; background: #16161e; padding: 8px; border-radius: 6px; flex-wrap: wrap; }
     .giveaway-controls input { width: 80px; padding: 6px; background: #0b0b0e; border: 1px solid #272736; border-radius: 4px; color: white; font-size: 12px; }
-    .btn-give { padding: 6px 10px; border: none; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
+    .btn-give { padding: 6px 10px; border: none; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; flex: 1; }
     .btn-give-coin { background: #eab308; color: black; }
     .btn-give-pbux { background: #3b82f6; color: white; }
   </style>
@@ -99,9 +119,16 @@
   <div class="modal-overlay" id="adminModal">
     <div class="modal">
       <div class="modal-header">
-        <h3>👑 Pannello Controllo & Ricariche Giveaway</h3>
+        <h3>👑 Pannello Controllo & Ricariche</h3>
         <button class="btn-close" onclick="chiudiSupervisione()">✕</button>
       </div>
+
+      <!-- BARRA DI RICERCA UTENTI -->
+      <div class="search-box">
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Cerca giocatore per Nickname..." oninput="renderAccountList()">
+      </div>
+
+      <!-- LISTA UTENTI CON SCROLL -->
       <div class="account-list" id="accountListContainer"></div>
     </div>
   </div>
@@ -110,6 +137,7 @@
   const ADMIN_NAME = "huggy_huggy223";
   const SECRET_PIN = "947947";
   let currentUser = localStorage.getItem('bloxi_session');
+  let autoRefreshInterval = null;
 
   // CONTROLLO SESSIONE
   if (!currentUser) {
@@ -120,13 +148,11 @@
   function caricaDatiUtente() {
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
     
-    // Se l'utente corrente non esiste nel DB lo reindirizza
     if (!users[currentUser]) {
       logout();
       return;
     }
 
-    // Imposta valori predefiniti per Platabux se mancanti
     if (users[currentUser].platabux === undefined) {
       users[currentUser].platabux = currentUser === ADMIN_NAME ? 999999 : 0;
       localStorage.setItem('bloxi_users', JSON.stringify(users));
@@ -137,13 +163,14 @@
     document.getElementById('coinDisplay').textContent = (users[currentUser].coins || 0).toLocaleString();
     document.getElementById('platabuxDisplay').textContent = (users[currentUser].platabux || 0).toLocaleString();
 
-    // Mostra il pulsante Admin solo se si è loggati come huggy_huggy223
+    // Mostra il pulsante solo all'admin
     if (currentUser === ADMIN_NAME) {
       document.getElementById('adminBtn').style.display = "inline-block";
     }
   }
 
   function logout() {
+    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
     localStorage.removeItem('bloxi_session');
     window.location.href = "./index.html";
   }
@@ -156,20 +183,46 @@
       return;
     }
 
+    document.getElementById('searchInput').value = "";
     renderAccountList();
     document.getElementById('adminModal').style.display = "flex";
+
+    // AVVIA REFRESH AUTOMATICO OGNI 2 SECONDI
+    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+    autoRefreshInterval = setInterval(() => {
+      caricaDatiUtente();
+      renderAccountList();
+    }, 2000);
   }
 
   function renderAccountList() {
     const container = document.getElementById('accountListContainer');
-    container.innerHTML = "";
+    const filterText = document.getElementById('searchInput').value.toLowerCase().trim();
     
+    // Mantiene lo scorrimento corrente prima di aggiornare la lista
+    const currentScrollTop = container.scrollTop;
+
+    // Salva i valori digitati negli input per non azzerarli col refresh
+    const currentAmounts = {};
+    document.querySelectorAll('.giveaway-controls input').forEach(inp => {
+      currentAmounts[inp.id] = inp.value;
+    });
+
+    container.innerHTML = "";
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
     
-    Object.keys(users).forEach(u => {
+    const userKeys = Object.keys(users).filter(u => u.toLowerCase().includes(filterText));
+
+    if (userKeys.length === 0) {
+      container.innerHTML = `<div style="text-align:center; color:#8a94a6; font-size:13px; padding:20px;">Nessun giocatore trovato</div>`;
+      return;
+    }
+
+    userKeys.forEach(u => {
       const item = document.createElement('div');
       item.className = "account-item";
       const isAdmin = u === ADMIN_NAME;
+      const savedVal = currentAmounts[`amount_${u}`] !== undefined ? currentAmounts[`amount_${u}`] : "1000";
       
       item.innerHTML = `
         <div class="account-info">
@@ -183,15 +236,17 @@
           </div>
         </div>
 
-        <!-- GENERATORE DI RICARICHE E GIVEAWAY -->
         <div class="giveaway-controls">
-          <input type="number" id="amount_${u}" placeholder="Quantità..." value="1000">
-          <button class="btn-give btn-give-coin" onclick="regalaValuta('${u}', 'coins')">+🪙 Regala Monete</button>
-          <button class="btn-give btn-give-pbux" onclick="regalaValuta('${u}', 'platabux')">+💎 Regala Platabux</button>
+          <input type="number" id="amount_${u}" placeholder="Quantità..." value="${savedVal}">
+          <button class="btn-give btn-give-coin" onclick="regalaValuta('${u}', 'coins')">+🪙 Monete</button>
+          <button class="btn-give btn-give-pbux" onclick="regalaValuta('${u}', 'platabux')">+💎 Platabux</button>
         </div>
       `;
       container.appendChild(item);
     });
+
+    // Ripristina la posizione dello scroll dopo l'aggiornamento
+    container.scrollTop = currentScrollTop;
   }
 
   function regalaValuta(targetUser, tipoValuta) {
@@ -216,6 +271,10 @@
   }
 
   function chiudiSupervisione() {
+    if (autoRefreshInterval) {
+      clearInterval(autoRefreshInterval);
+      autoRefreshInterval = null;
+    }
     document.getElementById('adminModal').style.display = "none";
   }
 
