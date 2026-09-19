@@ -29,9 +29,6 @@
     label { display: block; font-size: 11px; color: #a855f7; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
     input { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; font-size: 14px; outline: none; }
     input:focus { border-color: #a855f7; }
-    
-    .captcha-box { background: #0b0b0e; border: 1px dashed #a855f7; padding: 10px; border-radius: 6px; margin-bottom: 14px; text-align: left; }
-    .captcha-code { font-weight: bold; color: #3b82f6; letter-spacing: 2px; }
 
     .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; }
     .switch-mode { margin-top: 15px; font-size: 13px; color: #9aa4b8; }
@@ -49,9 +46,10 @@
     .game-body { padding: 15px; }
     .btn-play { width: 100%; padding: 10px; background: #22c55e; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
-    /* MODALE ADMIN */
+    /* MODALE ADMIN & CAPTCHA POPUP */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; padding: 15px; }
     .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 580px; height: 80vh; max-height: 600px; padding: 20px; display: flex; flex-direction: column; }
+    .modal-captcha { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 360px; padding: 25px; text-align: center; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #272736; padding-bottom: 10px; }
     .btn-close { background: none; border: none; color: #ef4444; font-size: 18px; font-weight: bold; cursor: pointer; }
     .search-box { margin-bottom: 12px; }
@@ -81,7 +79,7 @@
   </header>
 
   <main>
-    <!-- VISTA LOGIN / REGISTRAZIONE -->
+    <!-- VISTA LOGIN / REGISTRAZIONE (PULITO SENZA CAPTCHA) -->
     <div class="auth-card" id="authView">
       <h2 id="title">BLOX PLATFORM</h2>
       <p class="subtitle" id="subtitle">Inserisci le credenziali per accedere</p>
@@ -93,12 +91,6 @@
       <div class="input-group">
         <label>Password</label>
         <input type="password" id="password" placeholder="Inserisci password...">
-      </div>
-
-      <!-- CAPTCHA VERIFICATION -->
-      <div class="captcha-box">
-        <label>Verifica Captcha (Codice: <span class="captcha-code">4999</span>)</label>
-        <input type="text" id="captchaInput" placeholder="Inserisci 4999 per verificare...">
       </div>
 
       <button class="btn-main" id="submitBtn" onclick="inviaForm()">ACCEDI</button>
@@ -130,6 +122,19 @@
     </div>
   </main>
 
+  <!-- POPUP CAPTCHA PER ADMIN -->
+  <div class="modal-overlay" id="captchaModal">
+    <div class="modal-captcha">
+      <h3 style="color:#a855f7; margin-bottom:10px;">🛡️ Verifica Captcha Admin</h3>
+      <p style="font-size:12px; color:#9aa4b8; margin-bottom:15px;">Account Admin rilevato. Inserisci il codice Captcha per proseguire:</p>
+      <div class="input-group">
+        <input type="text" id="popupCaptchaInput" placeholder="Inserisci codice captcha..." style="text-align:center; font-weight:bold; letter-spacing:2px;">
+      </div>
+      <button class="btn-main" onclick="confermaCaptchaPopup()">VERIFICA ED ENTRA</button>
+      <div id="captchaError" style="font-size:12px; color:#ef4444; margin-top:10px; display:none;">Codice Captcha errato!</div>
+    </div>
+  </div>
+
   <!-- MODALE SUPERVISIONE ADMIN E DONAZIONI -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal">
@@ -145,26 +150,35 @@
   </div>
 
 <script>
-  const ADMIN_NAME = "huggy_huggy223";
-  const ADMIN_PASS = "Kevindibella18";
-  const SECRET_PIN = "947947";
-  const REQUIRED_CAPTCHA = "4999";
+  const OWNER_NAME = "huggy_huggy223";
+  const OWNER_PASS = "Kevindibella18";
+  const OWNER_CAPTCHA = "947947";
+
+  const ADMIN_COUSIN = "Exegreen4999";
+  const ADMIN_COUSIN_PASS = "Exegreen4999";
+  const ADMIN_COUSIN_CAPTCHA = "4999";
 
   let isLoginMode = true;
   let currentUser = localStorage.getItem('bloxi_session');
+  let pendingUserLogin = null;
 
-  // INIZIALIZZA DATABASE DI BLOX PLATFORM
   function getDB() {
     let db = JSON.parse(localStorage.getItem('bloxi_platform_db')) || {};
     
-    // Account Owner/Admin con donazioni (huggy_huggy223)
-    if (!db[ADMIN_NAME]) {
-      db[ADMIN_NAME] = { password: ADMIN_PASS, coins: 100, platabux: 0, role: "owner" };
+    if (!db[OWNER_NAME]) {
+      db[OWNER_NAME] = { password: OWNER_PASS, coins: 100, platabux: 0, role: "owner", captcha: OWNER_CAPTCHA };
+    } else {
+      db[OWNER_NAME].password = OWNER_PASS;
+      db[OWNER_NAME].captcha = OWNER_CAPTCHA;
+      db[OWNER_NAME].role = "owner";
     }
     
-    // Account Admin senza donazioni (Exegreen4999)
-    if (!db["Exegreen4999"]) {
-      db["Exegreen4999"] = { password: "Exegreen4999", coins: 100, platabux: 0, role: "admin" };
+    if (!db[ADMIN_COUSIN]) {
+      db[ADMIN_COUSIN] = { password: ADMIN_COUSIN_PASS, coins: 100, platabux: 0, role: "admin", captcha: ADMIN_COUSIN_CAPTCHA };
+    } else {
+      db[ADMIN_COUSIN].password = ADMIN_COUSIN_PASS;
+      db[ADMIN_COUSIN].captcha = ADMIN_COUSIN_CAPTCHA;
+      db[ADMIN_COUSIN].role = "admin";
     }
 
     localStorage.setItem('bloxi_platform_db', JSON.stringify(db));
@@ -194,10 +208,8 @@
   function inviaForm() {
     const user = document.getElementById('username').value.trim();
     const pass = document.getElementById('password').value.trim();
-    const captcha = document.getElementById('captchaInput').value.trim();
 
     if (!user || !pass) return mostraMessaggio("Inserisci Nickname e Password!", "error");
-    if (captcha !== REQUIRED_CAPTCHA) return mostraMessaggio("Captcha errato! Inserisci 4999", "error");
 
     let db = getDB();
 
@@ -205,16 +217,37 @@
       if (!db[user] || db[user].password !== pass) {
         return mostraMessaggio("Credenziali errate!", "error");
       }
+      
+      // SE È UN ACCOUNT ADMIN/OWNER APRI IL POPUP CAPTCHA
       if (db[user].role === "owner" || db[user].role === "admin") {
-        const pin = prompt("Inserisci il PIN Admin per il controllo:");
-        if (pin !== SECRET_PIN) return alert("PIN Errato!");
+        pendingUserLogin = user;
+        document.getElementById('popupCaptchaInput').value = "";
+        document.getElementById('captchaError').style.display = "none";
+        document.getElementById('captchaModal').style.display = "flex";
+        return;
       }
+
       completaLogin(user);
     } else {
       if (db[user]) return mostraMessaggio("Nickname già occupato!", "error");
       db[user] = { password: pass, coins: 100, platabux: 0, role: "user" };
       saveDB(db);
       completaLogin(user);
+    }
+  }
+
+  function confermaCaptchaPopup() {
+    if (!pendingUserLogin) return;
+    let db = getDB();
+    const inputCaptcha = document.getElementById('popupCaptchaInput').value.trim();
+    const expectedCaptcha = db[pendingUserLogin].captcha;
+
+    if (inputCaptcha === expectedCaptcha) {
+      document.getElementById('captchaModal').style.display = "none";
+      completaLogin(pendingUserLogin);
+      pendingUserLogin = null;
+    } else {
+      document.getElementById('captchaError').style.display = "block";
     }
   }
 
@@ -247,10 +280,16 @@
     document.getElementById('coinDisplay').textContent = (db[currentUser].coins || 0).toLocaleString();
     document.getElementById('platabuxDisplay').textContent = (db[currentUser].platabux || 0).toLocaleString();
 
-    // Mostra il badge speciale e il pulsante Admin
+    // Gestione visualizzazione Badge e Pulsante Pannello Admin
     if (db[currentUser].role === "owner" || db[currentUser].role === "admin") {
-      document.getElementById('adminBtn').style.display = "inline-block";
       document.getElementById('adminTagDisplay').style.display = "inline-block";
+      
+      // Solo l'owner (huggy_huggy223) ha il pulsante per il pannello donazioni
+      if (currentUser === OWNER_NAME) {
+        document.getElementById('adminBtn').style.display = "inline-block";
+      } else {
+        document.getElementById('adminBtn').style.display = "none";
+      }
     } else {
       document.getElementById('adminBtn').style.display = "none";
       document.getElementById('adminTagDisplay').style.display = "none";
@@ -264,9 +303,6 @@
   }
 
   function apriSupervisione() {
-    const pinVerifica = prompt("Inserisci il PIN Admin:");
-    if (pinVerifica !== SECRET_PIN) return alert("PIN Errato!");
-
     document.getElementById('searchInput').value = "";
     renderAccountList();
     document.getElementById('adminModal').style.display = "flex";
@@ -289,9 +325,8 @@
       const item = document.createElement('div');
       item.className = "account-item";
       
-      // Controlli per accreditare Monete/Platabux (solo per l'account owner huggy_huggy223)
       let giveawayControlsHTML = "";
-      if (currentUser === ADMIN_NAME) {
+      if (currentUser === OWNER_NAME) {
         giveawayControlsHTML = `
           <div class="giveaway-controls">
             <input type="number" id="amt_${u}" value="1000" min="1">
