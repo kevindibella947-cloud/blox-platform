@@ -37,34 +37,37 @@
     .btn-play { width: 100%; padding: 10px; background: #22c55e; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
 
     /* MODALE SUPERVISIONE & GIVEAWAY ADMIN */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; padding: 10px; }
-    .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 580px; padding: 20px; height: 80vh; max-height: 600px; display: flex; flex-direction: column; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; padding: 15px; }
+    .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 580px; height: 80vh; max-height: 600px; padding: 20px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #272736; padding-bottom: 10px; }
     .modal-header h3 { color: #a855f7; font-size: 18px; }
     .btn-close { background: none; border: none; color: #ef4444; font-size: 18px; font-weight: bold; cursor: pointer; }
     
-    /* BARRA DI RICERCA */
-    .search-box { margin-bottom: 12px; }
+    /* BARRA DI RICERCA FISSA */
+    .search-box { margin-bottom: 12px; flex-shrink: 0; }
     .search-input { width: 100%; padding: 10px; background: #0b0b0e; border: 1px solid #a855f7; border-radius: 6px; color: white; font-size: 13px; outline: none; }
     .search-input:focus { box-shadow: 0 0 8px rgba(168, 85, 247, 0.4); }
 
-    /* CONTENITORE CON SCROLL DEDICATO (ALTO E BASSO) */
+    /* CONTENITORE ACCOUNT CON ROTELLINA RISOLEVA */
     .account-list { 
-      overflow-y: scroll; 
-      flex: 1; 
+      overflow-y: auto !important; 
+      flex: 1 1 auto; 
       display: flex; 
       flex-direction: column; 
       gap: 10px; 
-      padding-right: 5px;
-      -webkit-overflow-scrolling: touch; /* Scroll fluido da mobile */
+      padding-right: 6px;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
     }
     
-    /* Personalizzazione barra di scorrimento */
+    /* Personalizzazione barra di scorrimento visibile */
     .account-list::-webkit-scrollbar { width: 8px; }
     .account-list::-webkit-scrollbar-track { background: #0b0b0e; border-radius: 4px; }
     .account-list::-webkit-scrollbar-thumb { background: #9333ea; border-radius: 4px; }
+    .account-list::-webkit-scrollbar-thumb:hover { background: #a855f7; }
 
-    .account-item { background: #0b0b0e; border: 1px solid #272736; padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
+    .account-item { background: #0b0b0e; border: 1px solid #272736; padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
     .account-info { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
     .giveaway-controls { display: flex; gap: 6px; align-items: center; background: #16161e; padding: 8px; border-radius: 6px; flex-wrap: wrap; }
     .giveaway-controls input { width: 80px; padding: 6px; background: #0b0b0e; border: 1px solid #272736; border-radius: 4px; color: white; font-size: 12px; }
@@ -128,7 +131,7 @@
         <input type="text" id="searchInput" class="search-input" placeholder="🔍 Cerca giocatore per Nickname..." oninput="renderAccountList()">
       </div>
 
-      <!-- LISTA UTENTI CON SCROLL -->
+      <!-- LISTA UTENTI CON SCROLL ROTELLINA -->
       <div class="account-list" id="accountListContainer"></div>
     </div>
   </div>
@@ -163,7 +166,6 @@
     document.getElementById('coinDisplay').textContent = (users[currentUser].coins || 0).toLocaleString();
     document.getElementById('platabuxDisplay').textContent = (users[currentUser].platabux || 0).toLocaleString();
 
-    // Mostra il pulsante solo all'admin
     if (currentUser === ADMIN_NAME) {
       document.getElementById('adminBtn').style.display = "inline-block";
     }
@@ -199,10 +201,8 @@
     const container = document.getElementById('accountListContainer');
     const filterText = document.getElementById('searchInput').value.toLowerCase().trim();
     
-    // Mantiene lo scorrimento corrente prima di aggiornare la lista
     const currentScrollTop = container.scrollTop;
 
-    // Salva i valori digitati negli input per non azzerarli col refresh
     const currentAmounts = {};
     document.querySelectorAll('.giveaway-controls input').forEach(inp => {
       currentAmounts[inp.id] = inp.value;
@@ -245,7 +245,6 @@
       container.appendChild(item);
     });
 
-    // Ripristina la posizione dello scroll dopo l'aggiornamento
     container.scrollTop = currentScrollTop;
   }
 
