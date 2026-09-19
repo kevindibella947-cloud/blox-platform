@@ -3,94 +3,225 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Platform — Dashboard Hub</title>
+  <title>Blox Platform - Hub</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background-color: #0b0b0e; color: #ffffff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-    
-    header { height: 60px; background-color: #16161e; border-bottom: 1px solid #272736; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 10; }
-    .brand { font-weight: 800; font-size: 20px; background: linear-gradient(135deg, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .user-info { display: flex; align-items: center; gap: 15px; }
-    .coin-badge { background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; color: #eab308; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 14px; }
-    .user-badge { background-color: #272736; padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; color: #93c5fd; }
-    .btn-logout { background-color: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; }
-    
-    main { flex: 1; position: relative; background-color: #0b0b0e; padding: 30px; display: flex; flex-direction: column; align-items: center; }
-    
-    /* SCHEDA DEL GIOCO */
-    .game-grid { display: flex; gap: 20px; width: 100%; max-width: 900px; justify-content: center; }
-    .game-card { background: #16161e; border: 1px solid #272736; border-radius: 12px; width: 300px; padding: 20px; text-align: center; transition: transform 0.2s; }
-    .game-card:hover { border-color: #a855f7; transform: translateY(-5px); }
-    .game-card h3 { color: #ffd23f; margin-bottom: 10px; font-size: 20px; }
-    .game-card p { font-size: 13px; color: #8a94a6; margin-bottom: 20px; }
-    .btn-play { background: #22c55e; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; font-size: 15px; }
-    .btn-play:hover { background: #16a34a; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0b0b0e; color: white; min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* IFRAME PER GIOCARE (Nascosto all'inizio) */
-    #gameContainer { display: none; width: 100%; height: 100%; position: absolute; inset: 0; background: #000; }
-    iframe { width: 100%; height: 100%; border: none; }
-    .btn-close-game { position: absolute; top: 15px; right: 15px; background: rgba(239, 68, 68, 0.8); color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; z-index: 20; }
+    /* BARRA SUPERIORE (NAVBAR) */
+    header { background: #16161e; border-bottom: 1px solid #272736; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 20px; font-weight: bold; color: #a855f7; display: flex; align-items: center; gap: 8px; }
+    
+    .stats-bar { display: flex; align-items: center; gap: 15px; }
+    .stat-card { background: #0b0b0e; border: 1px solid #272736; padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: bold; }
+    .coins { color: #eab308; }
+    .platabux { color: #3b82f6; }
+    
+    .user-info { display: flex; align-items: center; gap: 10px; }
+    .btn-admin { background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; display: none; }
+    .btn-logout { background: #ef4444; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+
+    /* CONTENUTO PRINCIPALE HUB */
+    main { flex: 1; padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .welcome-box { background: linear-gradient(135deg, rgba(147,51,234,0.15), rgba(59,130,246,0.15)); border: 1px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 30px; }
+    .welcome-box h1 { font-size: 24px; color: #a855f7; margin-bottom: 5px; }
+    .welcome-box p { color: #9aa4b8; font-size: 14px; }
+
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .game-card { background: #16161e; border: 1px solid #272736; border-radius: 12px; overflow: hidden; transition: transform 0.2s, border-color 0.2s; }
+    .game-card:hover { transform: translateY(-4px); border-color: #a855f7; }
+    .game-thumb { width: 100%; height: 160px; background: #272736; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+    .game-body { padding: 15px; }
+    .game-title { font-size: 18px; margin-bottom: 8px; color: white; }
+    .game-desc { font-size: 12px; color: #9aa4b8; margin-bottom: 15px; }
+    .btn-play { width: 100%; padding: 10px; background: #22c55e; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
+
+    /* MODALE SUPERVISIONE & GIVEAWAY ADMIN */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; }
+    .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 95%; max-width: 550px; padding: 20px; max-height: 85vh; display: flex; flex-direction: column; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #272736; padding-bottom: 10px; }
+    .modal-header h3 { color: #a855f7; font-size: 18px; }
+    .btn-close { background: none; border: none; color: #ef4444; font-size: 18px; font-weight: bold; cursor: pointer; }
+    
+    .account-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 5px; }
+    .account-item { background: #0b0b0e; border: 1px solid #272736; padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
+    .account-info { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+    .giveaway-controls { display: flex; gap: 6px; align-items: center; background: #16161e; padding: 8px; border-radius: 6px; }
+    .giveaway-controls input { width: 80px; padding: 6px; background: #0b0b0e; border: 1px solid #272736; border-radius: 4px; color: white; font-size: 12px; }
+    .btn-give { padding: 6px 10px; border: none; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
+    .btn-give-coin { background: #eab308; color: black; }
+    .btn-give-pbux { background: #3b82f6; color: white; }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="brand">BLOX PLATFORM</div>
+    <div class="logo">🎮 BLOX PLATFORM</div>
+    
+    <div class="stats-bar">
+      <div class="stat-card coins" title="Monete guadagnate in-game">
+        🪙 <span id="coinDisplay">0</span>
+      </div>
+      <div class="stat-card platabux" title="Platabux VIP">
+        💎 <span id="platabuxDisplay">0</span>
+      </div>
+    </div>
+
     <div class="user-info">
-      <div class="coin-badge">🪙 Monete: <span id="coinDisplay">100</span></div>
-      <div class="user-badge" id="usernameDisplay">Giocatore</div>
+      <button class="btn-admin" id="adminBtn" onclick="apriSupervisione()">👑 Pannello Admin</button>
+      <span id="usernameDisplay" style="font-size: 14px; font-weight: bold;">-</span>
       <button class="btn-logout" onclick="logout()">Esci</button>
     </div>
   </header>
 
   <main>
-    <h2 style="margin-bottom: 25px; font-size: 24px;">Scegli un Gioco</h2>
-    
-    <!-- CATALOGO GIOCHI -->
-    <div class="game-grid" id="catalog">
-      <div class="game-card">
-        <h3>Blocky Arena</h3>
-        <p>Combatti contro il rivale 3D, fai combo e guadagna monete!</p>
-        <button class="btn-play" onclick="apriGioco()">GIOCA ORA</button>
-      </div>
+    <div class="welcome-box">
+      <h1>Bentornato, <span id="welcomeUser">-</span>! 👋</h1>
+      <p>Scegli un'esperienza dalla libreria o gestisci i tuoi premi e la tua community.</p>
     </div>
 
-    <!-- SCHERMO DI GIOCO -->
-    <div id="gameContainer">
-      <button class="btn-close-game" onclick="chiudiGioco()">❌ Torna all'Hub</button>
-      <iframe id="gameFrame" src="about:blank"></iframe>
+    <h2 style="margin-bottom: 15px; font-size: 20px;">🕹️ Esperienze Disponibili</h2>
+    <div class="games-grid">
+      
+      <div class="game-card">
+        <div class="game-thumb">⚔️</div>
+        <div class="game-body">
+          <div class="game-title">Blocky Arena 3D</div>
+          <div class="game-desc">Combatti nell'arena, accumula combo e guadagna monete gratis!</div>
+          <button class="btn-play" onclick="alert('Lancio di Blocky Arena 3D...')">GIOCA ORA</button>
+        </div>
+      </div>
+
     </div>
   </main>
 
-  <script>
-    let currentUser = localStorage.getItem('bloxi_session') || 'Giocatore';
+  <!-- MODALE SUPERVISIONE & RICARICA GIVEAWAY (ADMIN) -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>👑 Pannello Controllo & Ricariche Giveaway</h3>
+        <button class="btn-close" onclick="chiudiSupervisione()">✕</button>
+      </div>
+      <div class="account-list" id="accountListContainer"></div>
+    </div>
+  </div>
+
+<script>
+  const ADMIN_NAME = "huggy_huggy223";
+  const SECRET_PIN = "947947";
+  let currentUser = localStorage.getItem('bloxi_session');
+
+  // CONTROLLO SESSIONE
+  if (!currentUser) {
+    window.location.href = "./index.html";
+  }
+
+  // AGGIORNA E MOSTRA I DATI
+  function caricaDatiUtente() {
     let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
-    let userData = users[currentUser] || { coins: 100 };
+    
+    // Se l'utente corrente non esiste nel DB lo reindirizza
+    if (!users[currentUser]) {
+      logout();
+      return;
+    }
+
+    // Imposta valori predefiniti per Platabux se mancanti
+    if (users[currentUser].platabux === undefined) {
+      users[currentUser].platabux = currentUser === ADMIN_NAME ? 999999 : 0;
+      localStorage.setItem('bloxi_users', JSON.stringify(users));
+    }
 
     document.getElementById('usernameDisplay').textContent = currentUser;
-    document.getElementById('coinDisplay').textContent = userData.coins;
+    document.getElementById('welcomeUser').textContent = currentUser;
+    document.getElementById('coinDisplay').textContent = (users[currentUser].coins || 0).toLocaleString();
+    document.getElementById('platabuxDisplay').textContent = (users[currentUser].platabux || 0).toLocaleString();
 
-    function apriGioco() {
-      document.getElementById('gameFrame').src = "game.html";
-      document.getElementById('gameContainer').style.display = "block";
+    // Mostra il pulsante Admin solo se si è loggati come huggy_huggy223
+    if (currentUser === ADMIN_NAME) {
+      document.getElementById('adminBtn').style.display = "inline-block";
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('bloxi_session');
+    window.location.href = "./index.html";
+  }
+
+  // GESTIONE PANNELLO ADMIN & GIVEAWAY
+  function apriSupervisione() {
+    const pinVerifica = prompt("Inserisci la chiave segreta Admin:");
+    if (pinVerifica !== SECRET_PIN) {
+      alert("Accesso Negato: PIN Errato!");
+      return;
     }
 
-    function chiudiGioco() {
-      document.getElementById('gameFrame').src = "about:blank";
-      document.getElementById('gameContainer').style.display = "none";
-    }
+    renderAccountList();
+    document.getElementById('adminModal').style.display = "flex";
+  }
 
-    // Ricezione Monete dal Gioco
-    window.addEventListener('message', function(event) {
-      if (event.data && event.data.type === 'UPDATE_COINS') {
-        document.getElementById('coinDisplay').textContent = event.data.coins;
-      }
+  function renderAccountList() {
+    const container = document.getElementById('accountListContainer');
+    container.innerHTML = "";
+    
+    let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
+    
+    Object.keys(users).forEach(u => {
+      const item = document.createElement('div');
+      item.className = "account-item";
+      const isAdmin = u === ADMIN_NAME;
+      
+      item.innerHTML = `
+        <div class="account-info">
+          <div>
+            <strong>${u}</strong> ${isAdmin ? '<span style="background:#9333ea; font-size:10px; padding:2px 6px; border-radius:4px;">ADMIN</span>' : ''}
+            <div style="font-size:11px; color:#8a94a6;">Pass: ${users[u].password}</div>
+          </div>
+          <div>
+            <span style="color:#eab308; font-weight:bold; margin-right:8px;">🪙 ${(users[u].coins || 0).toLocaleString()}</span>
+            <span style="color:#3b82f6; font-weight:bold;">💎 ${(users[u].platabux || 0).toLocaleString()}</span>
+          </div>
+        </div>
+
+        <!-- GENERATORE DI RICARICHE E GIVEAWAY -->
+        <div class="giveaway-controls">
+          <input type="number" id="amount_${u}" placeholder="Quantità..." value="1000">
+          <button class="btn-give btn-give-coin" onclick="regalaValuta('${u}', 'coins')">+🪙 Regala Monete</button>
+          <button class="btn-give btn-give-pbux" onclick="regalaValuta('${u}', 'platabux')">+💎 Regala Platabux</button>
+        </div>
+      `;
+      container.appendChild(item);
     });
+  }
 
-    function logout() {
-      localStorage.removeItem('bloxi_session');
-      window.location.href = "index.html";
+  function regalaValuta(targetUser, tipoValuta) {
+    const amountInput = document.getElementById(`amount_${targetUser}`);
+    const val = parseInt(amountInput.value);
+
+    if (isNaN(val) || val <= 0) {
+      alert("Inserisci un importo valido!");
+      return;
     }
-  </script>
+
+    let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
+    if (!users[targetUser]) return;
+
+    users[targetUser][tipoValuta] = (users[targetUser][tipoValuta] || 0) + val;
+    localStorage.setItem('bloxi_users', JSON.stringify(users));
+
+    alert(`Accreditati con successo ${val} ${tipoValuta === 'coins' ? 'Monete 🪙' : 'Platabux 💎'} a ${targetUser}!`);
+    
+    caricaDatiUtente();
+    renderAccountList();
+  }
+
+  function chiudiSupervisione() {
+    document.getElementById('adminModal').style.display = "none";
+  }
+
+  // AVVIO ALLA CARICA DELLA PAGINA
+  caricaDatiUtente();
+</script>
+
 </body>
 </html>
