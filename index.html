@@ -3,124 +3,207 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Platform - Login</title>
+  <title>Blox Platform - Cloud Sincronizzata</title>
+  
+  <!-- SDK Firebase Compatibili per Browser -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: #0b0b0e; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; position: relative; overflow: hidden; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0b0e; color: white; min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* CARD DI LOGIN */
-    .card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 2; }
-    h2 { margin-bottom: 8px; color: #a855f7; font-size: 26px; }
+    /* NAVBAR */
+    header { background: #16161e; border-bottom: 1px solid #272736; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 20px; font-weight: bold; color: #a855f7; display: flex; align-items: center; gap: 8px; }
+    .stats-bar { display: flex; align-items: center; gap: 15px; }
+    .stat-card { background: #0b0b0e; border: 1px solid #272736; padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: bold; }
+    .coins { color: #eab308; }
+    .platabux { color: #3b82f6; }
+    .user-info { display: flex; align-items: center; gap: 10px; }
+    .btn-admin { background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; display: none; }
+    .btn-logout { background: #ef4444; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+
+    /* MAIN */
+    main { flex: 1; padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .auth-card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 100%; max-width: 380px; margin: 40px auto; text-align: center; }
+    h2 { margin-bottom: 8px; color: #a855f7; }
     p.subtitle { font-size: 13px; color: #9aa4b8; margin-bottom: 20px; }
     .input-group { text-align: left; margin-bottom: 14px; }
-    label { display: block; font-size: 11px; color: #a855f7; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+    label { display: block; font-size: 11px; color: #a855f7; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
     input { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; font-size: 14px; outline: none; }
     input:focus { border-color: #a855f7; }
-    
-    .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; transition: opacity 0.2s; }
-    .btn-main:hover { opacity: 0.9; }
-
-    .switch-mode { margin-top: 20px; font-size: 13px; color: #9aa4b8; }
+    .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; }
+    .switch-mode { margin-top: 15px; font-size: 13px; color: #9aa4b8; }
     .switch-link { color: #3b82f6; font-weight: bold; cursor: pointer; text-decoration: underline; margin-left: 4px; }
-
     #msg { font-size: 13px; margin-top: 15px; display: none; padding: 8px; border-radius: 6px; }
     .error { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
     .success { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
 
-    /* CAPTCHA MODALE PER ADMIN */
-    .captcha-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-    }
-    .captcha-card {
-      background: #16161e;
-      border: 2px solid #eab308;
-      padding: 25px;
-      border-radius: 12px;
-      width: 320px;
-      text-align: center;
-    }
-    .captcha-card h3 { color: #eab308; margin-bottom: 10px; }
-    .captcha-card p { font-size: 13px; color: #9aa4b8; margin-bottom: 15px; }
+    /* HUB APPS */
+    .hub-view { display: none; }
+    .welcome-box { background: linear-gradient(135deg, rgba(147,51,234,0.15), rgba(59,130,246,0.15)); border: 1px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 30px; }
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .game-card { background: #16161e; border: 1px solid #272736; border-radius: 12px; overflow: hidden; }
+    .game-thumb { width: 100%; height: 160px; background: #272736; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+    .game-body { padding: 15px; }
+    .btn-play { width: 100%; padding: 10px; background: #22c55e; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
+    /* MODALE ADMIN */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; padding: 15px; }
+    .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 580px; height: 80vh; max-height: 600px; padding: 20px; display: flex; flex-direction: column; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #272736; padding-bottom: 10px; }
+    .btn-close { background: none; border: none; color: #ef4444; font-size: 18px; font-weight: bold; cursor: pointer; }
+    .search-box { margin-bottom: 12px; }
+    .account-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 6px; }
+    .account-item { background: #0b0b0e; border: 1px solid #272736; padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
+    .giveaway-controls { display: flex; gap: 6px; align-items: center; background: #16161e; padding: 8px; border-radius: 6px; flex-wrap: wrap; }
+    .giveaway-controls input { width: 80px; padding: 6px; background: #0b0b0e; border: 1px solid #272736; border-radius: 4px; color: white; font-size: 12px; }
+    .btn-give { padding: 6px 10px; border: none; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; flex: 1; }
+    .btn-give-coin { background: #eab308; color: black; }
+    .btn-give-pbux { background: #3b82f6; color: white; }
+
+    /* STATUS BADGE */
+    .status-badge { position: fixed; bottom: 10px; right: 10px; background: #16161e; border: 1px solid #272736; padding: 8px 12px; border-radius: 20px; font-size: 11px; display: flex; align-items: center; gap: 6px; z-index: 200; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; }
+    .status-dot.online { background: #22c55e; }
   </style>
 </head>
 <body>
 
-  <!-- CARD LOGIN / REGISTRAZIONE -->
-  <div class="card">
-    <h2 id="title">BLOX PLATFORM</h2>
-    <p class="subtitle" id="subtitle">Inserisci le tue credenziali per accedere</p>
-    
-    <div class="input-group">
-      <label for="username">Nickname</label>
-      <input type="text" id="username" placeholder="Inserisci nickname...">
+  <header>
+    <div class="logo">🎮 BLOX PLATFORM <span style="font-size:10px; background:#3b82f6; color:white; padding:2px 6px; border-radius:4px;">CLOUD</span></div>
+    <div class="stats-bar" id="statsHeader" style="display: none;">
+      <div class="stat-card coins">🪙 <span id="coinDisplay">0</span></div>
+      <div class="stat-card platabux">💎 <span id="platabuxDisplay">0</span></div>
+    </div>
+    <div class="user-info" id="userHeader" style="display: none;">
+      <button class="btn-admin" id="adminBtn" onclick="apriSupervisione()">👑 Pannello Admin</button>
+      <span id="usernameDisplay" style="font-size: 14px; font-weight: bold;">-</span>
+      <button class="btn-logout" onclick="logout()">Esci</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- VISTA LOGIN / REGISTRAZIONE -->
+    <div class="auth-card" id="authView">
+      <h2 id="title">BLOX PLATFORM</h2>
+      <p class="subtitle" id="subtitle">Inserisci le credenziali per accedere</p>
+      
+      <div class="input-group">
+        <label>Nickname</label>
+        <input type="text" id="username" placeholder="Inserisci nickname...">
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Inserisci password...">
+      </div>
+
+      <button class="btn-main" id="submitBtn" onclick="inviaForm()">ACCEDI</button>
+
+      <div class="switch-mode" id="switchText">
+        Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>
+      </div>
+      <div id="msg"></div>
     </div>
 
-    <div class="input-group">
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Inserisci password...">
+    <!-- VISTA HUB GIOCHI -->
+    <div class="hub-view" id="hubView">
+      <div class="welcome-box">
+        <h1 style="color:#a855f7; font-size:24px;">Bentornato, <span id="welcomeUser">-</span>! 👋</h1>
+        <p style="color:#9aa4b8; font-size:14px; margin-top:5px;">La tua piattaforma è collegata direttamente al Cloud. Tutti i nuovi giocatori appariranno subito nel tuo Pannello Admin!</p>
+      </div>
+
+      <h2 style="margin-bottom: 15px; font-size: 20px;">🕹️ Esperienze Disponibili</h2>
+      <div class="games-grid">
+        <div class="game-card">
+          <div class="game-thumb">⚔️</div>
+          <div class="game-body">
+            <h3 style="font-size: 18px; margin-bottom: 5px;">Blocky Arena 3D</h3>
+            <p style="font-size: 12px; color: #9aa4b8;">Combatti e guadagna monete e Platabux in tempo reale!</p>
+            <button class="btn-play" onclick="alert('Avvio Blocky Arena 3D...')">GIOCA ORA</button>
+          </div>
+        </div>
+      </div>
     </div>
+  </main>
 
-    <button class="btn-main" id="submitBtn" onclick="inviaForm()">ACCEDI</button>
-
-    <div class="switch-mode" id="switchText">
-      Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>
+  <!-- MODALE ADMIN -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 style="color:#a855f7;">👑 Controllo Account Cloud & Donazioni</h3>
+        <button class="btn-close" onclick="chiudiSupervisione()">✕</button>
+      </div>
+      <div class="search-box">
+        <input type="text" id="searchInput" style="width:100%; padding:10px; background:#0b0b0e; border:1px solid #a855f7; border-radius:6px; color:white;" placeholder="🔍 Cerca giocatore per Nickname..." oninput="renderAccountList()">
+      </div>
+      <div class="account-list" id="accountListContainer"></div>
     </div>
-
-    <div id="msg"></div>
   </div>
 
-  <!-- MODALE CAPTCHA PER ADMIN -->
-  <div class="captcha-overlay" id="captchaModal">
-    <div class="captcha-card">
-      <h3>🤖 CAPTCHA ADMIN</h3>
-      <p>Inserisci il codice segreto di verifica per procedere:</p>
-      <input type="password" id="captchaInput" placeholder="Inserisci codice...">
-      <button class="btn-main" style="background: #eab308; color: #000; margin-top: 15px;" onclick="verificaCaptcha()">CONFERMA CODICE</button>
-      <div id="captchaError" style="color: #ef4444; font-size: 12px; margin-top: 10px; display: none;">Codice Errato!</div>
-    </div>
+  <div class="status-badge">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Connessione Cloud in corso...</span>
   </div>
 
 <script>
-  let isLoginMode = true;
+  // CONFIGURAZIONE FIREBASE INTEGRATA
+  const firebaseConfig = {
+    apiKey: "AIzaSyB7n06YFbklzSH-Q-4mCVffXnnhcDaIbCI",
+    authDomain: "blox-platform-54c86.firebaseapp.com",
+    databaseURL: "https://blox-platform-54c86-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "blox-platform-54c86",
+    storageBucket: "blox-platform-54c86.firebasestorage.app",
+    messagingSenderId: "1070253033615",
+    appId: "1:1070253033615:web:7e69b2b7234b19f5c348fa"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const dbRef = firebase.database().ref('users');
+
   const ADMIN_NAME = "huggy_huggy223";
   const ADMIN_PASS = "Kevindibella18";
   const SECRET_PIN = "947947";
+  
+  let isLoginMode = true;
+  let currentUser = localStorage.getItem('bloxi_session');
+  let cachedAccounts = {};
 
-  // INIZIALIZZA L'ACCOUNT ADMIN CON LA TUA PASSWORD E I PLATABUX
-  (function initAdmin() {
-    let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
-    users[ADMIN_NAME] = {
-      password: ADMIN_PASS,
-      coins: 999999,
-      platabux: 999999,
-      role: "admin"
-    };
-    localStorage.setItem('bloxi_users', JSON.stringify(users));
-  })();
+  // ASCOLTO CLOUD IN TEMPO REALE
+  dbRef.on('value', (snapshot) => {
+    cachedAccounts = snapshot.val() || {};
+    
+    // Crea l'account Admin nel Cloud se non esiste ancora
+    if (!cachedAccounts[ADMIN_NAME]) {
+      dbRef.child(ADMIN_NAME).set({
+        password: ADMIN_PASS,
+        coins: 999999,
+        platabux: 999999,
+        role: "admin"
+      });
+    }
+
+    document.getElementById('statusDot').className = "status-dot online";
+    document.getElementById('statusText').textContent = "Cloud Connesso";
+
+    caricaInterfaccia();
+    if (document.getElementById('adminModal').style.display === 'flex') {
+      renderAccountList();
+    }
+  }, (error) => {
+    console.error(error);
+    document.getElementById('statusDot').className = "status-dot";
+    document.getElementById('statusText').textContent = "Errore Cloud (Controlla le Regole)";
+  });
 
   function cambiaModalita() {
     isLoginMode = !isLoginMode;
-    const subtitle = document.getElementById('subtitle');
-    const submitBtn = document.getElementById('submitBtn');
-    const switchText = document.getElementById('switchText');
-    const msgEl = document.getElementById('msg');
-    msgEl.style.display = "none";
-
-    if (isLoginMode) {
-      subtitle.textContent = "Inserisci le tue credenziali per accedere";
-      submitBtn.textContent = "ACCEDI";
-      switchText.innerHTML = 'Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>';
-    } else {
-      subtitle.textContent = "Crea un nuovo account per iniziare";
-      submitBtn.textContent = "REGISTRATI";
-      switchText.innerHTML = 'Hai già un account? <span class="switch-link" onclick="cambiaModalita()">Accedi</span>';
-    }
+    document.getElementById('subtitle').textContent = isLoginMode ? "Inserisci le credenziali per accedere" : "Crea un nuovo account per iniziare";
+    document.getElementById('submitBtn').textContent = isLoginMode ? "ACCEDI" : "REGISTRATI";
+    document.getElementById('switchText').innerHTML = isLoginMode ? 
+      'Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>' : 
+      'Hai già un account? <span class="switch-link" onclick="cambiaModalita()">Accedi</span>';
   }
 
   function mostraMessaggio(testo, tipo) {
@@ -133,60 +216,141 @@
   function inviaForm() {
     const user = document.getElementById('username').value.trim();
     const pass = document.getElementById('password').value.trim();
-
-    if (!user || !pass) {
-      mostraMessaggio("Inserisci sia Nickname che Password!", "error");
-      return;
-    }
-
-    let users = JSON.parse(localStorage.getItem('bloxi_users')) || {};
+    if (!user || !pass) return mostraMessaggio("Inserisci Nickname e Password!", "error");
 
     if (isLoginMode) {
-      if (!users[user]) {
-        mostraMessaggio("Utente non trovato! Clicca su Registrati.", "error");
-        return;
+      if (!cachedAccounts[user] || cachedAccounts[user].password !== pass) {
+        return mostraMessaggio("Credenziali errate!", "error");
       }
-      if (users[user].password !== pass) {
-        mostraMessaggio("Password errata!", "error");
-        return;
-      }
-
-      // SE È L'ACCOUNT ADMIN RICHIEDE IL CAPTCHA
       if (user === ADMIN_NAME) {
-        document.getElementById('captchaInput').value = "";
-        document.getElementById('captchaError').style.display = "none";
-        document.getElementById('captchaModal').style.display = "flex";
-      } else {
-        completaLogin(user);
+        const pin = prompt("Inserisci il PIN Admin:");
+        if (pin !== SECRET_PIN) return alert("PIN Errato!");
       }
-
-    } else {
-      if (users[user]) {
-        mostraMessaggio("Nickname già occupato!", "error");
-        return;
-      }
-
-      users[user] = { password: pass, coins: 100, platabux: 0 };
-      localStorage.setItem('bloxi_users', JSON.stringify(users));
       completaLogin(user);
-    }
-  }
-
-  function verificaCaptcha() {
-    const code = document.getElementById('captchaInput').value.trim();
-    if (code === SECRET_PIN) {
-      document.getElementById('captchaModal').style.display = "none";
-      completaLogin(ADMIN_NAME);
     } else {
-      document.getElementById('captchaError').style.display = "block";
+      if (cachedAccounts[user]) return mostraMessaggio("Nickname già occupato!", "error");
+      
+      // Registrazione diretta nel Cloud
+      dbRef.child(user).set({
+        password: pass,
+        coins: 100,
+        platabux: 0
+      }).then(() => {
+        completaLogin(user);
+      }).catch(err => {
+        mostraMessaggio("Errore durante il salvataggio!", "error");
+      });
     }
   }
 
   function completaLogin(user) {
     localStorage.setItem('bloxi_session', user);
-    mostraMessaggio("Accesso effettuato! Reindirizzamento...", "success");
-    setTimeout(() => { window.location.href = "./hub.html"; }, 600);
+    currentUser = user;
+    mostraMessaggio("Accesso effettuato...", "success");
+    setTimeout(() => { caricaInterfaccia(); }, 500);
   }
+
+  function caricaInterfaccia() {
+    if (!currentUser) {
+      document.getElementById('authView').style.display = "block";
+      document.getElementById('hubView').style.display = "none";
+      document.getElementById('statsHeader').style.display = "none";
+      document.getElementById('userHeader').style.display = "none";
+      return;
+    }
+
+    if (!cachedAccounts[currentUser]) { logout(); return; }
+
+    document.getElementById('authView').style.display = "none";
+    document.getElementById('hubView').style.display = "block";
+    document.getElementById('statsHeader').style.display = "flex";
+    document.getElementById('userHeader').style.display = "flex";
+
+    document.getElementById('usernameDisplay').textContent = currentUser;
+    document.getElementById('welcomeUser').textContent = currentUser;
+    document.getElementById('coinDisplay').textContent = (cachedAccounts[currentUser].coins || 0).toLocaleString();
+    document.getElementById('platabuxDisplay').textContent = (cachedAccounts[currentUser].platabux || 0).toLocaleString();
+
+    if (currentUser === ADMIN_NAME) {
+      document.getElementById('adminBtn').style.display = "inline-block";
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('bloxi_session');
+    currentUser = null;
+    caricaInterfaccia();
+  }
+
+  function apriSupervisione() {
+    const pinVerifica = prompt("Inserisci il PIN Admin:");
+    if (pinVerifica !== SECRET_PIN) return alert("PIN Errato!");
+
+    document.getElementById('searchInput').value = "";
+    renderAccountList();
+    document.getElementById('adminModal').style.display = "flex";
+  }
+
+  function renderAccountList() {
+    const container = document.getElementById('accountListContainer');
+    const filterText = document.getElementById('searchInput').value.toLowerCase().trim();
+    const currentScroll = container.scrollTop;
+
+    container.innerHTML = "";
+    const keys = Object.keys(cachedAccounts).filter(u => u.toLowerCase().includes(filterText));
+
+    if (keys.length === 0) {
+      container.innerHTML = `<div style="text-align:center; color:#8a94a6; padding:20px;">Nessun giocatore trovato</div>`;
+      return;
+    }
+
+    keys.forEach(u => {
+      const item = document.createElement('div');
+      item.className = "account-item";
+      item.innerHTML = `
+        <div style="display:flex; justify-content:space-between; font-size:13px;">
+          <div>
+            <strong>${u}</strong> ${u === ADMIN_NAME ? '<span style="background:#9333ea; font-size:10px; padding:2px 6px; border-radius:4px;">ADMIN</span>' : ''}
+            <div style="font-size:11px; color:#8a94a6;">Pass: ${cachedAccounts[u].password}</div>
+          </div>
+          <div>
+            <span style="color:#eab308; font-weight:bold; margin-right:8px;">🪙 ${(cachedAccounts[u].coins || 0).toLocaleString()}</span>
+            <span style="color:#3b82f6; font-weight:bold;">💎 ${(cachedAccounts[u].platabux || 0).toLocaleString()}</span>
+          </div>
+        </div>
+        <div class="giveaway-controls">
+          <input type="number" id="amt_${u}" value="1000">
+          <button class="btn-give btn-give-coin" onclick="regala('${u}', 'coins')">+🪙 Monete</button>
+          <button class="btn-give btn-give-pbux" onclick="regala('${u}', 'platabux')">+💎 Platabux</button>
+        </div>
+      `;
+      container.appendChild(item);
+    });
+
+    container.scrollTop = currentScroll;
+  }
+
+  function regala(targetUser, tipo) {
+    const val = parseInt(document.getElementById(`amt_${targetUser}`).value);
+    if (isNaN(val) || val <= 0) return alert("Quantità non valida!");
+
+    if (!cachedAccounts[targetUser]) return;
+
+    const nuovaQuantita = (cachedAccounts[targetUser][tipo] || 0) + val;
+
+    // Aggiornamento in tempo reale nel Cloud
+    dbRef.child(targetUser).child(tipo).set(nuovaQuantita)
+      .then(() => {
+        alert(`Accreditati ${val} ${tipo === 'coins' ? 'Monete 🪙' : 'Platabux 💎'} a ${targetUser}!`);
+      })
+      .catch(err => alert("Errore durante l'accredito!"));
+  }
+
+  function chiudiSupervisione() {
+    document.getElementById('adminModal').style.display = "none";
+  }
+
+  caricaInterfaccia();
 </script>
 
 </body>
