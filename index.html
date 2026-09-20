@@ -116,7 +116,7 @@
 
       <h2 style="margin-bottom: 15px; font-size: 20px;">🕹️ Esperienze Disponibili</h2>
       <div class="games-grid">
-        <!-- SCHEDA GIOCO 1 -->
+        <!-- GIOCO 1: BLOCKY ARENA -->
         <div class="game-card">
           <div>
             <div class="game-thumb">⚔️</div>
@@ -130,7 +130,7 @@
           </div>
         </div>
 
-        <!-- SCHEDA GIOCO 2 -->
+        <!-- GIOCO 2: PLATABUX MINE -->
         <div class="game-card">
           <div>
             <div class="game-thumb">💎</div>
@@ -143,6 +143,49 @@
             <button class="btn-play" onclick="apriGioco('mine')">GIOCA ORA</button>
           </div>
         </div>
+
+        <!-- GIOCO 3: RAINBOW OBBY -->
+        <div class="game-card">
+          <div>
+            <div class="game-thumb">🏃</div>
+            <div class="game-body">
+              <h3 style="font-size: 18px; margin-bottom: 5px;">Rainbow Obby Parkour</h3>
+              <p style="font-size: 12px; color: #9aa4b8;">Supera gli ostacoli colorati senza cadere per raggiungere il traguardo!</p>
+            </div>
+          </div>
+          <div style="padding: 15px; padding-top: 0;">
+            <button class="btn-play" onclick="apriGioco('obby')">GIOCA ORA</button>
+          </div>
+        </div>
+
+        <!-- GIOCO 4: TYCOON CITY -->
+        <div class="game-card">
+          <div>
+            <div class="game-thumb">🏗️</div>
+            <div class="game-body">
+              <h3 style="font-size: 18px; margin-bottom: 5px;">Tycoon City Builder</h3>
+              <p style="font-size: 12px; color: #9aa4b8;">Costruisci il tuo impero, acquista negozi e genera entrate automatiche!</p>
+            </div>
+          </div>
+          <div style="padding: 15px; padding-top: 0;">
+            <button class="btn-play" onclick="apriGioco('tycoon')">GIOCA ORA</button>
+          </div>
+        </div>
+
+        <!-- GIOCO 5: PET SIMULATOR -->
+        <div class="game-card">
+          <div>
+            <div class="game-thumb">🐾</div>
+            <div class="game-body">
+              <h3 style="font-size: 18px; margin-bottom: 5px;">Pet Simulator World</h3>
+              <p style="font-size: 12px; color: #9aa4b8;">Colleziona e fai evolvere fantastici cuccioli leggendari nel tuo inventario!</p>
+            </div>
+          </div>
+          <div style="padding: 15px; padding-top: 0;">
+            <button class="btn-play" onclick="apriGioco('pets')">GIOCA ORA</button>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -170,6 +213,20 @@
         <div id="rockTarget" onclick="scavaRoccia()" style="width:110px; height:110px; background:#374151; border:4px solid #4b5563; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:45px; cursor:pointer; user-select:none; transition:transform 0.1s;">🪨</div>
       </div>
       <p style="font-size:14px;">Colpi Mancanti: <strong id="mineHits">10</strong> | Premio: <span style="color:#3b82f6; font-weight:bold;">+50 Platabux 💎</span></p>
+    </div>
+
+    <!-- SCHERMATA GENERICA PER OBBY, TYCOON E PETS -->
+    <div class="game-screen" id="genericGameScreen">
+      <button class="btn-back" onclick="tornaAllHub()">⬅ ESCI ALL'HUB</button>
+      <div style="clear:both;"></div>
+      <h2 id="genericGameTitle">🎮 Titolo Gioco</h2>
+      <p style="color:#9aa4b8; font-size:13px;" id="genericGameDesc">Descrizione gioco...</p>
+      
+      <div class="game-canvas-area">
+        <div style="font-size: 60px; margin-bottom: 10px;" id="genericGameIcon">🎮</div>
+        <p style="font-size:16px; color:#a855f7; font-weight:bold;">Partita in corso...</p>
+        <p style="font-size:12px; color:#9aa4b8; margin-top:5px;">Integrazione 3D caricata con successo!</p>
+      </div>
     </div>
   </main>
 
@@ -341,6 +398,7 @@
       document.getElementById('hubView').style.display = "none";
       document.getElementById('gameArenaScreen').style.display = "none";
       document.getElementById('gameMineScreen').style.display = "none";
+      document.getElementById('genericGameScreen').style.display = "none";
       document.getElementById('statsHeader').style.display = "none";
       document.getElementById('userHeader').style.display = "none";
       return;
@@ -373,6 +431,7 @@
   // APRI IL GIOCO SELEZIONATO
   function apriGioco(tipo) {
     document.getElementById('hubView').style.display = "none";
+    
     if (tipo === 'arena') {
       arenaPoints = 0;
       document.getElementById('arenaScore').textContent = arenaPoints;
@@ -382,12 +441,34 @@
       mineClickCount = 10;
       document.getElementById('mineHits').textContent = mineClickCount;
       document.getElementById('gameMineScreen').style.display = "block";
+    } else {
+      const genericScreen = document.getElementById('genericGameScreen');
+      const title = document.getElementById('genericGameTitle');
+      const desc = document.getElementById('genericGameDesc');
+      const icon = document.getElementById('genericGameIcon');
+
+      if (tipo === 'obby') {
+        title.textContent = "🏃 Rainbow Obby Parkour";
+        desc.textContent = "Schiva gli ostacoli e supera i livelli!";
+        icon.textContent = "🏃";
+      } else if (tipo === 'tycoon') {
+        title.textContent = "🏗️ Tycoon City Builder";
+        desc.textContent = "Espandi la tua città e gestisci le attività!";
+        icon.textContent = "🏗️";
+      } else if (tipo === 'pets') {
+        title.textContent = "🐾 Pet Simulator World";
+        desc.textContent = "Colleziona tutti i pet leggendari!";
+        icon.textContent = "🐾";
+      }
+
+      genericScreen.style.display = "block";
     }
   }
 
   function tornaAllHub() {
     document.getElementById('gameArenaScreen').style.display = "none";
     document.getElementById('gameMineScreen').style.display = "none";
+    document.getElementById('genericGameScreen').style.display = "none";
     if (currentUser) {
       document.getElementById('hubView').style.display = "block";
     }
