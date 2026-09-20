@@ -10,7 +10,7 @@
 
     /* NAVBAR */
     header { background: #16161e; border-bottom: 1px solid #272736; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 20px; font-weight: bold; color: #a855f7; display: flex; align-items: center; gap: 8px; }
+    .logo { font-size: 20px; font-weight: bold; color: #a855f7; display: flex; align-items: center; gap: 8px; cursor: pointer; }
     .stats-bar { display: flex; align-items: center; gap: 15px; }
     .stat-card { background: #0b0b0e; border: 1px solid #272736; padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: bold; transition: transform 0.2s; }
     .stat-card.bump { transform: scale(1.15); }
@@ -47,6 +47,11 @@
     .game-body { padding: 15px; }
     .btn-play { width: 100%; padding: 12px; background: #22c55e; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 14px; }
 
+    /* SCHERMATE GIOCHI INTEGRATE */
+    .game-screen { display: none; background: #16161e; border: 1px solid #272736; border-radius: 12px; padding: 20px; text-align: center; }
+    .btn-back { background: #ef4444; border: none; color: white; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 15px; float: left; }
+    .game-canvas-area { width: 100%; height: 350px; background: #0b0b0e; border: 2px dashed #a855f7; border-radius: 8px; margin: 15px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+
     /* MODALE ADMIN & CAPTCHA POPUP */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; padding: 15px; }
     .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 600px; height: 80vh; max-height: 600px; padding: 20px; display: flex; flex-direction: column; }
@@ -66,7 +71,7 @@
 <body>
 
   <header>
-    <div class="logo">🎮 BLOX PLATFORM</div>
+    <div class="logo" onclick="tornaAllHub()">🎮 BLOX PLATFORM</div>
     <div class="stats-bar" id="statsHeader" style="display: none;">
       <div class="stat-card coins" id="cardCoin">🪙 <span id="coinDisplay">0</span></div>
       <div class="stat-card platabux" id="cardPbux">💎 <span id="platabuxDisplay">0</span></div>
@@ -106,37 +111,65 @@
     <div class="hub-view" id="hubView">
       <div class="welcome-box">
         <h1 style="color:#a855f7; font-size:24px;">Bentornato, <span id="welcomeUser">-</span>! 👋</h1>
-        <p style="color:#9aa4b8; font-size:14px; margin-top:5px;">Benvenuto su Blox Platform! Scegli un'esperienza e inizia a giocare.</p>
+        <p style="color:#9aa4b8; font-size:14px; margin-top:5px;">Benvenuto su Blox Platform! Scegli un'esperienza e inizia a giocare per vincere premi salvati sul tuo conto.</p>
       </div>
 
       <h2 style="margin-bottom: 15px; font-size: 20px;">🕹️ Esperienze Disponibili</h2>
       <div class="games-grid">
+        <!-- SCHEDA GIOCO 1 -->
         <div class="game-card">
           <div>
             <div class="game-thumb">⚔️</div>
             <div class="game-body">
               <h3 style="font-size: 18px; margin-bottom: 5px;">Blocky Arena 3D</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Combatti nell'arena e accumula vittorie!</p>
+              <p style="font-size: 12px; color: #9aa4b8;">Combatti nell'arena, sconfiggi i nemici e guadagni Monete 🪙 per ogni vittoria!</p>
             </div>
           </div>
           <div style="padding: 15px; padding-top: 0;">
-            <button class="btn-play" onclick="alert('Avvio Blocky Arena 3D...')">GIOCA ORA</button>
+            <button class="btn-play" onclick="apriGioco('arena')">GIOCA ORA</button>
           </div>
         </div>
 
+        <!-- SCHEDA GIOCO 2 -->
         <div class="game-card">
           <div>
             <div class="game-thumb">💎</div>
             <div class="game-body">
               <h3 style="font-size: 18px; margin-bottom: 5px;">Platabux Mine</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Scava nelle miniere per estrarre rari Platabux!</p>
+              <p style="font-size: 12px; color: #9aa4b8;">Scava nelle miniere per estrarre preziosi Platabux 💎 direttamente sul tuo account!</p>
             </div>
           </div>
           <div style="padding: 15px; padding-top: 0;">
-            <button class="btn-play" onclick="alert('Avvio Platabux Mine...')">GIOCA ORA</button>
+            <button class="btn-play" onclick="apriGioco('mine')">GIOCA ORA</button>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- SCHERMATA GIOCO 1: BLOCKY ARENA 3D -->
+    <div class="game-screen" id="gameArenaScreen">
+      <button class="btn-back" onclick="tornaAllHub()">⬅ ESCI ALL'HUB</button>
+      <div style="clear:both;"></div>
+      <h2>⚔️ Blocky Arena 3D</h2>
+      <p style="color:#9aa4b8; font-size:13px;">Elimina i bersagli nell'arena per vincere Monete!</p>
+      
+      <div class="game-canvas-area" id="arenaCanvas">
+        <div id="arenaTarget" onclick="colpisciArena()" style="width:70px; height:70px; background:#ef4444; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:30px; cursor:pointer; user-select:none; position:absolute; transition:all 0.1s;">👾</div>
+      </div>
+      <p style="font-size:14px;">Nemici Sconfitti: <strong id="arenaScore">0</strong>/5 | Premio: <span style="color:#eab308; font-weight:bold;">+250 Monete 🪙</span></p>
+    </div>
+
+    <!-- SCHERMATA GIOCO 2: PLATABUX MINE -->
+    <div class="game-screen" id="gameMineScreen">
+      <button class="btn-back" onclick="tornaAllHub()">⬅ ESCI ALL'HUB</button>
+      <div style="clear:both;"></div>
+      <h2>⛏️ Platabux Mine</h2>
+      <p style="color:#9aa4b8; font-size:13px;">Clicca sulla roccia per scavare ed estrarre Platabux!</p>
+      
+      <div class="game-canvas-area" id="mineCanvas">
+        <div id="rockTarget" onclick="scavaRoccia()" style="width:110px; height:110px; background:#374151; border:4px solid #4b5563; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:45px; cursor:pointer; user-select:none; transition:transform 0.1s;">🪨</div>
+      </div>
+      <p style="font-size:14px;">Colpi Mancanti: <strong id="mineHits">10</strong> | Premio: <span style="color:#3b82f6; font-weight:bold;">+50 Platabux 💎</span></p>
     </div>
   </main>
 
@@ -179,6 +212,10 @@
   let isLoginMode = true;
   let currentUser = localStorage.getItem('bloxi_session');
   let pendingUserLogin = null;
+
+  // VARIABILI DI GIOCO
+  let arenaPoints = 0;
+  let mineClickCount = 10;
 
   // FORMATTATORI NUMERI IN k, M, B, T
   function formattaNumero(num) {
@@ -302,6 +339,8 @@
     if (!currentUser) {
       document.getElementById('authView').style.display = "block";
       document.getElementById('hubView').style.display = "none";
+      document.getElementById('gameArenaScreen').style.display = "none";
+      document.getElementById('gameMineScreen').style.display = "none";
       document.getElementById('statsHeader').style.display = "none";
       document.getElementById('userHeader').style.display = "none";
       return;
@@ -311,7 +350,6 @@
     if (!db[currentUser]) { logout(); return; }
 
     document.getElementById('authView').style.display = "none";
-    document.getElementById('hubView').style.display = "block";
     document.getElementById('statsHeader').style.display = "flex";
     document.getElementById('userHeader').style.display = "flex";
 
@@ -329,6 +367,72 @@
     } else {
       document.getElementById('adminBtn').style.display = "none";
       document.getElementById('adminTagDisplay').style.display = "none";
+    }
+  }
+
+  // APRI IL GIOCO SELEZIONATO
+  function apriGioco(tipo) {
+    document.getElementById('hubView').style.display = "none";
+    if (tipo === 'arena') {
+      arenaPoints = 0;
+      document.getElementById('arenaScore').textContent = arenaPoints;
+      posizionaTargetArena();
+      document.getElementById('gameArenaScreen').style.display = "block";
+    } else if (tipo === 'mine') {
+      mineClickCount = 10;
+      document.getElementById('mineHits').textContent = mineClickCount;
+      document.getElementById('gameMineScreen').style.display = "block";
+    }
+  }
+
+  function tornaAllHub() {
+    document.getElementById('gameArenaScreen').style.display = "none";
+    document.getElementById('gameMineScreen').style.display = "none";
+    if (currentUser) {
+      document.getElementById('hubView').style.display = "block";
+    }
+  }
+
+  // LOGICA GIOCO BLOCKY ARENA 3D
+  function posizionaTargetArena() {
+    const target = document.getElementById('arenaTarget');
+    const maxX = 250;
+    const maxY = 200;
+    const randX = Math.floor(Math.random() * maxX) - 125;
+    const randY = Math.floor(Math.random() * maxY) - 100;
+    target.style.transform = `translate(${randX}px, ${randY}px)`;
+  }
+
+  function colpisciArena() {
+    arenaPoints++;
+    document.getElementById('arenaScore').textContent = arenaPoints;
+    if (arenaPoints >= 5) {
+      let db = getDB();
+      db[currentUser].coins = (db[currentUser].coins || 0) + 250;
+      saveDB(db);
+      caricaInterfaccia();
+      alert("🎉 Vittoria nell'Arena! Hai guadagnato 250 Monete 🪙!");
+      tornaAllHub();
+    } else {
+      posizionaTargetArena();
+    }
+  }
+
+  // LOGICA GIOCO PLATABUX MINE
+  function scavaRoccia() {
+    mineClickCount--;
+    document.getElementById('mineHits').textContent = mineClickCount;
+    const rock = document.getElementById('rockTarget');
+    rock.style.transform = "scale(0.9)";
+    setTimeout(() => rock.style.transform = "scale(1)", 100);
+
+    if (mineClickCount <= 0) {
+      let db = getDB();
+      db[currentUser].platabux = (db[currentUser].platabux || 0) + 50;
+      saveDB(db);
+      caricaInterfaccia();
+      alert("💎 Hai trovato la vena di Platabux! Hai guadagnato 50 Platabux 💎!");
+      tornaAllHub();
     }
   }
 
