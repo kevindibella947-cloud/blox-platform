@@ -122,7 +122,7 @@
           </div>
           <div style="padding: 15px; padding-top: 0;">
             <button class="btn-play" onclick="alert('Avvio Blocky Arena 3D...')">GIOCA ORA</button>
-            <button class="btn-earn" onclick="guadagnaMonete(100)">🪙 GUADAGNA 100 MONETE</button>
+            <button class="btn-earn" onclick="guadagnaMonete(1000)">🪙 GUADAGNA 1k MONETE</button>
           </div>
         </div>
 
@@ -136,7 +136,7 @@
           </div>
           <div style="padding: 15px; padding-top: 0;">
             <button class="btn-play" onclick="alert('Avvio Platabux Mine...')">GIOCA ORA</button>
-            <button class="btn-earn" style="background:#3b82f6; color:white;" onclick="guadagnaPlatabux(10)">💎 GUADAGNA 10 PLATABUX</button>
+            <button class="btn-earn" style="background:#3b82f6; color:white;" onclick="guadagnaPlatabux(500)">💎 GUADAGNA 500 PLATABUX</button>
           </div>
         </div>
       </div>
@@ -183,12 +183,34 @@
   let currentUser = localStorage.getItem('bloxi_session');
   let pendingUserLogin = null;
 
+  // FUNZIONE PER FORMATTARE I NUMERI CON LE LETTERE (1k, 100k, 1.5M, 2B, ecc.)
+  function formattaNumero(num) {
+    if (num === null || num === undefined) return "0";
+    if (num < 1000) return num.toString();
+
+    const simboli = [
+      { val: 1e12, lett: 'T' },
+      { val: 1e9, lett: 'B' },
+      { val: 1e6, lett: 'M' },
+      { val: 1e3, lett: 'k' }
+    ];
+
+    for (let i = 0; i < simboli.length; i++) {
+      if (num >= simboli[i].val) {
+        let res = (num / simboli[i].val).toFixed(1);
+        if (res.endsWith('.0')) res = res.slice(0, -2);
+        return res + simboli[i].lett;
+      }
+    }
+    return num.toString();
+  }
+
   // CARICAMENTO DATABASE LOCALE CON RIPRISTINO DATI
   function getDB() {
     let db = JSON.parse(localStorage.getItem('bloxi_platform_db')) || {};
     
     if (!db[OWNER_NAME]) {
-      db[OWNER_NAME] = { password: OWNER_PASS, coins: 5000, platabux: 500, role: "owner", captcha: OWNER_CAPTCHA };
+      db[OWNER_NAME] = { password: OWNER_PASS, coins: 500000, platabux: 15000, role: "owner", captcha: OWNER_CAPTCHA };
     } else {
       db[OWNER_NAME].password = OWNER_PASS;
       db[OWNER_NAME].captcha = OWNER_CAPTCHA;
@@ -196,7 +218,7 @@
     }
     
     if (!db[ADMIN_COUSIN]) {
-      db[ADMIN_COUSIN] = { password: ADMIN_COUSIN_PASS, coins: 1000, platabux: 100, role: "admin", captcha: ADMIN_COUSIN_CAPTCHA };
+      db[ADMIN_COUSIN] = { password: ADMIN_COUSIN_PASS, coins: 100000, platabux: 2500, role: "admin", captcha: ADMIN_COUSIN_CAPTCHA };
     } else {
       db[ADMIN_COUSIN].password = ADMIN_COUSIN_PASS;
       db[ADMIN_COUSIN].captcha = ADMIN_COUSIN_CAPTCHA;
@@ -299,9 +321,9 @@
     document.getElementById('usernameDisplay').textContent = currentUser;
     document.getElementById('welcomeUser').textContent = currentUser;
     
-    // Aggiornamento Saldi Live
-    document.getElementById('coinDisplay').textContent = (db[currentUser].coins || 0).toLocaleString();
-    document.getElementById('platabuxDisplay').textContent = (db[currentUser].platabux || 0).toLocaleString();
+    // Aggiornamento Saldi Formattati con le Lettere (k, M, B)
+    document.getElementById('coinDisplay').textContent = formattaNumero(db[currentUser].coins || 0);
+    document.getElementById('platabuxDisplay').textContent = formattaNumero(db[currentUser].platabux || 0);
 
     // Badge e Permessi Admin
     if (db[currentUser].role === "owner" || db[currentUser].role === "admin") {
@@ -313,7 +335,6 @@
     }
   }
 
-  // GUADAGNA MONETE NEI GIOCHI CON SALVATAGGIO
   function guadagnaMonete(quantita) {
     let db = getDB();
     if (!db[currentUser]) return;
@@ -325,7 +346,6 @@
     animazioneRisorse('cardCoin');
   }
 
-  // GUADAGNA PLATABUX NEI GIOCHI CON SALVATAGGIO
   function guadagnaPlatabux(quantita) {
     let db = getDB();
     if (!db[currentUser]) return;
@@ -390,8 +410,8 @@
             <div style="font-size:11px; color:#8a94a6;">Password: ${db[u].password}</div>
           </div>
           <div>
-            <span style="color:#eab308; font-weight:bold; margin-right:8px;">🪙 ${(db[u].coins || 0).toLocaleString()}</span>
-            <span style="color:#3b82f6; font-weight:bold;">💎 ${(db[u].platabux || 0).toLocaleString()}</span>
+            <span style="color:#eab308; font-weight:bold; margin-right:8px;">🪙 ${formattaNumero(db[u].coins || 0)}</span>
+            <span style="color:#3b82f6; font-weight:bold;">💎 ${formattaNumero(db[u].platabux || 0)}</span>
           </div>
         </div>
         ${giveawayControlsHTML}
@@ -400,7 +420,6 @@
     });
   }
 
-  // FUNZIONE PER DONARE RISORSE A QUASIASI UTENTE (COMPRESO Exegreen4999)
   function donare(targetUser, tipo) {
     const inputEl = document.getElementById(`amt_${targetUser}`);
     const val = parseInt(inputEl.value);
@@ -409,11 +428,10 @@
     let db = getDB();
     if (!db[targetUser]) return;
 
-    // AUMENTA E SALVA IL SALDO PER SEMPRE
     db[targetUser][tipo] = (db[targetUser][tipo] || 0) + val;
     saveDB(db);
 
-    alert(`Accreditati con successo ${val} ${tipo === 'coins' ? 'Monete 🪙' : 'Platabux 💎'} a ${targetUser}!`);
+    alert(`Accreditati con successo ${formattaNumero(val)} ${tipo === 'coins' ? 'Monete 🪙' : 'Platabux 💎'} a ${targetUser}!`);
     renderAccountList();
     caricaInterfaccia();
   }
@@ -422,7 +440,6 @@
     document.getElementById('adminModal').style.display = "none";
   }
 
-  // Sincronizzazione automatica del conto in background
   window.addEventListener('storage', () => {
     caricaInterfaccia();
   });
