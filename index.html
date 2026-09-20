@@ -3,449 +3,865 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blox Platform</title>
+  <title>PlataBush - Gaming & Rewards Platform</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0b0e; color: white; min-height: 100vh; display: flex; flex-direction: column; }
+    :root {
+      --bg-primary: #0a0e17;
+      --bg-secondary: #121824;
+      --bg-card: #1a2234;
+      --bg-card-hover: #222d42;
+      --accent-gold: #f39c12;
+      --accent-gold-light: #f1c40f;
+      --accent-blue: #00d2ff;
+      --accent-purple: #9b59b6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --success: #2ecc71;
+      --danger: #e74c3c;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
 
-    /* NAVBAR */
-    header { background: #16161e; border-bottom: 1px solid #272736; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 20px; font-weight: bold; color: #a855f7; display: flex; align-items: center; gap: 8px; }
-    .stats-bar { display: flex; align-items: center; gap: 15px; }
-    .stat-card { background: #0b0b0e; border: 1px solid #272736; padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: bold; transition: transform 0.2s; }
-    .stat-card.bump { transform: scale(1.15); }
-    .coins { color: #eab308; }
-    .platabux { color: #3b82f6; }
-    .user-info { display: flex; align-items: center; gap: 10px; }
-    .admin-badge { background: linear-gradient(135deg, #9333ea, #3b82f6); color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; }
-    .btn-admin { background: #9333ea; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
-    .btn-logout { background: #ef4444; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
 
-    /* MAIN CONTAINER */
-    main { flex: 1; padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; }
-    .auth-card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; margin: 40px auto; text-align: center; }
-    h2 { margin-bottom: 8px; color: #a855f7; }
-    p.subtitle { font-size: 13px; color: #9aa4b8; margin-bottom: 20px; }
-    .input-group { text-align: left; margin-bottom: 14px; }
-    label { display: block; font-size: 11px; color: #a855f7; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
-    input { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; font-size: 14px; outline: none; }
-    input:focus { border-color: #a855f7; }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
 
-    .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; }
-    .switch-mode { margin-top: 15px; font-size: 13px; color: #9aa4b8; }
-    .switch-link { color: #3b82f6; font-weight: bold; cursor: pointer; text-decoration: underline; margin-left: 4px; }
-    #msg { font-size: 13px; margin-top: 15px; display: none; padding: 8px; border-radius: 6px; }
-    .error { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
-    .success { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--bg-card-hover);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-gold);
+    }
 
-    /* HUB APPS */
-    .hub-view { display: none; }
-    .welcome-box { background: linear-gradient(135deg, rgba(147,51,234,0.15), rgba(59,130,246,0.15)); border: 1px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 30px; }
-    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .game-card { background: #16161e; border: 1px solid #272736; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
-    .game-thumb { width: 100%; height: 160px; background: #272736; display: flex; align-items: center; justify-content: center; font-size: 48px; }
-    .game-body { padding: 15px; }
-    .btn-play { width: 100%; padding: 10px; background: #22c55e; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
-    .btn-earn { width: 100%; padding: 10px; background: #eab308; border: none; border-radius: 6px; color: black; font-weight: bold; cursor: pointer; margin-top: 6px; }
+    /* Navigation Bar */
+    .navbar {
+      background-color: rgba(18, 24, 36, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-    /* MODALE ADMIN & CAPTCHA POPUP */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; padding: 15px; }
-    .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 600px; height: 80vh; max-height: 600px; padding: 20px; display: flex; flex-direction: column; }
-    .modal-captcha { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 360px; padding: 25px; text-align: center; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #272736; padding-bottom: 10px; }
-    .btn-close { background: none; border: none; color: #ef4444; font-size: 18px; font-weight: bold; cursor: pointer; }
-    .search-box { margin-bottom: 12px; }
-    .account-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 6px; }
-    .account-item { background: #0b0b0e; border: 1px solid #272736; padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
-    .giveaway-controls { display: flex; gap: 6px; align-items: center; background: #16161e; padding: 8px; border-radius: 6px; flex-wrap: wrap; }
-    .giveaway-controls input { width: 90px; padding: 6px; background: #0b0b0e; border: 1px solid #272736; border-radius: 4px; color: white; font-size: 12px; }
-    .btn-give { padding: 6px 10px; border: none; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; flex: 1; }
-    .btn-give-coin { background: #eab308; color: black; }
-    .btn-give-pbux { background: #3b82f6; color: white; }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    .brand i {
+      color: var(--accent-gold);
+      font-size: 1.8rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-btn:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--accent-gold), #d35400);
+      color: #fff;
+      border: none;
+    }
+
+    /* Currency Stats Container */
+    .user-stats {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      background: rgba(10, 14, 23, 0.6);
+      padding: 6px 16px;
+      border-radius: 30px;
+      border: 1px solid var(--border-color);
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .stat-item.coins {
+      color: var(--accent-gold-light);
+    }
+
+    .stat-item.platabux {
+      color: var(--accent-blue);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* Views Logic */
+    .view-section {
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Section Headers */
+    .section-header {
+      margin-bottom: 2rem;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    /* Games Grid & Cards */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .game-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .game-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow);
+      border-color: rgba(243, 156, 18, 0.4);
+      background-color: var(--bg-card-hover);
+    }
+
+    .game-thumb {
+      height: 160px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .game-thumb::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to bottom, transparent 40%, var(--bg-card));
+    }
+
+    .game-thumb i {
+      font-size: 3.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      z-index: 1;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .game-info {
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .game-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .game-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .game-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-gold), #e67e22);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+    }
+
+    .btn-secondary {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: #fff;
+    }
+
+    .btn-danger:hover {
+      background-color: #c0392b;
+    }
+
+    /* Auth Modal / Forms */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent-gold);
+    }
+
+    /* Admin Panel */
+    .admin-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: auto;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent-gold);
+      color: var(--text-main);
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 3000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="logo">🎮 BLOX PLATFORM</div>
-    <div class="stats-bar" id="statsHeader" style="display: none;">
-      <div class="stat-card coins" id="cardCoin">🪙 <span id="coinDisplay">0</span></div>
-      <div class="stat-card platabux" id="cardPbux">💎 <span id="platabuxDisplay">0</span></div>
-    </div>
-    <div class="user-info" id="userHeader" style="display: none;">
-      <button class="btn-admin" id="adminBtn" onclick="apriSupervisione()">👑 Pannello Admin</button>
-      <span id="adminTagDisplay" class="admin-badge" style="display:none;">👑 ADMIN</span>
-      <span id="usernameDisplay" style="font-size: 14px; font-weight: bold;">-</span>
-      <button class="btn-logout" onclick="logout()">Esci</button>
-    </div>
-  </header>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="#" class="brand" onclick="switchView('games')">
+      <i class="fa-solid fa-gamepad"></i>
+      <span>PlataBush</span>
+    </a>
 
-  <main>
-    <!-- VISTA LOGIN / REGISTRAZIONE -->
-    <div class="auth-card" id="authView">
-      <h2 id="title">BLOX PLATFORM</h2>
-      <p class="subtitle" id="subtitle">Inserisci le credenziali per accedere</p>
-      
-      <div class="input-group">
-        <label>Nickname</label>
-        <input type="text" id="username" placeholder="Inserisci nickname...">
+    <div class="user-stats" id="userStats">
+      <div class="stat-item coins" title="Monete">
+        <i class="fa-solid fa-coins"></i>
+        <span id="statCoins">0</span>
       </div>
-      <div class="input-group">
-        <label>Password</label>
-        <input type="password" id="password" placeholder="Inserisci password...">
+      <div class="stat-item platabux" title="Platabux">
+        <i class="fa-solid fa-bolt"></i>
+        <span id="statPlatabux">0</span>
       </div>
-
-      <button class="btn-main" id="submitBtn" onclick="inviaForm()">ACCEDI</button>
-
-      <div class="switch-mode" id="switchText">
-        Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>
-      </div>
-      <div id="msg"></div>
     </div>
 
-    <!-- VISTA HUB GIOCHI -->
-    <div class="hub-view" id="hubView">
-      <div class="welcome-box">
-        <h1 style="color:#a855f7; font-size:24px;">Bentornato, <span id="welcomeUser">-</span>! 👋</h1>
-        <p style="color:#9aa4b8; font-size:14px; margin-top:5px;">Benvenuto su Blox Platform! Gioca per guadagnare risorse salvate sul tuo conto.</p>
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="switchView('games')">
+        <i class="fa-solid fa-gamepad"></i> Giochi
+      </button>
+      <button class="nav-btn" id="adminNavBtn" style="display: none;" onclick="switchView('admin')">
+        <i class="fa-solid fa-user-shield"></i> Admin
+      </button>
+      <button class="nav-btn" id="authBtn" onclick="openAuthModal()">
+        <i class="fa-solid fa-right-to-bracket"></i> Accedi
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container">
+
+    <!-- Games View -->
+    <section id="gamesView" class="view-section active">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-fire" style="color: var(--accent-gold);"></i> Giochi Disponibili</h2>
+        <p>Scegli un gioco, entra e accumula risorse giocandoci!</p>
       </div>
 
-      <h2 style="margin-bottom: 15px; font-size: 20px;">🕹️ Esperienze Disponibili</h2>
       <div class="games-grid">
+        <!-- Game 1 -->
         <div class="game-card">
-          <div>
-            <div class="game-thumb">⚔️</div>
-            <div class="game-body">
-              <h3 style="font-size: 18px; margin-bottom: 5px;">Blocky Arena 3D</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Combatti nell'arena e accumula vittorie!</p>
-            </div>
+          <div class="game-thumb" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80');">
+            <i class="fa-solid fa-rocket"></i>
           </div>
-          <div style="padding: 15px; padding-top: 0;">
-            <button class="btn-play" onclick="alert('Avvio Blocky Arena 3D...')">GIOCA ORA</button>
-            <button class="btn-earn" onclick="guadagnaMonete(1000)">🪙 GUADAGNA 1k MONETE</button>
+          <div class="game-info">
+            <h3 class="game-title">Space Explorer</h3>
+            <p class="game-desc">Esplora la galassia sconosciuta e ottieni ricompense spaziali ad ogni missione completata.</p>
+            <div class="game-actions">
+              <button class="btn btn-primary" onclick="launchGame('Space Explorer')">
+                <i class="fa-solid fa-play"></i> GIOCA ORA
+              </button>
+            </div>
           </div>
         </div>
 
+        <!-- Game 2 -->
         <div class="game-card">
-          <div>
-            <div class="game-thumb">💎</div>
-            <div class="game-body">
-              <h3 style="font-size: 18px; margin-bottom: 5px;">Platabux Mine</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Scava nelle miniere per estrarre rari Platabux!</p>
+          <div class="game-thumb" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80');">
+            <i class="fa-solid fa-dragon"></i>
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Dungeon Quest</h3>
+            <p class="game-desc">Affronta mostri epici e colleziona tesori leggendari all'interno dei dungeon oscuri.</p>
+            <div class="game-actions">
+              <button class="btn btn-primary" onclick="launchGame('Dungeon Quest')">
+                <i class="fa-solid fa-play"></i> GIOCA ORA
+              </button>
             </div>
           </div>
-          <div style="padding: 15px; padding-top: 0;">
-            <button class="btn-play" onclick="alert('Avvio Platabux Mine...')">GIOCA ORA</button>
-            <button class="btn-earn" style="background:#3b82f6; color:white;" onclick="guadagnaPlatabux(500)">💎 GUADAGNA 500 PLATABUX</button>
+        </div>
+
+        <!-- Game 3 -->
+        <div class="game-card">
+          <div class="game-thumb" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80');">
+            <i class="fa-solid fa-flag-checkered"></i>
+          </div>
+          <div class="game-info">
+            <h3 class="game-title">Cyber Racer</h3>
+            <p class="game-desc">Sfreccia su piste futuristiche a velocità folli per guadagnare punti e risorse.</p>
+            <div class="game-actions">
+              <button class="btn btn-primary" onclick="launchGame('Cyber Racer')">
+                <i class="fa-solid fa-play"></i> GIOCA ORA
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </main>
+    </section>
 
-  <!-- POPUP CAPTCHA PER ADMIN -->
-  <div class="modal-overlay" id="captchaModal">
-    <div class="modal-captcha">
-      <h3 style="color:#a855f7; margin-bottom:10px;">🛡️ Verifica Captcha Admin</h3>
-      <p style="font-size:12px; color:#9aa4b8; margin-bottom:15px;">Account Admin rilevato. Inserisci il codice Captcha per proseguire:</p>
-      <div class="input-group">
-        <input type="text" id="popupCaptchaInput" placeholder="Inserisci codice captcha..." style="text-align:center; font-weight:bold; letter-spacing:2px;">
+    <!-- Admin View -->
+    <section id="adminView" class="view-section">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-user-shield" style="color: var(--accent-purple);"></i> Pannello di Controllo Admin</h2>
+        <p>Gestisci gli utenti registrati e accredita o rimuovi risorse manualmente.</p>
       </div>
-      <button class="btn-main" onclick="confermaCaptchaPopup()">VERIFICA ED ENTRA</button>
-      <div id="captchaError" style="font-size:12px; color:#ef4444; margin-top:10px; display:none;">Codice Captcha errato!</div>
+
+      <div class="admin-card">
+        <h3 style="margin-bottom: 1rem;"><i class="fa-solid fa-users"></i> Gestione Utenti</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Ruolo</th>
+                <th>Monete</th>
+                <th>Platabux</th>
+                <th>Azienda / Azioni</th>
+              </tr>
+            </thead>
+            <tbody id="adminUsersTable">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Auth Modal -->
+  <div class="modal" id="authModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+      <h3 id="modalTitle" style="margin-bottom: 1.5rem; text-align: center;">Accedi a PlataBush</h3>
+      
+      <form id="authForm" onsubmit="handleAuth(event)">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" class="form-control" placeholder="Inserisci il tuo username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" class="form-control" placeholder="Inserisci la password" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;" id="authSubmitBtn">
+          Accedi
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.2rem; font-size: 0.85rem;">
+        <span id="authToggleText">Non hai un account?</span>
+        <a href="#" id="authToggleLink" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;" onclick="toggleAuthMode()">Registrati</a>
+      </div>
     </div>
   </div>
 
-  <!-- MODALE SUPERVISIONE ADMIN E DONAZIONI -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 style="color:#a855f7;" id="modalTitle">👑 Pannello Gestione Donazioni</h3>
-        <button class="btn-close" onclick="chiudiSupervisione()">✕</button>
-      </div>
-      <div class="search-box">
-        <input type="text" id="searchInput" style="width:100%; padding:10px; background:#0b0b0e; border:1px solid #a855f7; border-radius:6px; color:white;" placeholder="🔍 Cerca utente per Nickname..." oninput="renderAccountList()">
-      </div>
-      <div class="account-list" id="accountListContainer"></div>
-    </div>
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <i class="fa-solid fa-circle-info" id="toastIcon"></i>
+    <span id="toastMessage">Notifica</span>
   </div>
 
-<script>
-  const OWNER_NAME = "huggy_huggy223";
-  const OWNER_PASS = "Kevindibella18";
-  const OWNER_CAPTCHA = "947947";
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 PlataBush Gaming Platform. Tutti i diritti riservati.</p>
+  </footer>
 
-  const ADMIN_COUSIN = "Exegreen4999";
-  const ADMIN_COUSIN_PASS = "Exegreen4999";
-  const ADMIN_COUSIN_CAPTCHA = "4999";
+  <script>
+    // State Management
+    let currentUser = null;
+    let isRegisterMode = false;
 
-  let isLoginMode = true;
-  let currentUser = localStorage.getItem('bloxi_session');
-  let pendingUserLogin = null;
+    // Helper: Number Formatting (abbreviated, e.g. 1.2k, 1.5M)
+    function formatNumber(num) {
+      if (num >= 1000000) {
+        return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+      }
+      if (num >= 1000) {
+        return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+      }
+      return num.toString();
+    }
 
-  // FUNZIONE PER FORMATTARE I NUMERI CON LE LETTERE (1k, 100k, 1.5M, 2B, ecc.)
-  function formattaNumero(num) {
-    if (num === null || num === undefined) return "0";
-    if (num < 1000) return num.toString();
-
-    const simboli = [
-      { val: 1e12, lett: 'T' },
-      { val: 1e9, lett: 'B' },
-      { val: 1e6, lett: 'M' },
-      { val: 1e3, lett: 'k' }
+    // Default Users Data (In-Memory Mock Database)
+    let usersDb = JSON.parse(localStorage.getItem('platabush_users')) || [
+      { username: 'admin', password: 'adminpassword', role: 'admin', coins: 1500000, platabux: 25000 },
+      { username: 'GamerOne', password: 'user123', role: 'user', coins: 3500, platabux: 120 }
     ];
 
-    for (let i = 0; i < simboli.length; i++) {
-      if (num >= simboli[i].val) {
-        let res = (num / simboli[i].val).toFixed(1);
-        if (res.endsWith('.0')) res = res.slice(0, -2);
-        return res + simboli[i].lett;
+    function saveUsers() {
+      localStorage.setItem('platabush_users', JSON.stringify(usersDb));
+    }
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedUser = localStorage.getItem('platabush_current_user');
+      if (savedUser) {
+        const found = usersDb.find(u => u.username === savedUser);
+        if (found) {
+          currentUser = found;
+        }
+      }
+      updateUI();
+    });
+
+    // Navigation Logic
+    function switchView(viewName) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+      if (viewName === 'games') {
+        document.getElementById('gamesView').classList.add('active');
+        document.querySelectorAll('.nav-btn')[0].classList.add('active');
+      } else if (viewName === 'admin') {
+        if (!currentUser || currentUser.role !== 'admin') {
+          showToast("Accesso negato: richiesta qualifica Admin", "danger");
+          switchView('games');
+          return;
+        }
+        document.getElementById('adminView').classList.add('active');
+        document.getElementById('adminNavBtn').classList.add('active');
+        renderAdminTable();
       }
     }
-    return num.toString();
-  }
 
-  // CARICAMENTO DATABASE LOCALE CON RIPRISTINO DATI
-  function getDB() {
-    let db = JSON.parse(localStorage.getItem('bloxi_platform_db')) || {};
-    
-    if (!db[OWNER_NAME]) {
-      db[OWNER_NAME] = { password: OWNER_PASS, coins: 500000, platabux: 15000, role: "owner", captcha: OWNER_CAPTCHA };
-    } else {
-      db[OWNER_NAME].password = OWNER_PASS;
-      db[OWNER_NAME].captcha = OWNER_CAPTCHA;
-      db[OWNER_NAME].role = "owner";
-    }
-    
-    if (!db[ADMIN_COUSIN]) {
-      db[ADMIN_COUSIN] = { password: ADMIN_COUSIN_PASS, coins: 100000, platabux: 2500, role: "admin", captcha: ADMIN_COUSIN_CAPTCHA };
-    } else {
-      db[ADMIN_COUSIN].password = ADMIN_COUSIN_PASS;
-      db[ADMIN_COUSIN].captcha = ADMIN_COUSIN_CAPTCHA;
-      db[ADMIN_COUSIN].role = "admin";
-    }
+    // Update UI Elements based on login state
+    function updateUI() {
+      const authBtn = document.getElementById('authBtn');
+      const adminNavBtn = document.getElementById('adminNavBtn');
+      const statCoins = document.getElementById('statCoins');
+      const statPlatabux = document.getElementById('statPlatabux');
 
-    localStorage.setItem('bloxi_platform_db', JSON.stringify(db));
-    return db;
-  }
+      if (currentUser) {
+        // Sync stats with DB
+        const updated = usersDb.find(u => u.username === currentUser.username);
+        if (updated) currentUser = updated;
 
-  function saveDB(db) {
-    localStorage.setItem('bloxi_platform_db', JSON.stringify(db));
-  }
+        statCoins.innerText = formatNumber(currentUser.coins);
+        statPlatabux.innerText = formatNumber(currentUser.platabux);
 
-  function cambiaModalita() {
-    isLoginMode = !isLoginMode;
-    document.getElementById('subtitle').textContent = isLoginMode ? "Inserisci le credenziali per accedere" : "Crea un nuovo account per iniziare";
-    document.getElementById('submitBtn').textContent = isLoginMode ? "ACCEDI" : "REGISTRATI";
-    document.getElementById('switchText').innerHTML = isLoginMode ? 
-      'Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>' : 
-      'Hai già un account? <span class="switch-link" onclick="cambiaModalita()">Accedi</span>';
-  }
+        authBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket"></i> ${currentUser.username} (Esci)`;
+        authBtn.onclick = logout;
 
-  function mostraMessaggio(testo, tipo) {
-    const msgEl = document.getElementById('msg');
-    msgEl.textContent = testo;
-    msgEl.className = tipo;
-    msgEl.style.display = "block";
-  }
+        if (currentUser.role === 'admin') {
+          adminNavBtn.style.display = 'flex';
+        } else {
+          adminNavBtn.style.display = 'none';
+        }
+      } else {
+        statCoins.innerText = '0';
+        statPlatabux.innerText = '0';
 
-  function inviaForm() {
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-
-    if (!user || !pass) return mostraMessaggio("Inserisci Nickname e Password!", "error");
-
-    let db = getDB();
-
-    if (isLoginMode) {
-      if (!db[user] || db[user].password !== pass) {
-        return mostraMessaggio("Credenziali errate!", "error");
+        authBtn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> Accedi`;
+        authBtn.onclick = openAuthModal;
+        adminNavBtn.style.display = 'none';
       }
-      
-      if (db[user].role === "owner" || db[user].role === "admin") {
-        pendingUserLogin = user;
-        document.getElementById('popupCaptchaInput').value = "";
-        document.getElementById('captchaError').style.display = "none";
-        document.getElementById('captchaModal').style.display = "flex";
+    }
+
+    // Modal Controls
+    function openAuthModal() {
+      document.getElementById('authModal').classList.add('active');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.remove('active');
+    }
+
+    function toggleAuthMode() {
+      isRegisterMode = !isRegisterMode;
+      const title = document.getElementById('modalTitle');
+      const submitBtn = document.getElementById('authSubmitBtn');
+      const toggleText = document.getElementById('authToggleText');
+      const toggleLink = document.getElementById('authToggleLink');
+
+      if (isRegisterMode) {
+        title.innerText = "Registrati a PlataBush";
+        submitBtn.innerText = "Registrati";
+        toggleText.innerText = "Hai già un account?";
+        toggleLink.innerText = "Accedi";
+      } else {
+        title.innerText = "Accedi a PlataBush";
+        submitBtn.innerText = "Accedi";
+        toggleText.innerText = "Non hai un account?";
+        toggleLink.innerText = "Registrati";
+      }
+    }
+
+    // Authentication Handler
+    function handleAuth(e) {
+      e.preventDefault();
+      const userVal = document.getElementById('username').value.trim();
+      const passVal = document.getElementById('password').value.trim();
+
+      if (!userVal || !passVal) {
+        showToast("Compila tutti i campi!", "danger");
         return;
       }
 
-      completaLogin(user);
-    } else {
-      if (db[user]) return mostraMessaggio("Nickname già occupato!", "error");
-      db[user] = { password: pass, coins: 100, platabux: 0, role: "user" };
-      saveDB(db);
-      completaLogin(user);
-    }
-  }
+      if (isRegisterMode) {
+        const exists = usersDb.some(u => u.username.toLowerCase() === userVal.toLowerCase());
+        if (exists) {
+          showToast("Nome utente già occupato!", "danger");
+          return;
+        }
 
-  function confermaCaptchaPopup() {
-    if (!pendingUserLogin) return;
-    let db = getDB();
-    const inputCaptcha = document.getElementById('popupCaptchaInput').value.trim();
-    const expectedCaptcha = db[pendingUserLogin].captcha;
+        const newUser = {
+          username: userVal,
+          password: passVal,
+          role: 'user',
+          coins: 100,
+          platabux: 10
+        };
 
-    if (inputCaptcha === expectedCaptcha) {
-      document.getElementById('captchaModal').style.display = "none";
-      completaLogin(pendingUserLogin);
-      pendingUserLogin = null;
-    } else {
-      document.getElementById('captchaError').style.display = "block";
-    }
-  }
+        usersDb.push(newUser);
+        saveUsers();
+        currentUser = newUser;
+        localStorage.setItem('platabush_current_user', newUser.username);
+        showToast("Registrazione completata con successo!");
+      } else {
+        const found = usersDb.find(u => u.username.toLowerCase() === userVal.toLowerCase() && u.password === passVal);
+        if (!found) {
+          showToast("Credenziali errate!", "danger");
+          return;
+        }
 
-  function completaLogin(user) {
-    localStorage.setItem('bloxi_session', user);
-    currentUser = user;
-    mostraMessaggio("Accesso completato...", "success");
-    setTimeout(() => { caricaInterfaccia(); }, 500);
-  }
-
-  function caricaInterfaccia() {
-    if (!currentUser) {
-      document.getElementById('authView').style.display = "block";
-      document.getElementById('hubView').style.display = "none";
-      document.getElementById('statsHeader').style.display = "none";
-      document.getElementById('userHeader').style.display = "none";
-      return;
-    }
-
-    let db = getDB();
-    if (!db[currentUser]) { logout(); return; }
-
-    document.getElementById('authView').style.display = "none";
-    document.getElementById('hubView').style.display = "block";
-    document.getElementById('statsHeader').style.display = "flex";
-    document.getElementById('userHeader').style.display = "flex";
-
-    document.getElementById('usernameDisplay').textContent = currentUser;
-    document.getElementById('welcomeUser').textContent = currentUser;
-    
-    // Aggiornamento Saldi Formattati con le Lettere (k, M, B)
-    document.getElementById('coinDisplay').textContent = formattaNumero(db[currentUser].coins || 0);
-    document.getElementById('platabuxDisplay').textContent = formattaNumero(db[currentUser].platabux || 0);
-
-    // Badge e Permessi Admin
-    if (db[currentUser].role === "owner" || db[currentUser].role === "admin") {
-      document.getElementById('adminTagDisplay').style.display = "inline-block";
-      document.getElementById('adminBtn').style.display = (currentUser === OWNER_NAME) ? "inline-block" : "none";
-    } else {
-      document.getElementById('adminBtn').style.display = "none";
-      document.getElementById('adminTagDisplay').style.display = "none";
-    }
-  }
-
-  function guadagnaMonete(quantita) {
-    let db = getDB();
-    if (!db[currentUser]) return;
-
-    db[currentUser].coins = (db[currentUser].coins || 0) + quantita;
-    saveDB(db);
-    
-    caricaInterfaccia();
-    animazioneRisorse('cardCoin');
-  }
-
-  function guadagnaPlatabux(quantita) {
-    let db = getDB();
-    if (!db[currentUser]) return;
-
-    db[currentUser].platabux = (db[currentUser].platabux || 0) + quantita;
-    saveDB(db);
-    
-    caricaInterfaccia();
-    animazioneRisorse('cardPbux');
-  }
-
-  function animazioneRisorse(idCard) {
-    const el = document.getElementById(idCard);
-    el.classList.add('bump');
-    setTimeout(() => el.classList.remove('bump'), 200);
-  }
-
-  function logout() {
-    localStorage.removeItem('bloxi_session');
-    currentUser = null;
-    caricaInterfaccia();
-  }
-
-  function apriSupervisione() {
-    document.getElementById('searchInput').value = "";
-    renderAccountList();
-    document.getElementById('adminModal').style.display = "flex";
-  }
-
-  function renderAccountList() {
-    const container = document.getElementById('accountListContainer');
-    const filterText = document.getElementById('searchInput').value.toLowerCase().trim();
-
-    container.innerHTML = "";
-    let db = getDB();
-    const keys = Object.keys(db).filter(u => u.toLowerCase().includes(filterText));
-
-    if (keys.length === 0) {
-      container.innerHTML = `<div style="text-align:center; color:#8a94a6; padding:20px;">Nessun utente trovato</div>`;
-      return;
-    }
-
-    keys.forEach(u => {
-      const item = document.createElement('div');
-      item.className = "account-item";
-      
-      let giveawayControlsHTML = "";
-      if (currentUser === OWNER_NAME) {
-        giveawayControlsHTML = `
-          <div class="giveaway-controls">
-            <input type="number" id="amt_${u}" value="1000" min="1">
-            <button class="btn-give btn-give-coin" onclick="donare('${u}', 'coins')">+🪙 Monete</button>
-            <button class="btn-give btn-give-pbux" onclick="donare('${u}', 'platabux')">+💎 Platabux</button>
-          </div>
-        `;
+        currentUser = found;
+        localStorage.setItem('platabush_current_user', currentUser.username);
+        showToast(`Bentornato, ${currentUser.username}!`);
       }
 
-      item.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <strong>${u}</strong> ${(db[u].role === "owner" || db[u].role === "admin") ? '<span class="admin-badge">👑 ADMIN</span>' : ''}
-            <div style="font-size:11px; color:#8a94a6;">Password: ${db[u].password}</div>
-          </div>
-          <div>
-            <span style="color:#eab308; font-weight:bold; margin-right:8px;">🪙 ${formattaNumero(db[u].coins || 0)}</span>
-            <span style="color:#3b82f6; font-weight:bold;">💎 ${formattaNumero(db[u].platabux || 0)}</span>
-          </div>
-        </div>
-        ${giveawayControlsHTML}
-      `;
-      container.appendChild(item);
-    });
-  }
+      closeAuthModal();
+      document.getElementById('authForm').reset();
+      updateUI();
+    }
 
-  function donare(targetUser, tipo) {
-    const inputEl = document.getElementById(`amt_${targetUser}`);
-    const val = parseInt(inputEl.value);
-    if (isNaN(val) || val <= 0) return alert("Inserisci una quantità valida!");
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('platabush_current_user');
+      showToast("Disconnessione effettuata");
+      updateUI();
+      switchView('games');
+    }
 
-    let db = getDB();
-    if (!db[targetUser]) return;
+    // Launch Game Action
+    function launchGame(gameTitle) {
+      if (!currentUser) {
+        openAuthModal();
+        showToast("Accedi per giocare e salvare le tue risorse!", "danger");
+        return;
+      }
+      showToast(`Avvio di ${gameTitle} in corso...`);
+    }
 
-    db[targetUser][tipo] = (db[targetUser][tipo] || 0) + val;
-    saveDB(db);
+    // Admin Operations
+    function renderAdminTable() {
+      const tbody = document.getElementById('adminUsersTable');
+      tbody.innerHTML = '';
 
-    alert(`Accreditati con successo ${formattaNumero(val)} ${tipo === 'coins' ? 'Monete 🪙' : 'Platabux 💎'} a ${targetUser}!`);
-    renderAccountList();
-    caricaInterfaccia();
-  }
+      usersDb.forEach(user => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${user.username}</strong></td>
+          <td><span style="color: ${user.role === 'admin' ? 'var(--accent-purple)' : 'var(--text-muted)'}; font-weight:600;">${user.role.toUpperCase()}</span></td>
+          <td>${formatNumber(user.coins)}</td>
+          <td>${formatNumber(user.platabux)}</td>
+          <td>
+            <button class="btn btn-secondary" style="display:inline-flex; width:auto; padding: 4px 10px; font-size: 0.8rem;" onclick="adminAddResources('${user.username}')">
+              <i class="fa-solid fa-plus"></i> Modifica Risorse
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-  function chiudiSupervisione() {
-    document.getElementById('adminModal').style.display = "none";
-  }
+    function adminAddResources(targetUsername) {
+      const user = usersDb.find(u => u.username === targetUsername);
+      if (!user) return;
 
-  window.addEventListener('storage', () => {
-    caricaInterfaccia();
-  });
+      const addCoins = prompt(`Aggiungi o rimuovi Monete per ${user.username}:`, "500");
+      if (addCoins !== null) {
+        const parsedCoins = parseInt(addCoins, 10);
+        if (!isNaN(parsedCoins)) user.coins = Math.max(0, user.coins + parsedCoins);
+      }
 
-  caricaInterfaccia();
-</script>
+      const addPlatabux = prompt(`Aggiungi o rimuovi Platabux per ${user.username}:`, "50");
+      if (addPlatabux !== null) {
+        const parsedPlatabux = parseInt(addPlatabux, 10);
+        if (!isNaN(parsedPlatabux)) user.platabux = Math.max(0, user.platabux + parsedPlatabux);
+      }
 
+      saveUsers();
+      updateUI();
+      renderAdminTable();
+      showToast(`Risorse aggiornate per ${user.username}!`);
+    }
+
+    // Toast Notification System
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMsg.innerText = message;
+
+      if (type === 'danger') {
+        toast.style.borderLeftColor = 'var(--danger)';
+        toastIcon.className = 'fa-solid fa-circle-exclamation';
+        toastIcon.style.color = 'var(--danger)';
+      } else {
+        toast.style.borderLeftColor = 'var(--accent-gold)';
+        toastIcon.className = 'fa-solid fa-circle-info';
+        toastIcon.style.color = 'var(--accent-gold)';
+      }
+
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+  </script>
 </body>
 </html>
