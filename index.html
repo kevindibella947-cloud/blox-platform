@@ -1,1 +1,170 @@
 
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blox Platform - Accedi</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0b0e; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .auth-card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; text-align: center; }
+    h2 { margin-bottom: 8px; color: #a855f7; }
+    p.subtitle { font-size: 13px; color: #9aa4b8; margin-bottom: 20px; }
+    .input-group { text-align: left; margin-bottom: 14px; }
+    label { display: block; font-size: 11px; color: #a855f7; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
+    input { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; font-size: 14px; outline: none; }
+    input:focus { border-color: #a855f7; }
+    .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 10px; }
+    .switch-mode { margin-top: 15px; font-size: 13px; color: #9aa4b8; }
+    .switch-link { color: #3b82f6; font-weight: bold; cursor: pointer; text-decoration: underline; margin-left: 4px; }
+    #msg { font-size: 13px; margin-top: 15px; display: none; padding: 8px; border-radius: 6px; }
+    .error { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+    .success { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; padding: 15px; }
+    .modal-captcha { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 360px; padding: 25px; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="auth-card">
+    <h2 id="title">BLOX PLATFORM</h2>
+    <p class="subtitle" id="subtitle">Inserisci le credenziali per accedere</p>
+    
+    <div class="input-group">
+      <label>Nickname</label>
+      <input type="text" id="username" placeholder="Inserisci nickname...">
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Inserisci password...">
+    </div>
+
+    <button class="btn-main" id="submitBtn" onclick="inviaForm()">ACCEDI</button>
+
+    <div class="switch-mode" id="switchText">
+      Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>
+    </div>
+    <div id="msg"></div>
+  </div>
+
+  <div class="modal-overlay" id="captchaModal">
+    <div class="modal-captcha">
+      <h3 style="color:#a855f7; margin-bottom:10px;">🛡️ Verifica Captcha Admin</h3>
+      <p style="font-size:12px; color:#9aa4b8; margin-bottom:15px;">Account Admin rilevato. Inserisci il codice Captcha:</p>
+      <div class="input-group">
+        <input type="text" id="popupCaptchaInput" placeholder="Inserisci codice captcha..." style="text-align:center; font-weight:bold; letter-spacing:2px;">
+      </div>
+      <button class="btn-main" onclick="confermaCaptchaPopup()">VERIFICA ED ENTRA</button>
+      <div id="captchaError" style="font-size:12px; color:#ef4444; margin-top:10px; display:none;">Codice Captcha errato!</div>
+    </div>
+  </div>
+
+  <script>
+    const OWNER_NAME = "huggy_huggy223";
+    const OWNER_PASS = "Kevindibella18";
+    const OWNER_CAPTCHA = "947947";
+
+    const ADMIN_COUSIN = "Exegreen4999";
+    const ADMIN_COUSIN_PASS = "Exegreen4999";
+    const ADMIN_COUSIN_CAPTCHA = "4999";
+
+    let isLoginMode = true;
+    let pendingUserLogin = null;
+
+    function getDB() {
+      let db = JSON.parse(localStorage.getItem('bloxi_platform_db')) || {};
+      
+      if (!db[OWNER_NAME]) {
+        db[OWNER_NAME] = { password: OWNER_PASS, coins: 500000, platabux: 15000, role: "owner", captcha: OWNER_CAPTCHA };
+      } else {
+        db[OWNER_NAME].password = OWNER_PASS;
+        db[OWNER_NAME].captcha = OWNER_CAPTCHA;
+        db[OWNER_NAME].role = "owner";
+      }
+      
+      if (!db[ADMIN_COUSIN]) {
+        db[ADMIN_COUSIN] = { password: ADMIN_COUSIN_PASS, coins: 100000, platabux: 2500, role: "admin", captcha: ADMIN_COUSIN_CAPTCHA };
+      } else {
+        db[ADMIN_COUSIN].password = ADMIN_COUSIN_PASS;
+        db[ADMIN_COUSIN].captcha = ADMIN_COUSIN_CAPTCHA;
+        db[ADMIN_COUSIN].role = "admin";
+      }
+
+      localStorage.setItem('bloxi_platform_db', JSON.stringify(db));
+      return db;
+    }
+
+    function saveDB(db) {
+      localStorage.setItem('bloxi_platform_db', JSON.stringify(db));
+    }
+
+    function cambiaModalita() {
+      isLoginMode = !isLoginMode;
+      document.getElementById('subtitle').textContent = isLoginMode ? "Inserisci le credenziali per accedere" : "Crea un nuovo account per iniziare";
+      document.getElementById('submitBtn').textContent = isLoginMode ? "ACCEDI" : "REGISTRATI";
+      document.getElementById('switchText').innerHTML = isLoginMode ? 
+        'Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>' : 
+        'Hai già un account? <span class="switch-link" onclick="cambiaModalita()">Accedi</span>';
+    }
+
+    function mostraMessaggio(testo, tipo) {
+      const msgEl = document.getElementById('msg');
+      msgEl.textContent = testo;
+      msgEl.className = tipo;
+      msgEl.style.display = "block";
+    }
+
+    function inviaForm() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+
+      if (!user || !pass) return mostraMessaggio("Inserisci Nickname e Password!", "error");
+
+      let db = getDB();
+
+      if (isLoginMode) {
+        if (!db[user] || db[user].password !== pass) {
+          return mostraMessaggio("Credenziali errate!", "error");
+        }
+        
+        if (db[user].role === "owner" || db[user].role === "admin") {
+          pendingUserLogin = user;
+          document.getElementById('popupCaptchaInput').value = "";
+          document.getElementById('captchaError').style.display = "none";
+          document.getElementById('captchaModal').style.display = "flex";
+          return;
+        }
+
+        completaLogin(user);
+      } else {
+        if (db[user]) return mostraMessaggio("Nickname già occupato!", "error");
+        db[user] = { password: pass, coins: 100, platabux: 0, role: "user" };
+        saveDB(db);
+        completaLogin(user);
+      }
+    }
+
+    function confermaCaptchaPopup() {
+      if (!pendingUserLogin) return;
+      let db = getDB();
+      const inputCaptcha = document.getElementById('popupCaptchaInput').value.trim();
+      const expectedCaptcha = db[pendingUserLogin].captcha;
+
+      if (inputCaptcha === expectedCaptcha) {
+        document.getElementById('captchaModal').style.display = "none";
+        completaLogin(pendingUserLogin);
+        pendingUserLogin = null;
+      } else {
+        document.getElementById('captchaError').style.display = "block";
+      }
+    }
+
+    function completaLogin(user) {
+      localStorage.setItem('bloxi_session', user);
+      mostraMessaggio("Accesso completato...", "success");
+      setTimeout(() => { window.location.href = "hub.html"; }, 500);
+    }
+  </script>
+</body>
+</html>
