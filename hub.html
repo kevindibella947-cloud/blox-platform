@@ -8,7 +8,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0b0e; color: white; min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* NAVBAR */
     header { background: #16161e; border-bottom: 1px solid #272736; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; }
     .logo { font-size: 20px; font-weight: bold; color: #a855f7; cursor: pointer; }
     .stats-bar { display: flex; align-items: center; gap: 15px; }
@@ -16,10 +15,8 @@
     .coins { color: #eab308; }
     .platabux { color: #3b82f6; }
 
-    /* MAIN CONTAINER */
     main { flex: 1; padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; }
 
-    /* HUB APPS */
     .welcome-box { background: linear-gradient(135deg, rgba(147,51,234,0.15), rgba(59,130,246,0.15)); border: 1px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 30px; }
     .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     .game-card { background: #16161e; border: 1px solid #272736; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
@@ -28,16 +25,13 @@
     .btn-play { width: 100%; padding: 12px; background: #22c55e; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 14px; transition: 0.2s; }
     .btn-play:hover { background: #16a34a; }
 
-    /* SCHERMATE GIOCHI */
     .game-screen { display: none; background: #16161e; border: 1px solid #272736; border-radius: 12px; padding: 20px; text-align: center; }
     .btn-back { background: #ef4444; border: none; color: white; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 15px; float: left; }
     .game-canvas-area { width: 100%; height: 350px; background: #0b0b0e; border: 2px dashed #a855f7; border-radius: 8px; margin: 15px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 
-    /* CONTROLLI GIOCHI INTERATTIVI */
     .game-btn { padding: 10px 20px; background: #a855f7; border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 10px; }
     .game-btn:hover { background: #9333ea; }
-    .pet-box { font-size: 50px; margin: 10px; display: inline-block; animation: bounce 0.5s infinite alternate; }
-    @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+    .pet-box { font-size: 60px; margin: 10px; display: inline-block; }
   </style>
 </head>
 <body>
@@ -51,22 +45,20 @@
   </header>
 
   <main>
-    <!-- VISTA HUB GIOCHI -->
     <div id="hubView">
       <div class="welcome-box">
-        <h1 style="color:#a855f7; font-size:24px;">Benvenuto su Blox Platform! 👋</h1>
-        <p style="color:#9aa4b8; font-size:14px; margin-top:5px;">Scegli uno dei 5 giochi disponibili e inizia subito a giocare per guadagnare Monete e Platabux!</p>
+        <h1 style="color:#a855f7; font-size:24px;">Tutti i 5 Giochi Disponibili! 👋</h1>
+        <p style="color:#9aa4b8; font-size:14px; margin-top:5px;">Scegli un gioco e gioca direttamente nell'Hub!</p>
       </div>
 
-      <h2 style="margin-bottom: 15px; font-size: 20px;">🕹️ Esperienze Disponibili</h2>
+      <h2 style="margin-bottom: 15px; font-size: 20px;">🕹️ Selezione Giochi</h2>
       <div class="games-grid">
-        <!-- GIOCO 1: BLOCKY ARENA -->
         <div class="game-card">
           <div>
             <div class="game-thumb">⚔️</div>
             <div class="game-body">
               <h3 style="font-size: 18px; margin-bottom: 5px;">Blocky Arena 3D</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Sconfiggi i bersagli che appaiono nell'arena per accumulare punti e monete!</p>
+              <p style="font-size: 12px; color: #9aa4b8;">Elimina i nemici nell'arena per vincere monete!</p>
             </div>
           </div>
           <div style="padding: 15px; padding-top: 0;">
@@ -74,13 +66,12 @@
           </div>
         </div>
 
-        <!-- GIOCO 2: PLATABUX MINE -->
         <div class="game-card">
           <div>
             <div class="game-thumb">⛏️</div>
             <div class="game-body">
               <h3 style="font-size: 18px; margin-bottom: 5px;">Platabux Mine</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Scava la roccia a colpi di piccone ed estrai Platabux preziosi!</p>
+              <p style="font-size: 12px; color: #9aa4b8;">Scava le rocce per trovare Platabux puri!</p>
             </div>
           </div>
           <div style="padding: 15px; padding-top: 0;">
@@ -88,13 +79,12 @@
           </div>
         </div>
 
-        <!-- GIOCO 3: RAINBOW OBBY -->
         <div class="game-card">
           <div>
             <div class="game-thumb">🏃</div>
             <div class="game-body">
               <h3 style="font-size: 18px; margin-bottom: 5px;">Rainbow Obby Parkour</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Avanza nei checkpoint saltando sui blocchi per raggiungere il traguardo!</p>
+              <p style="font-size: 12px; color: #9aa4b8;">Salta tra le piattaforme senza cadere!</p>
             </div>
           </div>
           <div style="padding: 15px; padding-top: 0;">
@@ -102,13 +92,12 @@
           </div>
         </div>
 
-        <!-- GIOCO 4: TYCOON CITY -->
         <div class="game-card">
           <div>
             <div class="game-thumb">🏗️</div>
             <div class="game-body">
               <h3 style="font-size: 18px; margin-bottom: 5px;">Tycoon City Builder</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Costruisci e migliora le tue strutture per generare entrate automatiche!</p>
+              <p style="font-size: 12px; color: #9aa4b8;">Costruisci la tua città ed espandi il tuo impero!</p>
             </div>
           </div>
           <div style="padding: 15px; padding-top: 0;">
@@ -116,13 +105,12 @@
           </div>
         </div>
 
-        <!-- GIOCO 5: PET SIMULATOR -->
         <div class="game-card">
           <div>
             <div class="game-thumb">🐾</div>
             <div class="game-body">
               <h3 style="font-size: 18px; margin-bottom: 5px;">Pet Simulator World</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Schiudi le uova per collezionare animali rari e leggendari!</p>
+              <p style="font-size: 12px; color: #9aa4b8;">Schiudi uova e colleziona animali rari!</p>
             </div>
           </div>
           <div style="padding: 15px; padding-top: 0;">
@@ -132,85 +120,69 @@
       </div>
     </div>
 
-    <!-- GIOCO 1: ARENA -->
+    <!-- ARENA -->
     <div class="game-screen" id="gameArenaScreen">
-      <button class="btn-back" onclick="tornaAllHub()">⬅ TORNA ALL'HUB</button>
+      <button class="btn-back" onclick="tornaAllHub()">⬅ ESCI ALL'HUB</button>
       <div style="clear:both;"></div>
       <h2>⚔️ Blocky Arena 3D</h2>
-      <p style="color:#9aa4b8; font-size:13px; margin-bottom:10px;">Clicca sui mostri il più velocemente possibile!</p>
       <div class="game-canvas-area">
-        <div id="arenaTarget" onclick="colpisciArena()" style="width:70px; height:70px; background:#ef4444; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:35px; cursor:pointer; user-select:none; position:absolute;">👾</div>
+        <div id="arenaTarget" onclick="colpisciArena()" style="width:70px; height:70px; background:#ef4444; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:35px; cursor:pointer; position:absolute;">👾</div>
       </div>
-      <p style="font-size:15px;">Nemici sconfitti: <strong id="arenaScore">0</strong>/5 | Premio: <span style="color:#eab308; font-weight:bold;">+250 Monete 🪙</span></p>
+      <p>Punti: <strong id="arenaScore">0</strong>/5 | Premio: <span style="color:#eab308;">+250 Monete</span></p>
     </div>
 
-    <!-- GIOCO 2: MINE -->
+    <!-- MINE -->
     <div class="game-screen" id="gameMineScreen">
-      <button class="btn-back" onclick="tornaAllHub()">⬅ TORNA ALL'HUB</button>
+      <button class="btn-back" onclick="tornaAllHub()">⬅ ESCI ALL'HUB</button>
       <div style="clear:both;"></div>
       <h2>⛏️ Platabux Mine</h2>
-      <p style="color:#9aa4b8; font-size:13px; margin-bottom:10px;">Clicca sulla roccia per rompere il blocco!</p>
       <div class="game-canvas-area">
-        <div id="rockTarget" onclick="scavaRoccia()" style="width:120px; height:120px; background:#374151; border:4px solid #4b5563; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:50px; cursor:pointer; user-select:none; transition:transform 0.1s;">🪨</div>
+        <div id="rockTarget" onclick="scavaRoccia()" style="width:120px; height:120px; background:#374151; border:4px solid #4b5563; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:50px; cursor:pointer;">🪨</div>
       </div>
-      <p style="font-size:15px;">Colpi rimanenti: <strong id="mineHits">10</strong> | Premio: <span style="color:#3b82f6; font-weight:bold;">+50 Platabux 💎</span></p>
+      <p>Colpi Rimanenti: <strong id="mineHits">10</strong> | Premio: <span style="color:#3b82f6;">+50 Platabux</span></p>
     </div>
 
-    <!-- GIOCO 3: OBBY PARKOUR -->
+    <!-- OBBY -->
     <div class="game-screen" id="gameObbyScreen">
-      <button class="btn-back" onclick="tornaAllHub()">⬅ TORNA ALL'HUB</button>
+      <button class="btn-back" onclick="tornaAllHub()">⬅ ESCI ALL'HUB</button>
       <div style="clear:both;"></div>
       <h2>🏃 Rainbow Obby Parkour</h2>
-      <p style="color:#9aa4b8; font-size:13px; margin-bottom:10px;">Salta da una piattaforma all'altra senza cadere nel vuoto!</p>
       <div class="game-canvas-area">
-        <div style="font-size:50px; margin-bottom:10px;" id="obbyStageIcon">🟥</div>
-        <p style="font-size:18px; font-weight:bold;" id="obbyText">Stage 1 / 5</p>
-        <button class="game-btn" onclick="saltaObby()">SALTA AL PROSSIMO BLOCCO 🦘</button>
+        <div style="font-size:50px;" id="obbyStageIcon">🟥</div>
+        <p style="font-size:18px; margin: 10px 0;" id="obbyText">Stage 1 / 5</p>
+        <button class="game-btn" onclick="saltaObby()">SALTA IL BLOCCO 🦘</button>
       </div>
-      <p style="font-size:15px;">Premio Completamento: <span style="color:#eab308; font-weight:bold;">+300 Monete 🪙</span></p>
     </div>
 
-    <!-- GIOCO 4: TYCOON -->
+    <!-- TYCOON -->
     <div class="game-screen" id="gameTycoonScreen">
-      <button class="btn-back" onclick="tornaAllHub()">⬅ TORNA ALL'HUB</button>
+      <button class="btn-back" onclick="tornaAllHub()">⬅ ESCI ALL'HUB</button>
       <div style="clear:both;"></div>
       <h2>🏗️ Tycoon City Builder</h2>
-      <p style="color:#9aa4b8; font-size:13px; margin-bottom:10px;">Migliora i tuoi edifici per aumentare la produzione!</p>
       <div class="game-canvas-area">
         <div style="font-size:60px;" id="tycoonBuilding">🏚️</div>
-        <p style="font-size:16px; margin-top:10px; font-weight:bold;" id="tycoonLevel">Livello Struttura: 1</p>
-        <button class="game-btn" onclick="potenziaTycoon()">POTENZIA EDIFICIO 💰</button>
+        <p style="font-size:16px; margin-top:10px;" id="tycoonLevel">Livello Edificio: 1</p>
+        <button class="game-btn" onclick="potenziaTycoon()">MIGLIORA STRUTTURA 💰</button>
       </div>
-      <p style="font-size:15px;">Rendita Attuale: <strong id="tycoonIncome">100</strong> Monete/sec</p>
     </div>
 
-    <!-- GIOCO 5: PET SIMULATOR -->
+    <!-- PET SIMULATOR -->
     <div class="game-screen" id="gamePetsScreen">
-      <button class="btn-back" onclick="tornaAllHub()">⬅ TORNA ALL'HUB</button>
+      <button class="btn-back" onclick="tornaAllHub()">⬅ ESCI ALL'HUB</button>
       <div style="clear:both;"></div>
       <h2>🐾 Pet Simulator World</h2>
-      <p style="color:#9aa4b8; font-size:13px; margin-bottom:10px;">Schiudi le uova magiche per trovare animali rari!</p>
       <div class="game-canvas-area">
         <div id="petDisplay" class="pet-box">🥚</div>
         <button class="game-btn" onclick="schiudiUovo()">SCHIUDI UOVO ✨</button>
       </div>
-      <p style="font-size:15px;">Ultimo Pet Trovato: <strong id="petName" style="color:#a855f7;">Nessuno</strong></p>
+      <p>Pet Trovato: <strong id="petName" style="color:#a855f7;">Nessuno</strong></p>
     </div>
   </main>
 
 <script>
   let userCoins = 1000;
   let userPlatabux = 500;
-
-  let arenaPoints = 0;
-  let mineHits = 10;
-  let obbyStage = 1;
-  let tycoonLvl = 1;
-
-  function aggiornaSaldi() {
-    document.getElementById('coinDisplay').textContent = userCoins.toLocaleString();
-    document.getElementById('platabuxDisplay').textContent = userPlatabux.toLocaleString();
-  }
+  let arenaPoints = 0, mineHits = 10, obbyStage = 1, tycoonLvl = 1;
 
   function nascondiTutti() {
     document.getElementById('hubView').style.display = 'none';
@@ -228,115 +200,53 @@
 
   function apriGioco(tipo) {
     nascondiTutti();
-    if (tipo === 'arena') {
-      arenaPoints = 0;
-      document.getElementById('arenaScore').textContent = arenaPoints;
-      posizionaArenaTarget();
-      document.getElementById('gameArenaScreen').style.display = 'block';
-    } else if (tipo === 'mine') {
-      mineHits = 10;
-      document.getElementById('mineHits').textContent = mineHits;
-      document.getElementById('gameMineScreen').style.display = 'block';
-    } else if (tipo === 'obby') {
-      obbyStage = 1;
-      aggiornaObby();
-      document.getElementById('gameObbyScreen').style.display = 'block';
-    } else if (tipo === 'tycoon') {
-      document.getElementById('gameTycoonScreen').style.display = 'block';
-    } else if (tipo === 'pets') {
-      document.getElementById('gamePetsScreen').style.display = 'block';
-    }
+    if (tipo === 'arena') { arenaPoints = 0; document.getElementById('arenaScore').textContent = 0; posizionaArenaTarget(); document.getElementById('gameArenaScreen').style.display = 'block'; }
+    else if (tipo === 'mine') { mineHits = 10; document.getElementById('mineHits').textContent = 10; document.getElementById('gameMineScreen').style.display = 'block'; }
+    else if (tipo === 'obby') { obbyStage = 1; aggiornaObby(); document.getElementById('gameObbyScreen').style.display = 'block'; }
+    else if (tipo === 'tycoon') { document.getElementById('gameTycoonScreen').style.display = 'block'; }
+    else if (tipo === 'pets') { document.getElementById('gamePetsScreen').style.display = 'block'; }
   }
 
-  /* ARENA */
   function posizionaArenaTarget() {
     const target = document.getElementById('arenaTarget');
-    const rx = Math.floor(Math.random() * 240) - 120;
-    const ry = Math.floor(Math.random() * 180) - 90;
-    target.style.transform = `translate(${rx}px, ${ry}px)`;
+    target.style.transform = `translate(${Math.floor(Math.random()*240)-120}px, ${Math.floor(Math.random()*180)-90}px)`;
   }
   function colpisciArena() {
     arenaPoints++;
     document.getElementById('arenaScore').textContent = arenaPoints;
-    if (arenaPoints >= 5) {
-      userCoins += 250;
-      aggiornaSaldi();
-      alert("🎉 Arena completata! +250 Monete!");
-      tornaAllHub();
-    } else {
-      posizionaArenaTarget();
-    }
+    if (arenaPoints >= 5) { alert("Vittoria! +250 Monete"); tornaAllHub(); } else posizionaArenaTarget();
   }
 
-  /* MINE */
   function scavaRoccia() {
     mineHits--;
     document.getElementById('mineHits').textContent = mineHits;
-    const rock = document.getElementById('rockTarget');
-    rock.style.transform = 'scale(0.85)';
-    setTimeout(() => rock.style.transform = 'scale(1)', 100);
-
-    if (mineHits <= 0) {
-      userPlatabux += 50;
-      aggiornaSaldi();
-      alert("💎 Miniera scavata! +50 Platabux!");
-      tornaAllHub();
-    }
+    if (mineHits <= 0) { alert("Miniera finita! +50 Platabux"); tornaAllHub(); }
   }
 
-  /* OBBY */
   const obbyBlocks = ['🟥', '🟧', '🟨', '🟩', '🟦'];
   function aggiornaObby() {
     document.getElementById('obbyStageIcon').textContent = obbyBlocks[obbyStage - 1];
     document.getElementById('obbyText').textContent = `Stage ${obbyStage} / 5`;
   }
   function saltaObby() {
-    if (Math.random() < 0.15) {
-      alert("💥 Sei caduto dal blocco! Ricominci dallo Stage 1.");
-      obbyStage = 1;
-    } else {
-      obbyStage++;
-      if (obbyStage > 5) {
-        userCoins += 300;
-        aggiornaSaldi();
-        alert("🏆 Obby completato! +300 Monete!");
-        tornaAllHub();
-        return;
-      }
-    }
-    aggiornaObby();
+    obbyStage++;
+    if (obbyStage > 5) { alert("Obby Completato! +300 Monete"); tornaAllHub(); } else aggiornaObby();
   }
 
-  /* TYCOON */
   const tycoonIcons = ['🏚️', '🏠', '🏡', '🏢', '🏰'];
   function potenziaTycoon() {
     if (tycoonLvl < 5) {
       tycoonLvl++;
-      userCoins += tycoonLvl * 150;
-      aggiornaSaldi();
       document.getElementById('tycoonBuilding').textContent = tycoonIcons[tycoonLvl - 1];
-      document.getElementById('tycoonLevel').textContent = `Livello Struttura: ${tycoonLvl}`;
-      document.getElementById('tycoonIncome').textContent = tycoonLvl * 100;
-      alert(`✨ Edificio potenziato al livello ${tycoonLvl}!`);
-    } else {
-      alert("👑 Hai già raggiunto il livello massimo per la struttura!");
+      document.getElementById('tycoonLevel').textContent = `Livello Edificio: ${tycoonLvl}`;
     }
   }
 
-  /* PETS */
-  const petsList = [
-    { name: "Gatto Comune", icon: "🐱" },
-    { name: "Cane Raro", icon: "🐶" },
-    { name: "Draghetto Epico", icon: "🐲" },
-    { name: "Unicorno Leggendario", icon: "🦄" }
-  ];
+  const petsList = [{ name: "Gatto", icon: "🐱" }, { name: "Cane", icon: "🐶" }, { name: "Drago", icon: "🐲" }, { name: "Unicorno", icon: "🦄" }];
   function schiudiUovo() {
-    const index = Math.floor(Math.random() * petsList.length);
-    const pet = petsList[index];
-    document.getElementById('petDisplay').textContent = pet.icon;
-    document.getElementById('petName').textContent = pet.name;
-    userCoins += 100;
-    aggiornaSaldi();
+    const p = petsList[Math.floor(Math.random() * petsList.length)];
+    document.getElementById('petDisplay').textContent = p.icon;
+    document.getElementById('petName').textContent = p.name;
   }
 </script>
 
