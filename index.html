@@ -10,6 +10,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
+  <!-- Three.js e FBXLoader per visualizzare l'Avatar 3D -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/fflate.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js"></script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0b0e; color: white; min-height: 100vh; display: flex; flex-direction: column; }
@@ -45,7 +50,7 @@
 
     /* HUB GIOCHI */
     .hub-view { display: none; }
-    .welcome-box { background: linear-gradient(135deg, rgba(147,51,234,0.15), rgba(59,130,246,0.15)); border: 1px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 30px; }
+    .welcome-box { background: linear-gradient(135deg, rgba(147,51,234,0.15), rgba(59,130,246,0.15)); border: 1px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; }
     .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     .game-card { background: #16161e; border: 1px solid #272736; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
     .game-thumb { width: 100%; height: 160px; background: #272736; display: flex; align-items: center; justify-content: center; font-size: 48px; }
@@ -54,19 +59,26 @@
 
     /* VISTA SCHERMATA GIOCO CLICKER */
     .game-view { display: none; }
-    .card-game { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 16px; width: 100%; max-width: 480px; margin: 0 auto; text-align: center; }
+    .card-game { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 16px; width: 100%; max-width: 520px; margin: 0 auto; text-align: center; }
     .user-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #272736; }
     .user-name { font-weight: bold; color: #3b82f6; font-size: 1.1rem; }
     .btn-back { background: none; border: 1px solid #3b82f6; color: #3b82f6; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold; }
 
-    .counter-container { font-size: 2.2rem; font-weight: bold; margin-bottom: 20px; color: #ffffff; }
-    .btn-wrapper { position: relative; margin-bottom: 25px; }
+    /* BOX AVVISO REGOLE */
+    .notice-box { background: rgba(59, 130, 246, 0.1); border: 1px solid #3b82f6; padding: 12px; border-radius: 8px; font-size: 13px; color: #93c5fd; margin-bottom: 20px; text-align: center; line-height: 1.4; }
+    .notice-box strong { color: #3b82f6; }
+
+    .counter-container { font-size: 2.2rem; font-weight: bold; margin-bottom: 10px; color: #ffffff; }
+    .progress-info { font-size: 14px; color: #eab308; margin-bottom: 20px; font-weight: bold; }
+
+    .btn-wrapper { position: relative; margin-bottom: 20px; }
     .click-btn { padding: 25px 50px; font-size: 1.8rem; font-weight: bold; color: white; background: linear-gradient(145deg, #007bff, #0056b3); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4); outline: none; user-select: none; }
     .click-btn:active { transform: scale(0.92); }
 
     .floating-text { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: 1.8rem; font-weight: bold; color: #22c55e; pointer-events: none; animation: floatUp 0.7s ease-out forwards; }
     @keyframes floatUp { 0% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, -60px); } }
 
+    .claim-btn { width: 100%; padding: 12px 20px; background: linear-gradient(135deg, #3b82f6, #9333ea); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-bottom: 10px; display: none; }
     .save-btn { width: 100%; padding: 12px 20px; background-color: #22c55e; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-bottom: 25px; }
 
     .leaderboard-container { width: 100%; border-top: 1px solid #272736; padding-top: 20px; text-align: left; }
@@ -74,6 +86,10 @@
     .leaderboard-list { list-style: none; padding: 0; margin: 0; }
     .leaderboard-item { display: flex; justify-content: space-between; padding: 10px 15px; background: #0b0b0e; border: 1px solid #272736; border-radius: 8px; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
     .empty-msg { text-align: center; color: #888; font-style: italic; }
+
+    /* CONTENITORI AVATAR 3D */
+    .avatar-3d-box { width: 100px; height: 100px; background: rgba(0,0,0,0.3); border-radius: 50%; overflow: hidden; border: 2px solid #a855f7; }
+    .avatar-3d-game { width: 150px; height: 150px; margin: 0 auto 15px auto; background: rgba(0,0,0,0.3); border-radius: 12px; border: 2px solid #3b82f6; overflow: hidden; }
 
     /* MODALI */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; padding: 15px; }
@@ -133,8 +149,12 @@
     <!-- HUB GIOCHI -->
     <div class="hub-view" id="hubView">
       <div class="welcome-box">
-        <h1 style="color:#a855f7; font-size:24px;">Bentornato, <span id="welcomeUser">-</span>! 👋</h1>
-        <p style="color:#9aa4b8; font-size:14px; margin-top:5px;">Benvenuto su Blox Platform Global Online! Scegli un'esperienza e gioca.</p>
+        <div>
+          <h1 style="color:#a855f7; font-size:24px;">Bentornato, <span id="welcomeUser">-</span>! 👋</h1>
+          <p style="color:#9aa4b8; font-size:14px; margin-top:5px;">Benvenuto su Blox Platform Global Online!</p>
+        </div>
+        <!-- VISTA AVATAR HUB -->
+        <div class="avatar-3d-box" id="avatarHubContainer"></div>
       </div>
 
       <h2 style="margin-bottom: 15px; font-size: 20px;">🕹️ Esperienze Disponibili</h2>
@@ -144,7 +164,7 @@
             <div class="game-thumb">🖱️💎</div>
             <div class="game-body">
               <h3 style="font-size: 18px; margin-bottom: 5px;">Platabux Clicker</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Clicca sul pulsante, guadagna Platabux e scala la classifica globale!</p>
+              <p style="font-size: 12px; color: #9aa4b8;">Fai 10.000 punti per vincere 500 Platabux e scala la classifica globale!</p>
             </div>
           </div>
           <div style="padding: 15px; padding-top: 0;">
@@ -157,7 +177,7 @@
             <div class="game-thumb">⚔️</div>
             <div class="game-body">
               <h3 style="font-size: 18px; margin-bottom: 5px;">Blocky Arena 3D</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Combatti nell'arena e accumula vittorie!</p>
+              <p style="font-size: 12px; color: #9aa4b8;">Combatti nell'arena col tuo avatar!</p>
             </div>
           </div>
           <div style="padding: 15px; padding-top: 0;">
@@ -175,15 +195,30 @@
           <button class="btn-back" onclick="apriHub()">⬅️ Torna al Hub</button>
         </div>
 
+        <!-- AVATAR 3D DENTRO IL GIOCO -->
+        <div class="avatar-3d-game" id="avatarGameContainer"></div>
+
+        <!-- AVVISO REGOLA PLATABUX -->
+        <div class="notice-box">
+          📢 <strong>REGOLA PLATABUX:</strong><br>
+          Ogni <strong>10.000 Punti</strong> effettuati riceverai in premio <strong>+500 Platabux 💎</strong>!<br>
+          Il traguardo si ripete all'infinito (10k, 20k, 30k...).
+        </div>
+
         <div class="counter-container">
-          Punteggio: <span id="clickScore">0</span>
+          Punteggio Sessione: <span id="clickScore">0</span>
+        </div>
+
+        <div class="progress-info" id="progressInfo">
+          Prossimo premio tra: 10.000 click
         </div>
 
         <div class="btn-wrapper" id="btnWrapper">
           <button class="click-btn" id="clickBtn" onclick="faiClick()">Cliccami!</button>
         </div>
 
-        <button class="save-btn" onclick="salvaPunteggio()">💾 Salva in Classifica & Platabux</button>
+        <button class="claim-btn" id="claimBtn" onclick="riscattaPlatabux()">🎁 RISCATTA +500 PLATABUX! 🎁</button>
+        <button class="save-btn" onclick="salvaPunteggio()">💾 Salva Punteggio in Classifica</button>
 
         <div class="leaderboard-container">
           <h2>🏆 Classifica Globale TOP 5</h2>
@@ -241,7 +276,11 @@
   let isLoginMode = true;
   let currentUser = localStorage.getItem('bloxi_session');
   let pendingUserLogin = null;
+  
   let clickerScore = 0;
+  let unrewardedClicks = 0;
+  const TARGET_CLICKS = 10000;
+  const REWARD_PLATABUX = 500;
 
   function sanitizeKey(key) {
     return key.replace(/[.#$\[\]]/g, "_");
@@ -266,7 +305,68 @@
     return num.toString();
   }
 
-  // INIZIALIZZAZIONE ACCOUNT ADMIN SUL CLOUD
+  // --- RENDERING AVATAR 3D CON THREE.JS ---
+  function caricaAvatar3D(containerId, fbxPath = 'avatar.fbx') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(0, 100, 250);
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    dirLight.position.set(100, 200, 100);
+    scene.add(dirLight);
+
+    let avatarModel = null;
+    const loader = new THREE.FBXLoader();
+    
+    // Tenta di caricare il file avatar.fbx salvato sul tuo server
+    loader.load(fbxPath, (object) => {
+      avatarModel = object;
+      avatarModel.scale.set(0.8, 0.8, 0.8);
+      avatarModel.position.set(0, -50, 0);
+      scene.add(avatarModel);
+    }, undefined, (err) => {
+      // Se il file .fbx non viene trovato sulla cartella root, crea un modello 3D segnaposto stile Roblox
+      const group = new THREE.Group();
+      const matSkin = new THREE.MeshPhongMaterial({ color: 0xffcc99 });
+      const matShirt = new THREE.MeshPhongMaterial({ color: 0xa855f7 });
+      const matPants = new THREE.MeshPhongMaterial({ color: 0x3b82f6 });
+
+      // Testa, Busto, Braccia, Gambe
+      const head = new THREE.Mesh(new THREE.BoxGeometry(30, 30, 30), matSkin);
+      head.position.y = 50;
+      const torso = new THREE.Mesh(new THREE.BoxGeometry(40, 50, 20), matShirt);
+      torso.position.y = 10;
+      const leg1 = new THREE.Mesh(new THREE.BoxGeometry(18, 45, 18), matPants);
+      leg1.position.set(-10, -35, 0);
+      const leg2 = new THREE.Mesh(new THREE.BoxGeometry(18, 45, 18), matPants);
+      leg2.position.set(10, -35, 0);
+
+      group.add(head, torso, leg1, leg2);
+      avatarModel = group;
+      scene.add(avatarModel);
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (avatarModel) {
+        avatarModel.rotation.y += 0.015;
+      }
+      renderer.render(scene, camera);
+    }
+    animate();
+  }
+
+  // INIZIALIZZAZIONE ADMIN SUL CLOUD
   function initAdminAccounts() {
     const ownerKey = sanitizeKey(OWNER_NAME);
     const adminKey = sanitizeKey(ADMIN_COUSIN);
@@ -280,7 +380,7 @@
   }
   initAdminAccounts();
 
-  /* ASCOLTA CLASSIFICA IN TEMPO REALE DAL CLOUD */
+  /* CLASSIFICA IN TEMPO REALE */
   dbRef.ref('leaderboard').on('value', (snapshot) => {
     const data = snapshot.val() || {};
     const leaderboardList = document.getElementById('leaderboardList');
@@ -312,6 +412,7 @@
     document.getElementById('hubView').style.display = "block";
     document.getElementById('gameView').style.display = "none";
     caricaInterfaccia();
+    setTimeout(() => { caricaAvatar3D('avatarHubContainer'); }, 100);
   }
 
   function avviaClickerGame() {
@@ -321,13 +422,17 @@
 
     document.getElementById('currentUsername').textContent = currentUser;
     clickerScore = 0;
-    document.getElementById('clickScore').textContent = clickerScore;
+    unrewardedClicks = 0;
+    aggiornaInterfacciaClicker();
+    setTimeout(() => { caricaAvatar3D('avatarGameContainer'); }, 100);
   }
 
   /* LOGICA GIOCO CLICKER */
   function faiClick() {
     clickerScore++;
-    document.getElementById('clickScore').textContent = clickerScore;
+    unrewardedClicks++;
+
+    aggiornaInterfacciaClicker();
     
     const floatEl = document.createElement('div');
     floatEl.classList.add('floating-text');
@@ -335,6 +440,43 @@
     const wrapper = document.getElementById('btnWrapper');
     wrapper.appendChild(floatEl);
     floatEl.addEventListener('animationend', () => { floatEl.remove(); });
+
+    if (unrewardedClicks >= TARGET_CLICKS) {
+      document.getElementById('claimBtn').style.display = "block";
+    }
+  }
+
+  function aggiornaInterfacciaClicker() {
+    document.getElementById('clickScore').textContent = formattaNumero(clickerScore);
+    const rimasti = TARGET_CLICKS - unrewardedClicks;
+    
+    if (rimasti > 0) {
+      document.getElementById('progressInfo').textContent = `Prossimo premio (+${REWARD_PLATABUX} Platabux): mancano ${formattaNumero(rimasti)} click`;
+      document.getElementById('claimBtn').style.display = "none";
+    } else {
+      document.getElementById('progressInfo').textContent = `🎉 HAI RAGGIUNTO 10.000 PUNTI! Riscatta il tuo premio!`;
+      document.getElementById('claimBtn').style.display = "block";
+    }
+  }
+
+  function riscattaPlatabux() {
+    if (unrewardedClicks < TARGET_CLICKS) return;
+
+    const userKey = sanitizeKey(currentUser);
+
+    dbRef.ref('users/' + userKey).transaction((userData) => {
+      if (userData) {
+        userData.platabux = (userData.platabux || 0) + REWARD_PLATABUX;
+      }
+      return userData;
+    }, (error, committed) => {
+      if (committed) {
+        alert(`🎉 Complimenti! Hai raggiunto 10.000 punti e hai guadagnato +${REWARD_PLATABUX} Platabux 💎!`);
+        unrewardedClicks -= TARGET_CLICKS;
+        aggiornaInterfacciaClicker();
+        caricaInterfaccia();
+      }
+    });
   }
 
   function salvaPunteggio() {
@@ -342,24 +484,13 @@
 
     const userKey = sanitizeKey(currentUser);
 
-    // 1. Salva Platabux nel profilo Cloud
-    dbRef.ref('users/' + userKey).transaction((userData) => {
-      if (userData) {
-        userData.platabux = (userData.platabux || 0) + clickerScore;
-      }
-      return userData;
-    }, (error, committed) => {
-      if (committed) caricaInterfaccia();
-    });
-
-    // 2. Salva in Classifica Globale Cloud
     dbRef.ref('leaderboard/' + userKey).once('value', (snap) => {
       const existing = snap.val();
       if (!existing || clickerScore > existing.score) {
         dbRef.ref('leaderboard/' + userKey).set({ name: currentUser, score: clickerScore });
-        alert(`Nuovo record globale salvato: ${clickerScore} punti!\nAccreditati ${clickerScore} Platabux!`);
+        alert(`Nuovo record globale salvato: ${clickerScore} punti!`);
       } else {
-        alert(`Accreditati ${clickerScore} Platabux!\n(Il tuo record globale rimane ${existing.score} punti)`);
+        alert(`Punteggio aggiornato!\n(Il tuo record massimo in classifica rimane ${existing.score} punti)`);
       }
     });
   }
@@ -368,7 +499,7 @@
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
 
-  /* LOGICA AUTH & AUTENTICAZIONE CLOUD */
+  /* AUTH & LOGIN */
   function cambiaModalita() {
     isLoginMode = !isLoginMode;
     document.getElementById('subtitle').textContent = isLoginMode ? "Inserisci le credenziali per accedere" : "Crea un nuovo account per iniziare";
@@ -491,7 +622,7 @@
     location.reload();
   }
 
-  /* PANNELLO ADMIN ONLINE */
+  /* ADMIN */
   function apriSupervisione() {
     document.getElementById('searchInput').value = "";
     renderAccountList();
