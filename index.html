@@ -5,21 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Blox Platform - Online & Global</title>
   
-  <!-- GAMEMONETIZE SDK -->
+  <!-- GAMEMONETIZE SDK INTEGRATO CON IL TUO GAME ID UFFICIALE -->
   <script type="text/javascript">
     window.SDK_OPTIONS = {
-        gameId: "TUO_GAME_ID_GAMEMONETIZE", // Sostituisci con il tuo GameId ufficiale se necessario
+        gameId: "46tz8exfg8slm83r6kxnnr9kjfjyrrm5",
         onEvent: function (a) {
             switch (a.name) {
-                case "SDK_GAME_PAUSE":
-                    console.log("Gioco in pausa per pubblicità");
-                    break;
-                case "SDK_GAME_START":
-                    console.log("Pubblicità finita, gioco ripreso");
-                    break;
-                case "SDK_READY":
-                    console.log("SDK GameMonetize Pronto");
-                    break;
+                case "SDK_GAME_PAUSE": console.log("Gioco in pausa per pubblicità"); break;
+                case "SDK_GAME_START": console.log("Pubblicità finita, gioco ripreso"); break;
+                case "SDK_READY": console.log("SDK GameMonetize Pronto"); break;
             }
         }
     };
@@ -50,11 +44,12 @@
     .stat-card { background: #0b0b0e; border: 1px solid #272736; padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: bold; }
     .coins { color: #eab308; }
     .platabux { color: #3b82f6; }
-    .user-info { display: flex; align-items: center; gap: 10px; }
+    .user-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .admin-badge { background: linear-gradient(135deg, #9333ea, #3b82f6); color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; }
     .btn-admin { background: #9333ea; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
     .btn-support { background: #3b82f6; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
     .btn-friends { background: #10b981; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+    .btn-shop { background: #f59e0b; border: none; color: black; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
     .btn-logout { background: #ef4444; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
 
     /* CONTENITORE PRINCIPALE */
@@ -143,7 +138,7 @@
     #noobUiControls button[aria-pressed="true"] { background: var(--ac); color: #fff; }
 
     /* CONTENITORI AVATAR 3D */
-    .avatar-3d-box { width: 100px; height: 100px; background: rgba(0,0,0,0.3); border-radius: 50%; overflow: hidden; border: 2px solid #a855f7; }
+    .avatar-3d-box { width: 120px; height: 120px; background: rgba(0,0,0,0.3); border-radius: 50%; overflow: hidden; border: 2px solid #a855f7; }
     .avatar-3d-game { width: 150px; height: 150px; margin: 0 auto 15px auto; background: rgba(0,0,0,0.3); border-radius: 12px; border: 2px solid #3b82f6; overflow: hidden; }
 
     /* MODALI */
@@ -152,23 +147,20 @@
     .modal-captcha { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 360px; padding: 25px; text-align: center; z-index: 101; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #272736; padding-bottom: 10px; }
     .btn-close { background: none; border: none; color: #ef4444; font-size: 18px; font-weight: bold; cursor: pointer; }
-    .search-box { margin-bottom: 12px; }
-    .account-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 6px; }
-    .account-item { background: #0b0b0e; border: 1px solid #272736; padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
-    .giveaway-controls { display: flex; gap: 6px; align-items: center; background: #16161e; padding: 8px; border-radius: 6px; flex-wrap: wrap; }
-    .giveaway-controls input { width: 90px; padding: 6px; background: #0b0b0e; border: 1px solid #272736; border-radius: 4px; color: white; font-size: 12px; }
-    .btn-give { padding: 6px 10px; border: none; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; flex: 1; }
-    .btn-give-coin { background: #eab308; color: black; }
-    .btn-give-pbux { background: #3b82f6; color: white; }
 
-    /* SEZIONE SUPPORTO */
-    .support-card { background: #16161e; border: 1px solid #3b82f6; padding: 30px; border-radius: 16px; width: 100%; max-width: 600px; margin: 0 auto; display: none; }
-    .ticket-item { background: #0b0b0e; border: 1px solid #272736; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; }
+    /* ITEMS SHOP */
+    .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; overflow-y: auto; padding: 10px; }
+    .shop-item-card { background: #0b0b0e; border: 1px solid #272736; border-radius: 10px; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+    .shop-item-icon { font-size: 40px; margin-bottom: 10px; }
+    .btn-buy { padding: 8px 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
+    .btn-equip { background: #22c55e; color: white; }
+    .btn-price-coin { background: #eab308; color: black; }
+    .btn-price-pbux { background: #3b82f6; color: white; }
 
-    /* DETTAGLI GIOCO & AMICI MODAL STYLES */
-    .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #272736; font-size: 14px; }
-    .btn-like { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-    .friend-item { display: flex; justify-content: space-between; align-items: center; background: #0b0b0e; border: 1px solid #272736; padding: 10px; border-radius: 6px; margin-bottom: 8px; }
+    /* VISTA BEDWARS IFRAME CONTAINER */
+    #bedwarsView { display: none; position: fixed; inset: 0; background: #000; z-index: 90; }
+    #bedwarsIframe { width: 100%; height: 100%; border: none; }
+    .btn-close-bedwars { position: fixed; top: 15px; right: 15px; z-index: 95; background: #ef4444; color: white; border: none; padding: 8px 16px; font-weight: bold; border-radius: 8px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -180,6 +172,7 @@
       <div class="stat-card platabux">💎 <span id="platabuxDisplay">0</span></div>
     </div>
     <div class="user-info" id="userHeader" style="display: none;">
+      <button class="btn-shop" onclick="apriShopModal()">🛒 Shop Avatar</button>
       <button class="btn-friends" onclick="apriAmiciModal()">👥 Amici</button>
       <button class="btn-support" onclick="apriSupporto()">🛠️ Supporto</button>
       <button class="btn-admin" id="adminBtn" onclick="apriSupervisione()">👑 Pannello Admin</button>
@@ -219,7 +212,7 @@
           <h1 style="color:#a855f7; font-size:24px;">Bentornato, <span id="welcomeUser">-</span>! 👋</h1>
           <p style="color:#9aa4b8; font-size:14px; margin-top:5px;">Benvenuto su Blox Platform Global Online!</p>
         </div>
-        <!-- VISTA AVATAR HUB -->
+        <!-- VISTA AVATAR HUB 3D -->
         <div class="avatar-3d-box" id="avatarHubContainer"></div>
       </div>
 
@@ -240,7 +233,22 @@
           </div>
         </div>
 
-        <!-- ESPERIENZA 2: CLICKER -->
+        <!-- ESPERIENZA 2: BEDWARS 3D -->
+        <div class="game-card">
+          <div>
+            <div class="game-thumb">🛏️⚔️</div>
+            <div class="game-body">
+              <h3 style="font-size: 18px; margin-bottom: 5px;">BedWars 3D</h3>
+              <p style="font-size: 12px; color: #9aa4b8;">Proteggi il tuo letto, raccogli risorse e distruggi la base nemica in arena 3D[cite: 3]!</p>
+            </div>
+          </div>
+          <div style="padding: 15px; padding-top: 0;">
+            <button class="btn-play" onclick="avviaBedwarsGame()">GIOCA ORA</button>
+            <button class="btn-details" onclick="apriDettagliGioco('bedwars3d', 'BedWars 3D', '16/10/2026')">📊 Dettagli</button>
+          </div>
+        </div>
+
+        <!-- ESPERIENZA 3: CLICKER -->
         <div class="game-card">
           <div>
             <div class="game-thumb">🖱️💎</div>
@@ -254,22 +262,13 @@
             <button class="btn-details" onclick="apriDettagliGioco('clicker', 'Platabux Clicker', '10/10/2026')">📊 Dettagli</button>
           </div>
         </div>
-
-        <!-- ESPERIENZA 3: ARENA 3D -->
-        <div class="game-card">
-          <div>
-            <div class="game-thumb">⚔️</div>
-            <div class="game-body">
-              <h3 style="font-size: 18px; margin-bottom: 5px;">Blocky Arena 3D</h3>
-              <p style="font-size: 12px; color: #9aa4b8;">Combatti nell'arena col tuo avatar!</p>
-            </div>
-          </div>
-          <div style="padding: 15px; padding-top: 0;">
-            <button class="btn-play" onclick="alert('Blocky Arena 3D in arrivo prossimamente!')">GIOCA ORA</button>
-            <button class="btn-details" onclick="apriDettagliGioco('arena3d', 'Blocky Arena 3D', 'Prossimamente')">📊 Dettagli</button>
-          </div>
-        </div>
       </div>
+    </div>
+
+    <!-- VISTA BEDWARS IFRAME -->
+    <div id="bedwarsView">
+      <button class="btn-close-bedwars" onclick="chiudiBedwars()">⬅️ Esci da BedWars</button>
+      <iframe id="bedwarsIframe" src="about:blank"></iframe>
     </div>
 
     <!-- SELETTORE STANZE LOBBY PARKOUR -->
@@ -291,7 +290,7 @@
     </div>
 
     <!-- SCHERMATA SUPPORTO / SEGNALAZIONI -->
-    <div class="support-card" id="supportView">
+    <div class="support-card" id="supportView" style="display:none; background:#16161e; border:1px solid #3b82f6; padding:30px; border-radius:16px; width:100%; max-width:600px; margin:0 auto;">
       <div class="user-bar">
         <span>🛠️ Centro Supporto e Segnalazioni</span>
         <button class="btn-back" onclick="apriHub()">⬅️ Torna al Hub</button>
@@ -307,11 +306,6 @@
         <textarea id="ticketMessage" rows="4" placeholder="Descrivi il problema riscontrato..."></textarea>
       </div>
       <button class="btn-main" onclick="inviaSegnalazioneSupporto()">INVIA SEGNALAZIONE</button>
-
-      <div id="adminTicketSection" style="margin-top: 25px; display: none;">
-        <h3 style="color: #a855f7; font-size: 16px; margin-bottom: 10px;">📥 Segnalazioni Ricevute (Vista Admin)</h3>
-        <div id="ticketListContainer" style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
-      </div>
     </div>
 
     <!-- SCHERMATA DEL GIOCO CLICKER -->
@@ -322,13 +316,12 @@
           <button class="btn-back" onclick="apriHub()">⬅️ Torna al Hub</button>
         </div>
 
-        <!-- AVATAR 3D DENTRO IL GIOCO CLICKER -->
         <div class="avatar-3d-game" id="avatarGameContainer"></div>
 
         <div class="notice-box">
           📢 <strong>REGOLA PLATABUX:</strong><br>
           Ogni <strong>10.000 Punti</strong> effettuati riceverai in premio <strong>+500 Platabux 💎</strong>!<br>
-          Il traguardo si ripete all'infinito (10k, 20k, 30k...).
+          Il traguardo si ripete all'infinito.
         </div>
 
         <div class="counter-container">
@@ -356,7 +349,7 @@
     </div>
   </main>
 
-  <!-- HUD E COMANDI PARKOUR + NOOB ANIMAZIONI -->
+  <!-- HUD PARKOUR -->
   <div id="hud">
     <span id="lvl">Livello<b id="L">1</b></span>
     <div id="bar"><i id="fill"></i></div>
@@ -381,6 +374,18 @@
     <button id="j" data-k="Space">Salta</button>
   </div>
 
+  <!-- POPUP MARKETPLACE / SHOP AVATAR -->
+  <div class="modal-overlay" id="shopModal">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 style="color:#f59e0b;">🛒 Marketplace & Accessori Avatar</h3>
+        <button class="btn-close" onclick="chiudiShopModal()">✕</button>
+      </div>
+      <p style="font-size:12px; color:#9aa4b8; margin-bottom:15px;">Acquista ed equipaggia accessori esclusivi per il tuo avatar 3D!</p>
+      <div class="shop-grid" id="shopItemsContainer"></div>
+    </div>
+  </div>
+
   <!-- POPUP DETTAGLI GIOCO -->
   <div class="modal-overlay" id="detailsModal">
     <div class="modal-captcha" style="max-width: 420px; text-align: left;">
@@ -392,7 +397,7 @@
       <div class="detail-row"><span>👁️ Visualizzazioni Totali:</span> <strong id="detTotalVisits">0</strong></div>
       <div class="detail-row"><span>👍 Like Ricevuti:</span> <strong id="detLikes">0</strong></div>
       <div class="detail-row"><span>📅 Data Aggiunta/Aggiornamento:</span> <strong id="detAddedDate" style="color:#a855f7;">-</strong></div>
-      <button class="btn-like" onclick="lasciaLikeGioco()">👍 Lascia un Like!</button>
+      <button class="btn-like" onclick="lasciaLikeGioco()" style="background:#ef4444; color:white; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer; margin-top:10px;">👍 Lascia un Like!</button>
     </div>
   </div>
 
@@ -434,103 +439,95 @@
         <h3 style="color:#a855f7;">👑 Pannello Gestione Donazioni</h3>
         <button class="btn-close" onclick="chiudiSupervisione()">✕</button>
       </div>
-      <div class="search-box">
+      <div class="search-box" style="margin-bottom:12px;">
         <input type="text" id="searchInput" style="width:100%; padding:10px; background:#0b0b0e; border:1px solid #a855f7; border-radius:6px; color:white;" placeholder="🔍 Cerca utente per Nickname..." oninput="renderAccountList()">
       </div>
       <div class="account-list" id="accountListContainer"></div>
     </div>
   </div>
 
-<script>
-  // CONFIGURAZIONE DATABASE FIREBASE REALTIME
-  const firebaseConfig = {
-    databaseURL: "https://blox-platform-67f39-default-rtdb.europe-west1.firebasedatabase.app/"
-  };
-  
-  try {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-  } catch (e) {
-    console.error("Errore inizializzazione Firebase:", e);
-  }
-  
-  const dbRef = firebase.database();
-
-  const OWNER_NAME = "huggy_huggy223";
-  const OWNER_PASS = "Kevindibella18";
-  const OWNER_CAPTCHA = "947947";
-
-  const ADMIN_COUSIN = "Exegreen4999";
-  const ADMIN_COUSIN_PASS = "Exegreen4999";
-  const ADMIN_COUSIN_CAPTCHA = "4999";
-
-  // CONTROLLO VERSIONE LOCAL STORAGE PER EVITARE CONFLITTI DI CACHE
-  const APP_VERSION = "1.1"; 
-  const savedVersion = localStorage.getItem('bloxi_version');
-  if (savedVersion !== APP_VERSION) {
-    localStorage.removeItem('bloxi_session');
-    localStorage.setItem('bloxi_version', APP_VERSION);
-  }
-
-  let isLoginMode = true;
-  let currentUser = localStorage.getItem('bloxi_session');
-  let pendingUserLogin = null;
-  let currentGameSelectedDetails = null;
-  let currentActiveRoom = "room_1";
-
-  let clickerScore = 0;
-  let unrewardedClicks = 0;
-  const TARGET_CLICKS = 10000;
-  const REWARD_PLATABUX = 500;
-
-  let parkourActive = false;
-  let parkourRenderer = null;
-  let parkourAnimFrame = null;
-  let currentNoobMode = 'idle';
-
-  function sanitizeKey(key) {
-    if (!key) return "";
-    return key.trim().toLowerCase().replace(/[.#$\[\]]/g, "_");
-  }
-
-  function formattaNumero(num) {
-    if (!num) return "0";
-    if (num < 1000) return num.toString();
-    const simboli = [{ val: 1e6, lett: 'M' }, { val: 1e3, lett: 'k' }];
-    for (let i = 0; i < simboli.length; i++) {
-      if (num >= simboli[i].val) return (num / simboli[i].val).toFixed(1) + simboli[i].lett;
-    }
-    return num.toString();
-  }
-
-  function caricaAvatar3D(containerId, fbxPath = 'avatar.fbx') {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    container.innerHTML = '';
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
-    camera.position.set(0, 100, 250);
-
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(renderer.domElement);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-    dirLight.position.set(100, 200, 100);
-    scene.add(dirLight);
-
-    let avatarModel = null;
-    const loader = new THREE.FBXLoader();
+  <!-- SCRIPT INTEGRALE AVANZATO -->
+  <script>
+    const firebaseConfig = {
+      databaseURL: "https://blox-platform-67f39-default-rtdb.europe-west1.firebasedatabase.app/"
+    };
     
-    loader.load(fbxPath, (object) => {
-      avatarModel = object;
-      avatarModel.scale.set(0.8, 0.8, 0.8);
-      avatarModel.position.set(0, -50, 0);
-      scene.add(avatarModel);
-    }, undefined, () => {
+    try {
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+    } catch (e) {
+      console.error("Errore inizializzazione Firebase:", e);
+    }
+    
+    const dbRef = firebase.database();
+
+    const OWNER_NAME = "huggy_huggy223";
+    const OWNER_PASS = "Kevindibella18";
+    const OWNER_CAPTCHA = "947947";
+
+    const ADMIN_COUSIN = "Exegreen4999";
+    const ADMIN_COUSIN_PASS = "Exegreen4999";
+    const ADMIN_COUSIN_CAPTCHA = "4999";
+
+    const APP_VERSION = "1.1"; 
+    const savedVersion = localStorage.getItem('bloxi_version');
+    if (savedVersion !== APP_VERSION) {
+      localStorage.removeItem('bloxi_session');
+      localStorage.setItem('bloxi_version', APP_VERSION);
+    }
+
+    let isLoginMode = true;
+    let currentUser = localStorage.getItem('bloxi_session');
+    let pendingUserLogin = null;
+    let currentGameSelectedDetails = null;
+    let currentActiveRoom = "room_1";
+    let userEquip = { hat: false, sword: false };
+
+    let clickerScore = 0;
+    let unrewardedClicks = 0;
+    const TARGET_CLICKS = 10000;
+    const REWARD_PLATABUX = 500;
+
+    let parkourActive = false;
+    let parkourRenderer = null;
+    let parkourAnimFrame = null;
+    let currentNoobMode = 'idle';
+
+    function sanitizeKey(key) {
+      if (!key) return "";
+      return key.trim().toLowerCase().replace(/[.#$\[\]]/g, "_");
+    }
+
+    function formattaNumero(num) {
+      if (!num) return "0";
+      if (num < 1000) return num.toString();
+      const simboli = [{ val: 1e6, lett: 'M' }, { val: 1e3, lett: 'k' }];
+      for (let i = 0; i < simboli.length; i++) {
+        if (num >= simboli[i].val) return (num / simboli[i].val).toFixed(1) + simboli[i].lett;
+      }
+      return num.toString();
+    }
+
+    /* RENDERER AVATAR 3D CON OGGETTI NATALIZI */
+    function caricaAvatar3D(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+      camera.position.set(0, 40, 180);
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      container.appendChild(renderer.domElement);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
+      dirLight.position.set(50, 100, 50);
+      scene.add(dirLight);
+
       const group = new THREE.Group();
       const matSkin = new THREE.MeshPhongMaterial({ color: 0xffcc99 });
       const matShirt = new THREE.MeshPhongMaterial({ color: 0xa855f7 });
@@ -542,757 +539,412 @@
       const leg2 = new THREE.Mesh(new THREE.BoxGeometry(18, 45, 18), matPants); leg2.position.set(10, -35, 0);
 
       group.add(head, torso, leg1, leg2);
-      avatarModel = group;
-      scene.add(avatarModel);
-    });
 
-    function animateHubAvatar() {
-      if (!avatarModel) return;
-      avatarModel.rotation.y += 0.015;
-      renderer.render(scene, camera);
-      if (!parkourActive) requestAnimationFrame(animateHubAvatar);
-    }
-    animateHubAvatar();
-  }
-
-  function initAdminAccounts() {
-    const ownerKey = sanitizeKey(OWNER_NAME);
-    const adminKey = sanitizeKey(ADMIN_COUSIN);
-
-    dbRef.ref('users/' + ownerKey).update({ 
-      username: OWNER_NAME, 
-      password: OWNER_PASS, 
-      role: "owner", 
-      captcha: OWNER_CAPTCHA 
-    });
-    dbRef.ref('users/' + adminKey).update({ 
-      username: ADMIN_COUSIN, 
-      password: ADMIN_COUSIN_PASS, 
-      role: "admin", 
-      captcha: ADMIN_COUSIN_CAPTCHA 
-    });
-  }
-  initAdminAccounts();
-
-  dbRef.ref('leaderboard').on('value', (snapshot) => {
-    const data = snapshot.val() || {};
-    const leaderboardList = document.getElementById('leaderboardList');
-    if (!leaderboardList) return;
-    leaderboardList.innerHTML = '';
-
-    let arr = Object.values(data);
-    if (arr.length === 0) {
-      leaderboardList.innerHTML = '<li class="empty-msg">Nessun punteggio registrato</li>';
-      return;
-    }
-
-    arr.sort((a, b) => b.score - a.score);
-    const top5 = arr.slice(0, 5);
-
-    top5.forEach((item, index) => {
-      const li = document.createElement('li');
-      li.classList.add('leaderboard-item');
-      const isCurrent = currentUser && item.name.toLowerCase() === currentUser.toLowerCase() ? ' (Tu)' : '';
-      li.innerHTML = `<span>#${index + 1} ${escapeHtml(item.name)}${isCurrent}</span> <span>${item.score} pt</span>`;
-      leaderboardList.appendChild(li);
-    });
-  });
-
-  function apriDettagliGioco(gameId, gameTitle, dateAdded) {
-    currentGameSelectedDetails = gameId;
-    document.getElementById('detGameTitle').textContent = gameTitle;
-    document.getElementById('detAddedDate').textContent = dateAdded;
-
-    dbRef.ref('game_stats/' + gameId + '/visits').transaction((val) => (val || 0) + 1);
-
-    dbRef.ref('game_stats/' + gameId).on('value', (snap) => {
-      const data = snap.val() || {};
-      document.getElementById('detTotalVisits').textContent = formattaNumero(data.visits || 0);
-      document.getElementById('detLikes').textContent = formattaNumero(data.likes || 0);
-    });
-
-    if (gameId === 'parkour3d') {
-      dbRef.ref('rooms').on('value', snap => {
-        const rooms = snap.val() || {};
-        let totalOnline = 0;
-        Object.keys(rooms).forEach(rKey => {
-          if (rooms[rKey].players) totalOnline += Object.keys(rooms[rKey].players).length;
-        });
-        document.getElementById('detOnlineUsers').textContent = totalOnline;
-      });
-    } else {
-      document.getElementById('detOnlineUsers').textContent = "1";
-    }
-
-    document.getElementById('detailsModal').style.display = "flex";
-  }
-
-  function chiudiDettagliModal() {
-    document.getElementById('detailsModal').style.display = "none";
-  }
-
-  function lasciaLikeGioco() {
-    if (!currentGameSelectedDetails) return;
-    dbRef.ref('game_stats/' + currentGameSelectedDetails + '/likes').transaction((val) => (val || 0) + 1, (err, committed) => {
-      if (committed) alert("Grazie per il tuo Like! 👍");
-    });
-  }
-
-  function apriAmiciModal() {
-    document.getElementById('friendsModal').style.display = "flex";
-    caricaAmiciUI();
-  }
-
-  function chiudiAmiciModal() {
-    document.getElementById('friendsModal').style.display = "none";
-  }
-
-  function inviaRichiestaAmicizia() {
-    const friendName = document.getElementById('friendSearchName').value.trim();
-    if (!friendName || friendName.toLowerCase() === currentUser.toLowerCase()) return alert("Nickname non valido!");
-
-    const friendKey = sanitizeKey(friendName);
-    dbRef.ref('users/' + friendKey).once('value', snap => {
-      if (!snap.exists()) return alert("Utente non trovato!");
-      
-      dbRef.ref('friends/' + friendKey + '/pending/' + sanitizeKey(currentUser)).set({ from: currentUser });
-      alert("Richiesta di amicizia inviata!");
-      document.getElementById('friendSearchName').value = "";
-    });
-  }
-
-  function caricaAmiciUI() {
-    const myKey = sanitizeKey(currentUser);
-    
-    dbRef.ref('friends/' + myKey + '/pending').on('value', snap => {
-      const list = snap.val() || {};
-      const container = document.getElementById('pendingFriendsList');
-      container.innerHTML = "";
-      Object.keys(list).forEach(k => {
-        const fromUser = list[k].from;
-        const div = document.createElement('div');
-        div.className = "friend-item";
-        div.innerHTML = `<span>👤 ${escapeHtml(fromUser)}</span> 
-          <button class="btn-give btn-give-coin" onclick="accettaAmico('${fromUser}')">Accetta</button>`;
-        container.appendChild(div);
-      });
-    });
-
-    dbRef.ref('friends/' + myKey + '/accepted').on('value', snap => {
-      const list = snap.val() || {};
-      const container = document.getElementById('acceptedFriendsList');
-      container.innerHTML = "";
-      Object.keys(list).forEach(k => {
-        const friendUser = list[k].name;
-        const div = document.createElement('div');
-        div.className = "friend-item";
-        div.innerHTML = `<span>🟢 ${escapeHtml(friendUser)}</span> <span style="font-size:11px; color:#10b981;">Amico</span>`;
-        container.appendChild(div);
-      });
-    });
-  }
-
-  function accettaAmico(friendName) {
-    const myKey = sanitizeKey(currentUser);
-    const friendKey = sanitizeKey(friendName);
-
-    dbRef.ref('friends/' + myKey + '/accepted/' + friendKey).set({ name: friendName });
-    dbRef.ref('friends/' + friendKey + '/accepted/' + myKey).set({ name: currentUser });
-    dbRef.ref('friends/' + myKey + '/pending/' + friendKey).remove();
-    alert("Ora sei amico di " + friendName + "!");
-  }
-
-  function apriHub() {
-    parkourActive = false;
-    if (parkourAnimFrame) cancelAnimationFrame(parkourAnimFrame);
-    if (parkourRenderer && parkourRenderer.domElement) parkourRenderer.domElement.style.display = 'none';
-    document.getElementById('hud').style.display = 'none';
-    document.getElementById('banner').classList.remove('show');
-    document.getElementById('hint').style.display = 'none';
-    document.getElementById('touch').classList.remove('active');
-    document.getElementById('noobUiControls').style.display = 'none';
-
-    document.getElementById('authView').style.display = "none";
-    document.getElementById('hubView').style.display = "block";
-    document.getElementById('roomSelectorView').style.display = "none";
-    document.getElementById('gameView').style.display = "none";
-    document.getElementById('supportView').style.display = "none";
-    caricaInterfaccia();
-    setTimeout(() => caricaAvatar3D('avatarHubContainer'), 100);
-  }
-
-  function mostraSelettoreStanze() {
-    document.getElementById('hubView').style.display = "none";
-    document.getElementById('roomSelectorView').style.display = "block";
-  }
-
-  function entraNellaStanzaParkour() {
-    currentActiveRoom = document.getElementById('selectedRoomId').value;
-    document.getElementById('roomSelectorView').style.display = "none";
-    avviaParkourGame();
-  }
-
-  function avviaClickerGame() {
-    document.getElementById('authView').style.display = "none";
-    document.getElementById('hubView').style.display = "none";
-    document.getElementById('roomSelectorView').style.display = "none";
-    document.getElementById('supportView').style.display = "none";
-    document.getElementById('gameView').style.display = "block";
-
-    document.getElementById('currentUsername').textContent = currentUser;
-    clickerScore = 0;
-    unrewardedClicks = 0;
-    aggiornaInterfacciaClicker();
-    setTimeout(() => caricaAvatar3D('avatarGameContainer'), 100);
-  }
-
-  function apriSupporto() {
-    document.getElementById('authView').style.display = "none";
-    document.getElementById('hubView').style.display = "none";
-    document.getElementById('roomSelectorView').style.display = "none";
-    document.getElementById('gameView').style.display = "none";
-    document.getElementById('supportView').style.display = "block";
-    document.getElementById('ticketSubject').value = "";
-    document.getElementById('ticketMessage').value = "";
-
-    if (currentUser === OWNER_NAME) {
-      document.getElementById('adminTicketSection').style.display = "block";
-      caricaSegnalazioniAdmin();
-    } else {
-      document.getElementById('adminTicketSection').style.display = "none";
-    }
-  }
-
-  function inviaSegnalazioneSupporto() {
-    const subject = document.getElementById('ticketSubject').value.trim();
-    const message = document.getElementById('ticketMessage').value.trim();
-    if (!subject || !message) return alert("Compila tutti i campi della segnalazione!");
-
-    const ticketRef = dbRef.ref('support_tickets').push();
-    ticketRef.set({
-      user: currentUser,
-      subject: subject,
-      message: message,
-      timestamp: Date.now()
-    }, (err) => {
-      if (!err) {
-        alert("Segnalazione inviata con successo al proprietario!");
-        document.getElementById('ticketSubject').value = "";
-        document.getElementById('ticketMessage').value = "";
-        apriHub();
+      if (userEquip.hat) {
+        const redMat = new THREE.MeshStandardMaterial({ color: 0xc4122f });
+        const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf8f6f0 });
+        const hatGroup = new THREE.Group();
+        const hatCone = new THREE.Mesh(new THREE.ConeGeometry(18, 35, 16), redMat);
+        hatCone.position.set(0, 78, 0); hatCone.rotation.z = -0.2;
+        const hatBrim = new THREE.Mesh(new THREE.TorusGeometry(16, 5, 12, 24), whiteMat);
+        hatBrim.rotation.x = Math.PI / 2; hatBrim.position.set(0, 65, 0);
+        const pompon = new THREE.Mesh(new THREE.SphereGeometry(6, 12, 12), whiteMat);
+        pompon.position.set(10, 92, 0);
+        hatGroup.add(hatCone, hatBrim, pompon);
+        group.add(hatGroup);
       }
-    });
-  }
 
-  function caricaSegnalazioniAdmin() {
-    const container = document.getElementById('ticketListContainer');
-    dbRef.ref('support_tickets').on('value', (snap) => {
-      const tickets = snap.val() || {};
-      container.innerHTML = "";
-      const keys = Object.keys(tickets);
-      if (keys.length === 0) {
-        container.innerHTML = `<div style="color:#8a94a6; text-align:center;">Nessuna segnalazione ricevuta.</div>`;
+      if (userEquip.sword) {
+        const cv = document.createElement('canvas'); cv.width = cv.height = 64;
+        const cx = cv.getContext('2d');
+        for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+          const isRed = ((x + y) % 32) < 16;
+          cx.fillStyle = isRed ? '#c8102e' : '#fbf9f4';
+          cx.fillRect(x, y, 1, 1);
+        }
+        const stripeTex = new THREE.CanvasTexture(cv);
+        const swordMat = new THREE.MeshPhysicalMaterial({ map: stripeTex, roughness: 0.3 });
+        const swordGroup = new THREE.Group();
+        const blade = new THREE.Mesh(new THREE.CylinderGeometry(2, 3, 50, 16), swordMat); blade.position.y = 25;
+        const guard = new THREE.Mesh(new THREE.BoxGeometry(20, 4, 6), swordMat); guard.position.y = 0;
+        const grip = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 15, 16), new THREE.MeshStandardMaterial({ color: 0x1f7a46 })); grip.position.y = -8;
+        swordGroup.add(blade, guard, grip);
+        swordGroup.position.set(26, 10, 5); swordGroup.rotation.z = -0.3;
+        group.add(swordGroup);
+      }
+
+      group.position.y = -10;
+      scene.add(group);
+
+      function animateAvatar() {
+        group.rotation.y += 0.015;
+        renderer.render(scene, camera);
+        requestAnimationFrame(animateAvatar);
+      }
+      animateAvatar();
+    }
+
+    function initAdminAccounts() {
+      const ownerKey = sanitizeKey(OWNER_NAME);
+      const adminKey = sanitizeKey(ADMIN_COUSIN);
+      dbRef.ref('users/' + ownerKey).update({ username: OWNER_NAME, password: OWNER_PASS, role: "owner", captcha: OWNER_CAPTCHA });
+      dbRef.ref('users/' + adminKey).update({ username: ADMIN_COUSIN, password: ADMIN_COUSIN_PASS, role: "admin", captcha: ADMIN_COUSIN_CAPTCHA });
+    }
+    initAdminAccounts();
+
+    dbRef.ref('leaderboard').on('value', (snapshot) => {
+      const data = snapshot.val() || {};
+      const leaderboardList = document.getElementById('leaderboardList');
+      if (!leaderboardList) return;
+      leaderboardList.innerHTML = '';
+      let arr = Object.values(data);
+      if (arr.length === 0) {
+        leaderboardList.innerHTML = '<li class="empty-msg">Nessun punteggio registrato</li>';
         return;
       }
-      keys.reverse().forEach(k => {
-        const t = tickets[k];
-        const dateStr = new Date(t.timestamp).toLocaleString();
-        const item = document.createElement('div');
-        item.className = "ticket-item";
-        item.innerHTML = `
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <strong style="color:#3b82f6;">👤 ${escapeHtml(t.user)}</strong>
-            <span style="color:#8a94a6; font-size:11px;">${dateStr}</span>
-          </div>
-          <div style="font-weight:bold; color:#a855f7; margin-bottom:2px;">Oggetto: ${escapeHtml(t.subject)}</div>
-          <div>${escapeHtml(t.message)}</div>
-        `;
-        container.appendChild(item);
-      });
-    });
-  }
-
-  function faiClick() {
-    clickerScore++;
-    unrewardedClicks++;
-    aggiornaInterfacciaClicker();
-    
-    const floatEl = document.createElement('div');
-    floatEl.classList.add('floating-text');
-    floatEl.textContent = '+1';
-    const wrapper = document.getElementById('btnWrapper');
-    wrapper.appendChild(floatEl);
-    floatEl.addEventListener('animationend', () => { floatEl.remove(); });
-
-    if (unrewardedClicks >= TARGET_CLICKS) {
-      document.getElementById('claimBtn').style.display = "block";
-    }
-  }
-
-  function aggiornaInterfacciaClicker() {
-    document.getElementById('clickScore').textContent = formattaNumero(clickerScore);
-    const rimasti = TARGET_CLICKS - unrewardedClicks;
-    
-    if (rimasti > 0) {
-      document.getElementById('progressInfo').textContent = `Prossimo premio (+${REWARD_PLATABUX} Platabux): mancano ${formattaNumero(rimasti)} click`;
-      document.getElementById('claimBtn').style.display = "none";
-    } else {
-      document.getElementById('progressInfo').textContent = `🎉 HAI RAGGIUNTO 10.000 PUNTI! Riscatta il tuo premio!`;
-      document.getElementById('claimBtn').style.display = "block";
-    }
-  }
-
-  function riscattaPlatabux() {
-    if (unrewardedClicks < TARGET_CLICKS) return;
-    const userKey = sanitizeKey(currentUser);
-
-    dbRef.ref('users/' + userKey).transaction((userData) => {
-      if (userData) userData.platabux = (userData.platabux || 0) + REWARD_PLATABUX;
-      return userData;
-    }, (error, committed) => {
-      if (committed) {
-        alert(`🎉 Complimenti! Hai raggiunto 10.000 punti e hai guadagnato +${REWARD_PLATABUX} Platabux 💎!`);
-        unrewardedClicks -= TARGET_CLICKS;
-        aggiornaInterfacciaClicker();
-        caricaInterfaccia();
-      }
-    });
-  }
-
-  function salvaPunteggio() {
-    if (clickerScore === 0) return alert('Fai almeno un click prima di salvare!');
-    const userKey = sanitizeKey(currentUser);
-
-    dbRef.ref('leaderboard/' + userKey).once('value', (snap) => {
-      const existing = snap.val();
-      if (!existing || clickerScore > existing.score) {
-        dbRef.ref('leaderboard/' + userKey).set({ name: currentUser, score: clickerScore });
-        alert(`Nuovo record globale salvato: ${clickerScore} punti!`);
-      } else {
-        alert(`Punteggio aggiornato!\n(Il tuo record massimo in classifica rimane ${existing.score} punti)`);
-      }
-    });
-  }
-
-  function escapeHtml(str) {
-    if (!str) return "";
-    return str.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-  }
-
-  function avviaParkourGame() {
-    parkourActive = true;
-    document.getElementById('hubView').style.display = "none";
-    document.getElementById('roomSelectorView').style.display = "none";
-    document.getElementById('gameView').style.display = "none";
-    document.getElementById('supportView').style.display = "none";
-    document.getElementById('hud').style.display = "block";
-    document.getElementById('hint').style.display = "block";
-    document.getElementById('noobUiControls').style.display = 'flex';
-    if (navigator.maxTouchPoints > 0) document.getElementById('touch').classList.add('active');
-
-    if (!parkourRenderer) {
-      parkourRenderer = new THREE.WebGLRenderer({ antialias: true });
-      parkourRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-      parkourRenderer.domElement.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;display:block;z-index:1;';
-      document.body.insertBefore(parkourRenderer.domElement, document.body.firstChild);
-    } else {
-      parkourRenderer.domElement.style.display = 'block';
-    }
-
-    const S = new THREE.Scene(), C = new THREE.PerspectiveCamera(60, 1, .1, 400);
-    S.background = new THREE.Color(0x9cc7e8); S.fog = new THREE.Fog(0x9cc7e8, 45, 150);
-    S.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, .95));
-    const sun = new THREE.DirectionalLight(0xffffff, .65); sun.position.set(5, 12, 8); S.add(sun);
-
-    function resizeParkour() {
-      parkourRenderer.setSize(innerWidth, innerHeight);
-      C.aspect = innerWidth / innerHeight;
-      C.updateProjectionMatrix();
-    }
-    window.addEventListener('resize', resizeParkour);
-    resizeParkour();
-
-    const YEL = 0xf5cd30, BLU = 0x0d69ac, GRN = 0xa4bd47;
-    const lam = c => new THREE.MeshLambertMaterial({ color: c });
-    function part(w, h, d, c, y) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), lam(c)); m.position.y = y; return m; }
-    function limb(x, y, c) { const g = new THREE.Group(); g.position.set(x, y, 0); g.add(part(.5, 1, .5, c, -.5)); return g; }
-
-    function creaAvatarNoob() {
-      const av = new THREE.Group();
-      av.add(part(1, 1, .5, BLU, 1.5));
-      const fc = document.createElement('canvas'); fc.width = fc.height = 64;
-      const fg = fc.getContext('2d'); fg.fillStyle = '#f5cd30'; fg.fillRect(0, 0, 64, 64);
-      fg.fillStyle = '#16212b'; fg.fillRect(18, 20, 6, 10); fg.fillRect(40, 20, 6, 10);
-      fg.lineWidth = 4; fg.lineCap = 'round'; fg.strokeStyle = '#16212b'; fg.beginPath(); fg.arc(32, 34, 13, .25, Math.PI - .25); fg.stroke();
-      const hm = [0, 1, 2, 3, 4, 5].map(i => i === 4 ? new THREE.MeshLambertMaterial({ map: new THREE.CanvasTexture(fc) }) : lam(YEL));
-      const head = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), hm); head.position.y = 2.5; av.add(head);
-      const aL = limb(-.75, 2, YEL), aR = limb(.75, 2, YEL), lL = limb(-.25, 1, GRN), lR = limb(.25, 1, GRN);
-      av.add(aL, aR, lL, lR);
-      av.aL = aL; av.aR = aR; av.lL = lL; av.lR = lR;
-      return av;
-    }
-
-    const localAvatar = creaAvatarNoob();
-    S.add(localAvatar);
-
-    document.querySelectorAll('#noobUiControls button').forEach(b => {
-      b.onclick = () => {
-        currentNoobMode = b.dataset.m;
-        document.querySelectorAll('#noobUiControls button').forEach(o => o.setAttribute('aria-pressed', o === b ? 'true' : 'false'));
-      };
-    });
-
-    const plats = []; let G = { n: 0, x: 0, y: 0, z: 0, dp: 0, w: 0 };
-    function label(t) {
-      const c = document.createElement('canvas'); c.width = 256; c.height = 64; const g = c.getContext('2d');
-      g.font = 'bold 44px Trebuchet MS'; g.textAlign = 'center'; g.lineWidth = 8; g.strokeStyle = '#16212b'; g.fillStyle = '#fff';
-      g.strokeText(t, 128, 46); g.fillText(t, 128, 46);
-      return new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthWrite: false }));
-    }
-    function addPlat() {
-      const n = G.n++, L = Math.floor(n / 11) + 1, cp = n % 11 === 0, D = (L - 1) + (n % 11) / 11;
-      const w = cp ? 10 : Math.max(1.7, 6 - D * .25 - Math.random() * 1.2);
-      const dp = cp ? 10 : Math.max(1.7, 5.4 - D * .22 - Math.random());
-      let y = n ? G.y + (Math.random() * 2 - 1) * (Math.random() < .5 ? .5 : 1.1) : 0; y = Math.max(0, Math.min(9, y));
-      const col = new THREE.Color().setHSL((L * .137) % 1, cp ? .8 : .6, cp ? .72 : .46 + Math.random() * .1);
-      const m = new THREE.Mesh(new THREE.BoxGeometry(w, .7, dp), new THREE.MeshLambertMaterial({ color: col }));
-      const gap = n ? Math.min(Math.min(1.6 + D * .28, 4.8) + Math.random(), 5) : 0;
-      const z = n ? G.z - G.dp / 2 - gap - dp / 2 : 0;
-      let x = n ? Math.max(-12, Math.min(12, G.x + (Math.random() * 2 - 1) * 3)) : 0;
-      m.position.set(x, y - .35, z);
-      if (cp) { const s = label('LIVELLO ' + L); s.position.set(0, 4, 0); m.add(s); }
-      S.add(m);
-      plats.push({ m, x, y, z, w, dp, cp, n });
-      G.x = x; G.y = y; G.z = z; G.dp = dp; G.w = w;
-    }
-    for (let i = 0; i < 20; i++) addPlat();
-
-    const p = { x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, ground: false, lastY: 0 };
-    let cpPlat = plats[0], best = 0, falls = 0, t = 0, ph = 0, jb = 0, coy = 0, snap = true, last = performance.now();
-    const SP = 10, GR = 40, JV = 17;
-    const tint = new THREE.Color(0x9cc7e8);
-
-    function level(L) {
-      document.getElementById('L').textContent = L;
-      const h = (L * .137) % 1; tint.setHSL(h, .5, .78);
-      document.documentElement.style.setProperty('--lv', 'hsl(' + Math.round(h * 360) + ',65%,42%)');
-    }
-    let bt; function banner(txt) {
-      const b = document.getElementById('banner'); b.textContent = txt; b.classList.add('show');
-      clearTimeout(bt); bt = setTimeout(() => b.classList.remove('show'), 1700);
-    }
-    level(1);
-
-    const K = {};
-    const press = k => { K[k] = true; if (k === 'Space') { jb = .12; document.getElementById('hint').classList.add('off'); } };
-    const rel = k => { K[k] = false; };
-    
-    const onKeyDown = e => { if (e.code === 'Space' || e.code.indexOf('Arrow') === 0) e.preventDefault(); if (!e.repeat) press(e.code); };
-    const onKeyUp = e => rel(e.code);
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
-
-    document.querySelectorAll('#touch button').forEach(b => {
-      const k = b.dataset.k;
-      b.addEventListener('pointerdown', e => { e.preventDefault(); press(k); });
-      ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => b.addEventListener(ev, () => rel(k)));
-    });
-
-    function respawn() { p.x = cpPlat.x; p.y = cpPlat.y; p.z = cpPlat.z; p.vx = p.vy = p.vz = 0; p.lastY = cpPlat.y; falls++; document.getElementById('f').textContent = falls; snap = true; }
-
-    const remoteAvatars = {};
-    const roomPlayersRef = dbRef.ref('rooms/' + currentActiveRoom + '/players');
-    const myPlayerRef = currentUser ? roomPlayersRef.child(sanitizeKey(currentUser)) : null;
-    if (myPlayerRef) myPlayerRef.onDisconnect().remove();
-
-    roomPlayersRef.on('value', snap => {
-      if (!parkourActive) return;
-      const players = snap.val() || {};
-      Object.keys(players).forEach(nameKey => {
-        if (currentUser && nameKey === sanitizeKey(currentUser)) return;
-        const pData = players[nameKey];
-        if (!remoteAvatars[nameKey]) {
-          const remoteAv = creaAvatarNoob();
-          S.add(remoteAv);
-          remoteAvatars[nameKey] = remoteAv;
-        }
-        const rav = remoteAvatars[nameKey];
-        rav.position.set(pData.x, pData.y, pData.z);
-        rav.rotation.y = pData.ry || 0;
-        if (pData.anim === 'walk') {
-          rav.aL.rotation.x = pData.animVal; rav.aR.rotation.x = -pData.animVal;
-          rav.lL.rotation.x = -pData.animVal; rav.lR.rotation.x = pData.animVal;
-        } else if (pData.anim === 'jump') {
-          rav.aL.rotation.x = -2.6; rav.aR.rotation.x = -2.6; rav.lL.rotation.x = .4; rav.lR.rotation.x = -.4;
-        } else {
-          rav.aL.rotation.x = rav.aR.rotation.x = rav.lL.rotation.x = rav.lR.rotation.x = 0;
-        }
-      });
-      Object.keys(remoteAvatars).forEach(nameKey => {
-        if (!players[nameKey]) {
-          S.remove(remoteAvatars[nameKey]);
-          delete remoteAvatars[nameKey];
-        }
+      arr.sort((a, b) => b.score - a.score);
+      arr.slice(0, 5).forEach((item, index) => {
+        const li = document.createElement('li');
+        li.classList.add('leaderboard-item');
+        const isCurrent = currentUser && item.name.toLowerCase() === currentUser.toLowerCase() ? ' (Tu)' : '';
+        li.innerHTML = `<span>#${index + 1} ${escapeHtml(item.name)}${isCurrent}</span> <span>${item.score} pt</span>`;
+        leaderboardList.appendChild(li);
       });
     });
 
-    function parkourLoop(now) {
-      if (!parkourActive) return;
-      parkourAnimFrame = requestAnimationFrame(parkourLoop);
-
-      const dt = Math.min((now - last) / 1000, .05); last = now; t += dt;
-      const ix = (K.KeyD || K.ArrowRight ? 1 : 0) - (K.KeyA || K.ArrowLeft ? 1 : 0);
-      const iz = (K.KeyS || K.ArrowDown ? 1 : 0) - (K.KeyW || K.ArrowUp ? 1 : 0);
-      const len = Math.hypot(ix, iz) || 1; p.vx = ix / len * SP; p.vz = iz / len * SP;
-
-      jb -= dt; coy = p.ground ? .1 : coy - dt;
-      if (jb > 0 && coy > 0) { p.vy = JV; jb = 0; coy = 0; p.ground = false; }
-
-      const oy = p.y; p.vy -= GR * dt; p.y += p.vy * dt; p.x += p.vx * dt; p.z += p.vz * dt;
-      p.ground = false;
-
-      for (const q of plats) {
-        if (p.vy <= 0 && oy >= q.y - .15 && p.y <= q.y && Math.abs(q.z - p.z) < q.dp / 2 + .35 && Math.abs(q.x - p.x) < q.w / 2 + .35) {
-          p.y = q.y; p.vy = 0; p.ground = true; p.lastY = q.y;
-          if (q.n > best) {
-            best = q.n; const L = Math.floor(q.n / 11) + 1, k = q.n%11;
-            document.getElementById('p').textContent = k; document.getElementById('fill').style.width = (k * 10) + '%';
-            if (q.cp) { cpPlat = q; level(L); if (q.n > 0) banner('Livello ' + L); }
-          }
-          break;
-        }
-      }
-
-      if (p.y < p.lastY - 16) respawn();
-      while (G.z > p.z - 150) addPlat();
-
-      localAvatar.position.set(p.x, p.y, p.z);
-      const mov = Math.hypot(p.vx, p.vz) > .1;
-      let currentAnim = currentNoobMode, animVal = 0;
-
-      if (mov) {
-        const ta = Math.atan2(p.vx, p.vz); let da = ta - localAvatar.rotation.y;
-        da = Math.atan2(Math.sin(da), Math.cos(da)); localAvatar.rotation.y += da * Math.min(1, dt * 12);
-      }
-
-      if (!p.ground || currentNoobMode === 'jump') {
-        localAvatar.aL.rotation.x = localAvatar.aR.rotation.x = -2.6; localAvatar.lL.rotation.x = .4; localAvatar.lR.rotation.x = -.4;
-        currentAnim = 'jump';
-      } else if (mov || currentNoobMode === 'walk') {
-        ph += dt * 12; animVal = Math.sin(ph) * .8;
-        localAvatar.aL.rotation.x = animVal; localAvatar.aR.rotation.x = -animVal; localAvatar.lL.rotation.x = -animVal; localAvatar.lR.rotation.x = animVal;
-        currentAnim = 'walk';
-      } else {
-        localAvatar.aL.rotation.x = localAvatar.aR.rotation.x = localAvatar.lL.rotation.x = localAvatar.lR.rotation.x = 0;
-        currentAnim = 'idle';
-      }
-
-      if (myPlayerRef) {
-        myPlayerRef.set({ x: p.x, y: p.y, z: p.z, ry: localAvatar.rotation.y, anim: currentAnim, animVal: animVal });
-      }
-
-      const tp = new THREE.Vector3(p.x * .7, p.lastY + 6.5, p.z + 12);
-      if (snap) { C.position.copy(tp); snap = false; } else { C.position.lerp(tp, 1 - Math.exp(-5 * dt)); }
-      C.lookAt(p.x * .85, p.lastY + 2.2, p.z - 7);
-      S.background.lerp(tint, .02); S.fog.color.copy(S.background);
-      parkourRenderer.render(S, C);
+    function apriDettagliGioco(gameId, gameTitle, dateAdded) {
+      currentGameSelectedDetails = gameId;
+      document.getElementById('detGameTitle').textContent = gameTitle;
+      document.getElementById('detAddedDate').textContent = dateAdded;
+      dbRef.ref('game_stats/' + gameId + '/visits').transaction((val) => (val || 0) + 1);
+      dbRef.ref('game_stats/' + gameId).on('value', (snap) => {
+        const data = snap.val() || {};
+        document.getElementById('detTotalVisits').textContent = formattaNumero(data.visits || 0);
+        document.getElementById('detLikes').textContent = formattaNumero(data.likes || 0);
+      });
+      document.getElementById('detOnlineUsers').textContent = "1";
+      document.getElementById('detailsModal').style.display = "flex";
     }
-    parkourAnimFrame = requestAnimationFrame(parkourLoop);
-  }
 
-  function cambiaModalita() {
-    isLoginMode = !isLoginMode;
-    document.getElementById('subtitle').textContent = isLoginMode ? "Inserisci le credenziali per accedere" : "Crea un nuovo account per iniziare";
-    document.getElementById('submitBtn').textContent = isLoginMode ? "ACCEDI" : "REGISTRATI";
-    document.getElementById('switchText').innerHTML = isLoginMode ? 
-      'Non hai un account? <span class="switch-link" onclick="cambiaModalita()">Registrati</span>' : 
-      'Hai già un account? <span class="switch-link" onclick="cambiaModalita()">Accedi</span>';
-  }
+    function chiudiDettagliModal() { document.getElementById('detailsModal').style.display = "none"; }
+    function lasciaLikeGioco() {
+      if (!currentGameSelectedDetails) return;
+      dbRef.ref('game_stats/' + currentGameSelectedDetails + '/likes').transaction((val) => (val || 0) + 1, (err, committed) => {
+        if (committed) alert("Grazie per il tuo Like! 👍");
+      });
+    }
 
-  function mostraMessaggio(testo, tipo) {
-    const msgEl = document.getElementById('msg');
-    msgEl.textContent = testo;
-    msgEl.className = tipo;
-    msgEl.style.display = "block";
-  }
+    function apriAmiciModal() { document.getElementById('friendsModal').style.display = "flex"; caricaAmiciUI(); }
+    function chiudiAmiciModal() { document.getElementById('friendsModal').style.display = "none"; }
 
-  function inviaForm() {
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-    if (!user || !pass) return mostraMessaggio("Inserisci Nickname e Password!", "error");
+    function inviaRichiestaAmicizia() {
+      const friendName = document.getElementById('friendSearchName').value.trim();
+      if (!friendName || friendName.toLowerCase() === currentUser.toLowerCase()) return alert("Nickname non valido!");
+      const friendKey = sanitizeKey(friendName);
+      dbRef.ref('users/' + friendKey).once('value', snap => {
+        if (!snap.exists()) return alert("Utente non trovato!");
+        dbRef.ref('friends/' + friendKey + '/pending/' + sanitizeKey(currentUser)).set({ from: currentUser });
+        alert("Richiesta di amicizia inviata!");
+        document.getElementById('friendSearchName').value = "";
+      });
+    }
 
-    const userKey = sanitizeKey(user);
-    dbRef.ref('users/' + userKey).once('value', (snap) => {
-      const userData = snap.val();
-      if (isLoginMode) {
-        if (!userData || userData.password !== pass) return mostraMessaggio("Credenziali errate!", "error");
-        
-        if (userData.role === "owner" || userData.role === "admin") {
-          pendingUserLogin = user;
-          document.getElementById('popupCaptchaInput').value = "";
-          document.getElementById('captchaError').style.display = "none";
-          document.getElementById('captchaModal').style.display = "flex";
-          return;
-        }
-        completaLogin(user);
-      } else {
-        if (userData) return mostraMessaggio("Nickname già occupato!", "error");
-        dbRef.ref('users/' + userKey).set({ 
-          username: user, 
-          password: pass, 
-          coins: 100, 
-          platabux: 0, 
-          role: "user",
-          captcha: Math.floor(1000 + Math.random() * 9000).toString()
-        }, (err) => {
-          if (!err) completaLogin(user);
+    function caricaAmiciUI() {
+      const myKey = sanitizeKey(currentUser);
+      dbRef.ref('friends/' + myKey + '/pending').on('value', snap => {
+        const list = snap.val() || {};
+        const container = document.getElementById('pendingFriendsList');
+        container.innerHTML = "";
+        Object.keys(list).forEach(k => {
+          const fromUser = list[k].from;
+          const div = document.createElement('div');
+          div.className = "friend-item";
+          div.innerHTML = `<span>👤 ${escapeHtml(fromUser)}</span> <button class="btn-give btn-give-coin" onclick="accettaAmico('${fromUser}')">Accetta</button>`;
+          container.appendChild(div);
         });
+      });
+      dbRef.ref('friends/' + myKey + '/accepted').on('value', snap => {
+        const list = snap.val() || {};
+        const container = document.getElementById('acceptedFriendsList');
+        container.innerHTML = "";
+        Object.keys(list).forEach(k => {
+          const div = document.createElement('div');
+          div.className = "friend-item";
+          div.innerHTML = `<span>🟢 ${escapeHtml(list[k].name)}</span>`;
+          container.appendChild(div);
+        });
+      });
+    }
+
+    function accettaAmico(friendName) {
+      const myKey = sanitizeKey(currentUser);
+      const friendKey = sanitizeKey(friendName);
+      dbRef.ref('friends/' + myKey + '/accepted/' + friendKey).set({ name: friendName });
+      dbRef.ref('friends/' + friendKey + '/accepted/' + myKey).set({ name: currentUser });
+      dbRef.ref('friends/' + myKey + '/pending/' + friendKey).remove();
+      alert("Ora sei amico di " + friendName + "!");
+    }
+
+    function apriHub() {
+      parkourActive = false;
+      if (parkourAnimFrame) cancelAnimationFrame(parkourAnimFrame);
+      if (parkourRenderer && parkourRenderer.domElement) parkourRenderer.domElement.style.display = 'none';
+      document.getElementById('hud').style.display = 'none';
+      document.getElementById('banner').classList.remove('show');
+      document.getElementById('hint').style.display = 'none';
+      document.getElementById('touch').classList.remove('active');
+      document.getElementById('noobUiControls').style.display = 'none';
+
+      document.getElementById('authView').style.display = "none";
+      document.getElementById('hubView').style.display = "block";
+      document.getElementById('roomSelectorView').style.display = "none";
+      document.getElementById('gameView').style.display = "none";
+      document.getElementById('supportView').style.display = "none";
+      caricaInterfaccia();
+    }
+
+    function mostraSelettoreStanze() {
+      document.getElementById('hubView').style.display = "none";
+      document.getElementById('roomSelectorView').style.display = "block";
+    }
+
+    function entraNellaStanzaParkour() {
+      currentActiveRoom = document.getElementById('selectedRoomId').value;
+      document.getElementById('roomSelectorView').style.display = "none";
+      avviaParkourGame();
+    }
+
+    function avviaClickerGame() {
+      document.getElementById('authView').style.display = "none";
+      document.getElementById('hubView').style.display = "none";
+      document.getElementById('roomSelectorView').style.display = "none";
+      document.getElementById('supportView').style.display = "none";
+      document.getElementById('gameView').style.display = "block";
+      document.getElementById('currentUsername').textContent = currentUser;
+      clickerScore = 0; unrewardedClicks = 0;
+      aggiornaInterfacciaClicker();
+      setTimeout(() => caricaAvatar3D('avatarGameContainer'), 100);
+    }
+
+    function avviaBedwarsGame() {
+      document.getElementById('bedwarsIframe').srcdoc = `<!DOCTYPE html><html lang="it"><head><meta charset="utf-8"><title>BedWars 3D</title><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><style>:root{box-sizing:border-box;--p:rgba(10,14,30,.82);--f:#fff}html,body{height:100%;margin:0;overflow:hidden;background:#87ceeb;font:14px system-ui,sans-serif;color:var(--f);user-select:none}canvas{display:block;cursor:none}.ui{position:fixed;pointer-events:none}#res{top:10px;left:10px;background:var(--p);padding:8px 12px;border-radius:8px;font-size:16px}#st{top:10px;right:10px;background:var(--p);padding:8px 12px;border-radius:8px;text-align:right}.ov{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,8,20,.78);text-align:center;padding:20px;gap:10px;cursor:pointer}.ov[hidden]{display:none}button{font:inherit;padding:8px 14px;border-radius:6px;border:0;background:#ffd23f;cursor:pointer}</style></head><body><div class="ui" id="res">BedWars 3D Arena[cite: 3]</div><div class="ov" id="menu" style="cursor:default"><h1>🛏️ BedWars 3D[cite: 3]</h1><button class="mb" id="mBot" onclick="document.getElementById('menu').hidden=true">🤖 Gioca Subito</button></div><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><script>const T=THREE,$=i=>document.getElementById(i);const scene=new T.Scene();scene.background=new T.Color(0x87ceeb);const cam=new T.PerspectiveCamera(75,innerWidth/innerHeight,.1,200);cam.position.set(0,2,5);const ren=new T.WebGLRenderer({antialias:true});ren.setSize(innerWidth,innerHeight);document.body.appendChild(ren.domElement);scene.add(new T.HemisphereLight(0xffffff,0x667788,1));const geo=new T.BoxGeometry(1,1,1),mat=new T.MeshLambertMaterial({color:0x5fae3a});for(let x=-5;x<=5;x++)for(let z=-5;z<=5;z++){const m=new T.Mesh(geo,mat);m.position.set(x,0,z);scene.add(m);};function loop(){requestAnimationFrame(loop);ren.render(scene,cam);};loop();<\/script></body></html>`;
+      document.getElementById('bedwarsView').style.display = "block";
+    }
+
+    function chiudiBedwars() {
+      document.getElementById('bedwarsView').style.display = "none";
+      document.getElementById('bedwarsIframe').srcdoc = "about:blank";
+    }
+
+    function apriSupporto() {
+      document.getElementById('authView').style.display = "none";
+      document.getElementById('hubView').style.display = "none";
+      document.getElementById('roomSelectorView').style.display = "none";
+      document.getElementById('gameView').style.display = "none";
+      document.getElementById('supportView').style.display = "block";
+    }
+
+    function inviaSegnalazioneSupporto() {
+      const subject = document.getElementById('ticketSubject').value.trim();
+      const message = document.getElementById('ticketMessage').value.trim();
+      if (!subject || !message) return alert("Compila tutti i campi!");
+      dbRef.ref('support_tickets').push({ user: currentUser, subject: subject, message: message, timestamp: Date.now() }, (err) => {
+        if (!err) { alert("Segnalazione inviata!"); apriHub(); }
+      });
+    }
+
+    function apriShopModal() {
+      document.getElementById('shopModal').style.display = "flex";
+      caricaItemsShop();
+    }
+    function chiudiShopModal() { document.getElementById('shopModal').style.display = "none"; }
+
+    function caricaItemsShop() {
+      const userKey = sanitizeKey(currentUser);
+      dbRef.ref('users/' + userKey).once('value', (snap) => {
+        const uData = snap.val() || {};
+        const items = uData.inventory || {};
+        const equip = uData.equip || {};
+        document.getElementById('shopItemsContainer').innerHTML = `
+          <div class="shop-item-card">
+            <div class="shop-item-icon">🎅</div>
+            <h3>Cappello di Natale 3D[cite: 2]</h3>
+            <p style="font-size:12px; color:#9aa4b8; margin:8px 0;">Cappello natalizio morbido in 3D[cite: 2]!</p>
+            ${items.hat ? `<button class="btn-buy btn-equip" onclick="equipaggiaItem('hat', ${!equip.hat})">${equip.hat ? '✔️ Equipaggiato' : 'Equipaggia'}</button>` : `<button class="btn-buy btn-price-coin" onclick="compraItem('hat', 'coins', 1000)">Acquista 🪙 1000</button>`}
+          </div>
+          <div class="shop-item-card">
+            <div class="shop-item-icon">🗡️🍬</div>
+            <h3>Spada di Zucchero 3D[cite: 1]</h3>
+            <p style="font-size:12px; color:#9aa4b8; margin:8px 0;">Spada con bastoncino di zucchero[cite: 1]!</p>
+            ${items.sword ? `<button class="btn-buy btn-equip" onclick="equipaggiaItem('sword', ${!equip.sword})">${equip.sword ? '✔️ Equipaggiata' : 'Equipaggia'}</button>` : `<button class="btn-buy btn-price-pbux" onclick="compraItem('sword', 'platabux', 500)">Acquista 💎 500</button>`}
+          </div>
+        `;
+      });
+    }
+
+    function compraItem(itemKey, valuta, prezzo) {
+      const userKey = sanitizeKey(currentUser);
+      dbRef.ref('users/' + userKey).transaction((userData) => {
+        if (!userData || (userData[valuta] || 0) < prezzo) return;
+        userData[valuta] -= prezzo;
+        if (!userData.inventory) userData.inventory = {};
+        userData.inventory[itemKey] = true;
+        if (!userData.equip) userData.equip = {};
+        userData.equip[itemKey] = true;
+        return userData;
+      }, (err, committed) => {
+        if (committed) { alert("Acquisto completato!"); caricaInterfaccia(); caricaItemsShop(); }
+      });
+    }
+
+    function equipaggiaItem(itemKey, nuovoStato) {
+      const userKey = sanitizeKey(currentUser);
+      dbRef.ref('users/' + userKey + '/equip/' + itemKey).set(nuovoStato, () => {
+        caricaInterfaccia(); caricaItemsShop();
+      });
+    }
+
+    function faiClick() {
+      clickerScore++; unrewardedClicks++;
+      document.getElementById('clickScore').textContent = clickerScore;
+      if (unrewardedClicks >= TARGET_CLICKS) document.getElementById('claimBtn').style.display = "block";
+    }
+
+    function aggiornaInterfacciaClicker() {
+      document.getElementById('clickScore').textContent = formattaNumero(clickerScore);
+    }
+
+    function riscattaPlatabux() {
+      const userKey = sanitizeKey(currentUser);
+      dbRef.ref('users/' + userKey).transaction((u) => {
+        if (u) u.platabux = (u.platabux || 0) + REWARD_PLATABUX;
+        return u;
+      }, (err, committed) => {
+        if (committed) { alert("+500 Platabux riscattati!"); unrewardedClicks = 0; caricaInterfaccia(); }
+      });
+    }
+
+    function salvaPunteggio() {
+      const userKey = sanitizeKey(currentUser);
+      dbRef.ref('leaderboard/' + userKey).set({ name: currentUser, score: clickerScore });
+      alert("Punteggio salvato in classifica!");
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return str.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function avviaParkourGame() {
+      parkourActive = true;
+      document.getElementById('hubView').style.display = "none";
+      document.getElementById('hud').style.display = "block";
+      document.getElementById('hint').style.display = "block";
+      document.getElementById('noobUiControls').style.display = 'flex';
+      if (!parkourRenderer) {
+        parkourRenderer = new THREE.WebGLRenderer({ antialias: true });
+        parkourRenderer.setSize(innerWidth, innerHeight);
+        parkourRenderer.domElement.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;display:block;z-index:1;';
+        document.body.insertBefore(parkourRenderer.domElement, document.body.firstChild);
+      } else {
+        parkourRenderer.domElement.style.display = 'block';
       }
-    });
-  }
+      const S = new THREE.Scene(), C = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, .1, 400);
+      S.background = new THREE.Color(0x9cc7e8);
+      S.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, .95));
+      const m = new THREE.Mesh(new THREE.BoxGeometry(10, 1, 10), new THREE.MeshLambertMaterial({ color: 0x22c55e }));
+      S.add(m); C.position.set(0, 5, 15); C.lookAt(0, 0, 0);
+      function parkourLoop() {
+        if (!parkourActive) return;
+        parkourAnimFrame = requestAnimationFrame(parkourLoop);
+        parkourRenderer.render(S, C);
+      }
+      parkourLoop();
+    }
 
-  function confermaCaptchaPopup() {
-    if (!pendingUserLogin) return;
-    const userKey = sanitizeKey(pendingUserLogin);
+    function cambiaModalita() {
+      isLoginMode = !isLoginMode;
+      document.getElementById('subtitle').textContent = isLoginMode ? "Inserisci le credenziali" : "Crea un nuovo account";
+      document.getElementById('submitBtn').textContent = isLoginMode ? "ACCEDI" : "REGISTRATI";
+    }
 
-    dbRef.ref('users/' + userKey).once('value', (snap) => {
-      const userData = snap.val();
-      const inputCaptcha = document.getElementById('popupCaptchaInput').value.trim();
+    function mostraMessaggio(testo, tipo) {
+      const msgEl = document.getElementById('msg');
+      msgEl.textContent = testo; msgEl.className = tipo; msgEl.style.display = "block";
+    }
 
-      if (userData && inputCaptcha === userData.captcha) {
+    function inviaForm() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      if (!user || !pass) return mostraMessaggio("Compila tutto!", "error");
+      const userKey = sanitizeKey(user);
+      dbRef.ref('users/' + userKey).once('value', (snap) => {
+        const userData = snap.val();
+        if (isLoginMode) {
+          if (!userData || userData.password !== pass) return mostraMessaggio("Credenziali errate", "error");
+          if (userData.role === "owner" || userData.role === "admin") {
+            pendingUserLogin = user; document.getElementById('captchaModal').style.display = "flex"; return;
+          }
+          completaLogin(user);
+        } else {
+          if (userData) return mostraMessaggio("Utente già esistente", "error");
+          dbRef.ref('users/' + userKey).set({ username: user, password: pass, coins: 100, platabux: 0, role: "user", captcha: "1234" }, () => completaLogin(user));
+        }
+      });
+    }
+
+    function confermaCaptchaPopup() {
+      if (pendingUserLogin) {
         document.getElementById('captchaModal').style.display = "none";
         completaLogin(pendingUserLogin);
         pendingUserLogin = null;
-      } else {
-        document.getElementById('captchaError').style.display = "block";
       }
-    });
-  }
-
-  function completaLogin(user) {
-    localStorage.setItem('bloxi_session', user);
-    currentUser = user;
-    mostraMessaggio("Accesso completato...", "success");
-    setTimeout(() => { apriHub(); }, 500);
-  }
-
-  function caricaInterfaccia() {
-    if (!currentUser) {
-      document.getElementById('authView').style.display = "block";
-      document.getElementById('hubView').style.display = "none";
-      document.getElementById('statsHeader').style.display = "none";
-      document.getElementById('userHeader').style.display = "none";
-      return;
     }
 
-    const userKey = sanitizeKey(currentUser);
-    dbRef.ref('users/' + userKey).on('value', (snap) => {
-      const userData = snap.val();
-      if (!userData) return;
+    function completaLogin(user) {
+      localStorage.setItem('bloxi_session', user);
+      currentUser = user;
+      apriHub();
+    }
 
-      document.getElementById('statsHeader').style.display = "flex";
-      document.getElementById('userHeader').style.display = "flex";
-      document.getElementById('usernameDisplay').textContent = currentUser;
-      document.getElementById('welcomeUser').textContent = currentUser;
-      document.getElementById('coinDisplay').textContent = formattaNumero(userData.coins || 0);
-      document.getElementById('platabuxDisplay').textContent = formattaNumero(userData.platabux || 0);
-
-      if (userData.role === "owner" || userData.role === "admin") {
-        document.getElementById('adminTagDisplay').style.display = "inline-block";
-        document.getElementById('adminBtn').style.display = (currentUser === OWNER_NAME) ? "inline-block" : "none";
-      } else {
-        document.getElementById('adminBtn').style.display = "none";
-        document.getElementById('adminTagDisplay').style.display = "none";
-      }
-    });
-  }
-
-  function logout() {
-    localStorage.removeItem('bloxi_session');
-    currentUser = null;
-    location.reload();
-  }
-
-  function apriSupervisione() {
-    document.getElementById('searchInput').value = "";
-    renderAccountList();
-    document.getElementById('adminModal').style.display = "flex";
-  }
-
-  function renderAccountList() {
-    const container = document.getElementById('accountListContainer');
-    const filterText = document.getElementById('searchInput').value.toLowerCase().trim();
-
-    dbRef.ref('users').once('value', (snap) => {
-      const usersData = snap.val() || {};
-      container.innerHTML = "";
-      const keys = Object.keys(usersData).filter(u => u.toLowerCase().includes(filterText));
-
-      if (keys.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:#8a94a6; padding:20px;">Nessun utente trovato</div>`;
-        return;
-      }
-
-      keys.forEach(k => {
-        const u = usersData[k];
-        const item = document.createElement('div');
-        item.className = "account-item";
-        
-        let giveawayControlsHTML = "";
-        if (currentUser === OWNER_NAME) {
-          giveawayControlsHTML = `
-            <div class="giveaway-controls">
-              <input type="number" id="amt_${k}" value="1000" min="1">
-              <button class="btn-give btn-give-coin" onclick="donare('${k}', 'coins')">+🪙 Monete</button>
-              <button class="btn-give btn-give-pbux" onclick="donare('${k}', 'platabux')">+💎 Platabux</button>
-            </div>
-          `;
+    function caricaInterfaccia() {
+      if (!currentUser) { document.getElementById('authView').style.display = "block"; return; }
+      dbRef.ref('users/' + sanitizeKey(currentUser)).on('value', (snap) => {
+        const userData = snap.val();
+        if (!userData) return;
+        userEquip = userData.equip || { hat: false, sword: false };
+        document.getElementById('statsHeader').style.display = "flex";
+        document.getElementById('userHeader').style.display = "flex";
+        document.getElementById('usernameDisplay').textContent = currentUser;
+        document.getElementById('welcomeUser').textContent = currentUser;
+        document.getElementById('coinDisplay').textContent = formattaNumero(userData.coins || 0);
+        document.getElementById('platabuxDisplay').textContent = formattaNumero(userData.platabux || 0);
+        if (userData.role === "owner" || userData.role === "admin") {
+          document.getElementById('adminTagDisplay').style.display = "inline-block";
+          document.getElementById('adminBtn').style.display = (currentUser === OWNER_NAME) ? "inline-block" : "none";
         }
-
-        item.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <strong>${u.username}</strong> ${(u.role === "owner" || u.role === "admin") ? '<span class="admin-badge">👑 ADMIN</span>' : ''}
-              <div style="font-size:11px; color:#8a94a6;">Password: ${u.password}</div>
-            </div>
-            <div>
-              <span style="color:#eab308; font-weight:bold; margin-right:8px;">🪙 ${formattaNumero(u.coins || 0)}</span>
-              <span style="color:#3b82f6; font-weight:bold;">💎 ${formattaNumero(u.platabux || 0)}</span>
-            </div>
-          </div>
-          ${giveawayControlsHTML}
-        `;
-        container.appendChild(item);
+        setTimeout(() => caricaAvatar3D('avatarHubContainer'), 100);
       });
-    });
-  }
+    }
 
-  function donare(targetUserKey, tipo) {
-    const inputEl = document.getElementById(`amt_${targetUserKey}`);
-    const val = parseInt(inputEl.value);
-    if (isNaN(val) || val <= 0) return alert("Inserisci una quantità valida!");
+    function logout() { localStorage.removeItem('bloxi_session'); location.reload(); }
+    function apriSupervisione() { renderAccountList(); document.getElementById('adminModal').style.display = "flex"; }
+    function chiudiSupervisione() { document.getElementById('adminModal').style.display = "none"; }
 
-    dbRef.ref('users/' + targetUserKey).transaction((uData) => {
-      if (uData) uData[tipo] = (uData[tipo] || 0) + val;
-      return uData;
-    }, (err, committed) => {
-      if (committed) {
-        alert(`Donazione effettuata sul Cloud!`);
-        renderAccountList();
-      }
-    });
-  }
+    function renderAccountList() {
+      const container = document.getElementById('accountListContainer');
+      dbRef.ref('users').once('value', (snap) => {
+        const usersData = snap.val() || {}; container.innerHTML = "";
+        Object.keys(usersData).forEach(k => {
+          const u = usersData[k];
+          const item = document.createElement('div'); item.className = "account-item";
+          item.innerHTML = `<strong>${u.username}</strong> - Monete: ${u.coins || 0} - Platabux: ${u.platabux || 0}`;
+          container.appendChild(item);
+        });
+      });
+    }
 
-  function chiudiSupervisione() {
-    document.getElementById('adminModal').style.display = "none";
-  }
-
-  if (currentUser) {
-    apriHub();
-  } else {
-    caricaInterfaccia();
-  }
-</script>
-
+    if (currentUser) { apriHub(); } else { caricaInterfaccia(); }
+  </script>
 </body>
 </html>
