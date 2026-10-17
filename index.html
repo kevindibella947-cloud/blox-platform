@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Blox Platform - Online & Global</title>
   
+  <!-- GAMEMONETIZE SDK INTEGRATO CON IL TUO GAME ID UFFICIALE -->
   <script type="text/javascript">
     window.SDK_OPTIONS = {
         gameId: "46tz8exfg8slm83r6kxnnr9kjfjyrrm5",
         onEvent: function (a) {
             switch (a.name) {
-                case "SDK_GAME_PAUSE": console.log("Pausa pubblicità"); break;
-                case "SDK_GAME_START": console.log("Ripresa gioco"); break;
-                case "SDK_READY": console.log("SDK Pronto"); break;
+                case "SDK_GAME_PAUSE": console.log("Gioco in pausa per pubblicità"); break;
+                case "SDK_GAME_START": console.log("Pubblicità finita, gioco ripreso"); break;
+                case "SDK_READY": console.log("SDK GameMonetize Pronto"); break;
             }
         }
     };
@@ -22,9 +23,11 @@
     })(document, "script", "gamemonetize-sdk");
   </script>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDK (v9 Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+  <!-- Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <style>
@@ -32,35 +35,43 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0b0e; color: white; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
-    header { background: #16161e; border-bottom: 1px solid #272736; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; z-index: 50; }
+    /* NAVBAR */
+    header { background: #16161e; border-bottom: 1px solid #272736; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; z-index: 50; position: relative; }
     .logo { font-size: 20px; font-weight: bold; color: #a855f7; cursor: pointer; }
     .stats-bar { display: flex; align-items: center; gap: 15px; }
     .stat-card { background: #0b0b0e; border: 1px solid #272736; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: bold; }
     .coins { color: #eab308; } .platabux { color: #3b82f6; }
-    .user-info { display: flex; align-items: center; gap: 8px; }
+    .user-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .btn-shop { background: #f59e0b; border: none; color: black; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    .btn-friends { background: #10b981; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
     .btn-logout { background: #ef4444; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-    main { flex: 1; padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; }
+    /* CONTENITORE PRINCIPALE */
+    main { flex: 1; padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; z-index: 10; }
     .auth-card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; max-width: 400px; margin: 40px auto; text-align: center; }
+    h2 { margin-bottom: 8px; color: #a855f7; }
     input { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; margin-bottom: 10px; }
     .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
 
+    /* HUB GIOCHI */
     .hub-view { display: none; }
     .welcome-box { background: linear-gradient(135deg, rgba(147,51,234,0.15), rgba(59,130,246,0.15)); border: 1px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; }
-    .avatar-3d-box { width: 120px; height: 120px; background: rgba(0,0,0,0.3); border-radius: 50%; border: 2px solid #a855f7; overflow: hidden; }
     .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     .game-card { background: #16161e; border: 1px solid #272736; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
     .btn-play { width: 100%; padding: 10px; background: #22c55e; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
+    /* AVATAR 3D */
+    .avatar-3d-box { width: 120px; height: 120px; background: rgba(0,0,0,0.3); border-radius: 50%; border: 2px solid #a855f7; overflow: hidden; }
+
+    /* MARKETPLACE MODAL */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; }
     .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 600px; padding: 20px; }
     .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
     .shop-item-card { background: #0b0b0e; border: 1px solid #272736; border-radius: 10px; padding: 15px; text-align: center; }
 
-    #bedwarsView { display: none; position: fixed; inset: 0; background: #000; z-index: 90; }
-    #bedwarsCanvasContainer { width: 100%; height: 100%; }
+    /* VISTA BEDWARS FULLSCREEN CON MAPPA 3D */
+    #bedwarsView { display: none; position: fixed; inset: 0; background: #87ceeb; z-index: 90; }
+    #bedwarsCanvasContainer { width: 100%; height: 100%; display: block; }
+    .btn-close-bedwars { position: fixed; top: 15px; right: 15px; z-index: 95; background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -73,24 +84,26 @@
     </div>
     <div class="user-info" id="userHeader" style="display: none;">
       <button class="btn-shop" onclick="apriShopModal()">🛒 Shop Avatar</button>
-      <button class="btn-friends">👥 Amici</button>
       <span id="usernameDisplay" style="font-weight: bold;">-</span>
       <button class="btn-logout" onclick="logout()">Esci</button>
     </div>
   </header>
 
   <main>
+    <!-- LOGIN -->
     <div class="auth-card" id="authView">
       <h2>BLOX PLATFORM</h2>
       <input type="text" id="username" placeholder="Nickname...">
       <input type="password" id="password" placeholder="Password...">
-      <button class="btn-main" onclick="inviaForm()">ACCEDI</button>
+      <button class="btn-main" onclick="inviaForm()">ACCEDI / REGISTRATI</button>
     </div>
 
+    <!-- HUB -->
     <div class="hub-view" id="hubView">
       <div class="welcome-box">
         <div>
           <h1 style="color:#a855f7;">Bentornato, <span id="welcomeUser">-</span>! 👋</h1>
+          <p style="color:#9aa4b8; font-size:14px; margin-top:5px;">Scegli la tua esperienza di gioco</p>
         </div>
         <div class="avatar-3d-box" id="avatarHubContainer"></div>
       </div>
@@ -99,7 +112,7 @@
       <div class="games-grid">
         <div class="game-card">
           <h3>🛏️ BedWars 3D</h3>
-          <p style="font-size: 12px; color: #9aa4b8;">Proteggi il tuo letto e distruggi quello nemico nell'isola 3D!</p>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Proteggi il tuo letto e combatti nell'isola voxel 3D[cite: 3]!</p>
           <button class="btn-play" onclick="avviaBedwarsGame()">GIOCA ORA</button>
         </div>
       </div>
@@ -110,16 +123,16 @@
   <div class="modal-overlay" id="shopModal">
     <div class="modal">
       <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-        <h3 style="color:#f59e0b;">🛒 Marketplace Avatar</h3>
-        <button onclick="chiudiShopModal()" style="background:none; border:none; color:red; font-size:18px;">✕</button>
+        <h3 style="color:#f59e0b;">🛒 Marketplace Avatar & Accessori</h3>
+        <button onclick="chiudiShopModal()" style="background:none; border:none; color:red; font-size:18px; cursor:pointer;">✕</button>
       </div>
       <div class="shop-grid" id="shopItemsContainer"></div>
     </div>
   </div>
 
-  <!-- BEDWARS FULLSCREEN CONTAINER -->
+  <!-- BEDWARS FULLSCREEN CON CANVAS INTEGRATO -->
   <div id="bedwarsView">
-    <button onclick="chiudiBedwars()" style="position:fixed; top:15px; right:15px; z-index:95; background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer;">⬅️ Esci da BedWars</button>
+    <button class="btn-close-bedwars" onclick="chiudiBedwars()">⬅️ Esci da BedWars</button>
     <div id="bedwarsCanvasContainer"></div>
   </div>
 
@@ -130,10 +143,11 @@
 
     let currentUser = localStorage.getItem('bloxi_session');
     let userEquip = { hat: false, sword: false };
+    let bedwarsScene, bedwarsRenderer, bedwarsCamera, bedwarsActive = false;
 
     function sanitizeKey(k) { return k ? k.trim().toLowerCase().replace(/[.#$\[\]]/g, "_") : ""; }
 
-    /* RENDERER AVATAR CON CAPPELLO E SPADA */
+    /* RENDERER AVATAR 3D NELL'HUB CON CAPPELLO E SPADA */
     function caricaAvatar3D(containerId) {
       const container = document.getElementById(containerId);
       if (!container) return; container.innerHTML = '';
@@ -155,7 +169,7 @@
       const torso = new THREE.Mesh(new THREE.BoxGeometry(40, 50, 20), matShirt); torso.position.y = 10;
       group.add(head, torso);
 
-      /* CAPPELLO DI NATALE */
+      /* CAPPELLO DI NATALE[cite: 2] */
       if (userEquip.hat) {
         const hatGroup = new THREE.Group();
         const hatCone = new THREE.Mesh(new THREE.ConeGeometry(18, 35, 16), new THREE.MeshStandardMaterial({ color: 0xc4122f }));
@@ -163,7 +177,7 @@
         hatGroup.add(hatCone); group.add(hatGroup);
       }
 
-      /* SPADA DI ZUCCHERO */
+      /* SPADA DI ZUCCHERO[cite: 1] */
       if (userEquip.sword) {
         const swordGroup = new THREE.Group();
         const blade = new THREE.Mesh(new THREE.CylinderGeometry(2, 3, 50, 16), new THREE.MeshStandardMaterial({ color: 0xc8102e }));
@@ -172,10 +186,16 @@
       }
 
       scene.add(group);
-      function anim() { group.rotation.y += 0.015; renderer.render(scene, camera); requestAnimationFrame(anim); }
+      function anim() { 
+        if (container.style.display === "none") return;
+        group.rotation.y += 0.015; 
+        renderer.render(scene, camera); 
+        requestAnimationFrame(anim); 
+      }
       anim();
     }
 
+    /* MARKETPLACE */
     function apriShopModal() { document.getElementById('shopModal').style.display = "flex"; caricaItemsShop(); }
     function chiudiShopModal() { document.getElementById('shopModal').style.display = "none"; }
 
@@ -189,15 +209,15 @@
         document.getElementById('shopItemsContainer').innerHTML = `
           <div class="shop-item-card">
             <div style="font-size:40px;">🎅</div>
-            <h3>Cappello di Natale 3D</h3>
-            <p style="font-size:12px;">Prezzo: 🪙 1000</p>
-            ${items.hat ? `<button onclick="equipaggiaItem('hat', ${!equip.hat})">${equip.hat ? '✔️ Equipaggiato' : 'Equipaggia'}</button>` : `<button onclick="compraItem('hat', 'coins', 1000)">Acquista</button>`}
+            <h3>Cappello di Natale 3D[cite: 2]</h3>
+            <p style="font-size:12px; color:#9aa4b8; margin:8px 0;">Prezzo: 🪙 1000</p>
+            ${items.hat ? `<button class="btn-play" onclick="equipaggiaItem('hat', ${!equip.hat})">${equip.hat ? '✔️ Equipaggiato' : 'Equipaggia'}</button>` : `<button class="btn-play" style="background:#eab308; color:black;" onclick="compraItem('hat', 'coins', 1000)">Acquista</button>`}
           </div>
           <div class="shop-item-card">
             <div style="font-size:40px;">🗡️🍬</div>
-            <h3>Spada di Zucchero 3D</h3>
-            <p style="font-size:12px;">Prezzo: 💎 500</p>
-            ${items.sword ? `<button onclick="equipaggiaItem('sword', ${!equip.sword})">${equip.sword ? '✔️ Equipaggiata' : 'Equipaggia'}</button>` : `<button onclick="compraItem('sword', 'platabux', 500)">Acquista</button>`}
+            <h3>Spada di Zucchero 3D[cite: 1]</h3>
+            <p style="font-size:12px; color:#9aa4b8; margin:8px 0;">Prezzo: 💎 500</p>
+            ${items.sword ? `<button class="btn-play" onclick="equipaggiaItem('sword', ${!equip.sword})">${equip.sword ? '✔️ Equipaggiata' : 'Equipaggia'}</button>` : `<button class="btn-play" style="background:#3b82f6;" onclick="compraItem('sword', 'platabux', 500)">Acquista</button>`}
           </div>
         `;
       });
@@ -220,16 +240,72 @@
       });
     }
 
+    /* AVVIO MAPPA 3D BEDWARS INTEGRATA */
     function avviaBedwarsGame() {
       document.getElementById('bedwarsView').style.display = "block";
-      if (!document.getElementById('bedwarsScript')) {
-        const script = document.createElement('script');
-        script.id = 'bedwarsScript'; script.src = 'bedwars.js';
-        document.body.appendChild(script);
+      bedwarsActive = true;
+
+      const container = document.getElementById('bedwarsCanvasContainer');
+      container.innerHTML = "";
+
+      bedwarsScene = new THREE.Scene();
+      bedwarsScene.background = new THREE.Color(0x87ceeb);
+      bedwarsScene.fog = new THREE.Fog(0x87ceeb, 30, 100);
+
+      bedwarsCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      bedwarsCamera.position.set(0, 10, 20);
+      bedwarsCamera.lookAt(0, 0, 0);
+
+      bedwarsRenderer = new THREE.WebGLRenderer({ antialias: true });
+      bedwarsRenderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(bedwarsRenderer.domElement);
+
+      bedwarsScene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1));
+      const sun = new THREE.DirectionalLight(0xffffff, 0.8);
+      sun.position.set(20, 40, 20);
+      bedwarsScene.add(sun);
+
+      /* COSTRUZIONE MAPPA VOXEL ISOLLE BEDWARS */
+      const boxGeo = new THREE.BoxGeometry(1, 1, 1);
+      const matIsland = new THREE.MeshLambertMaterial({ color: 0x5fae3a });
+      const matStone = new THREE.MeshLambertMaterial({ color: 0x8c8c8c });
+      const matBedBlue = new THREE.MeshLambertMaterial({ color: 0x2255dd });
+      const matBedRed = new THREE.MeshLambertMaterial({ color: 0xdd2222 });
+
+      // Isola blu (giocatore)
+      for(let x=-4; x<=4; x++) for(let z=-4; z<=4; z++) {
+        const m = new THREE.Mesh(boxGeo, x===0 && z===0 ? matStone : matIsland);
+        m.position.set(x, 0, z); bedwarsScene.add(m);
       }
+      // Letto Blu
+      const bedB = new THREE.Mesh(boxGeo, matBedBlue); bedB.position.set(-2, 1, 0); bedwarsScene.add(bedB);
+
+      // Isola nemica rossa
+      for(let x=14; x<=22; x++) for(let z=-4; z<=4; z++) {
+        const m = new THREE.Mesh(boxGeo, matStone);
+        m.position.set(x, 0, z); bedwarsScene.add(m);
+      }
+      // Letto Rosso
+      const bedR = new THREE.Mesh(boxGeo, matBedRed); bedR.position.set(18, 1, 0); bedwarsScene.add(bedR);
+
+      // Ponte centrale di collegamento
+      for(let x=-3; x<=15; x++) {
+        const bridge = new THREE.Mesh(boxGeo, new THREE.MeshLambertMaterial({ color: 0xc89b5a }));
+        bridge.position.set(x, 0, 0); bedwarsScene.add(bridge);
+      }
+
+      function animateBedwars() {
+        if (!bedwarsActive) return;
+        requestAnimationFrame(animateBedwars);
+        bedwarsRenderer.render(bedwarsScene, bedwarsCamera);
+      }
+      animateBedwars();
     }
 
-    function chiudiBedwars() { document.getElementById('bedwarsView').style.display = "none"; }
+    function chiudiBedwars() { 
+      bedwarsActive = false;
+      document.getElementById('bedwarsView').style.display = "none"; 
+    }
 
     function apriHub() {
       document.getElementById('authView').style.display = "none";
@@ -240,7 +316,7 @@
     function inviaForm() {
       const user = document.getElementById('username').value.trim();
       const pass = document.getElementById('password').value.trim();
-      if (!user || !pass) return;
+      if (!user || !pass) return alert("Inserisci nickname e password!");
       const userKey = sanitizeKey(user);
       dbRef.ref('users/' + userKey).once('value', (snap) => {
         if (!snap.exists()) {
