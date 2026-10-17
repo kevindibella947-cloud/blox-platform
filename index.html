@@ -70,7 +70,7 @@
     .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
     .shop-item-card { background: #0b0b0e; border: 1px solid #272736; border-radius: 10px; padding: 15px; text-align: center; }
 
-    /* PANNELLO ADMIN DONAZIONI VECCHIA STILE */
+    /* PANNELLO ADMIN DONAZIONI */
     .admin-card-row { background: #121218; border: 1px solid #272736; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
     .admin-card-header { display: flex; justify-content: space-between; align-items: center; }
     .admin-user-title { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 8px; color: white; }
@@ -82,7 +82,7 @@
     .btn-add-coin { flex: 1; padding: 10px; background: #f59e0b; border: none; border-radius: 6px; color: black; font-weight: bold; cursor: pointer; }
     .btn-add-pbux { flex: 1; padding: 10px; background: #3b82f6; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
 
-    /* PARKOUR 3D STILE NUOVO INTEGRATO */
+    /* PARKOUR 3D STILE */
     #parkour3dView { display: none; position: fixed; inset: 0; background: #9cc7e8; z-index: 90; }
     #pk-hud { position: fixed; left: 16px; top: 16px; background: rgba(20,28,38,.88); padding: 10px 14px 12px; border-radius: 10px; min-width: 160px; box-shadow: 0 3px 0 rgba(0,0,0,.2); z-index: 95; color: white; }
     #pk-lvl { font-size: 15px; } #pk-L { display: block; font-size: 40px; line-height: 1.05; color: #1f6fe0; }
@@ -100,24 +100,28 @@
     #pk-touch #pk-j { width: 96px; height: 96px; font-size: 18px; font-weight: 700; background: #1f6fe0; color: #fff; }
     @media (pointer:coarse){#pk-touch{display:flex}}
 
+    /* BEDWARS UI STILE ORIGINALE */
     #bedwarsView { display: none; position: fixed; inset: 0; background: #87ceeb; z-index: 90; font-family: system-ui, sans-serif; color: #fff; user-select: none; }
     #bedwarsView canvas { display: block; cursor: none; width: 100%; height: 100%; }
     .bw-ui { position: fixed; pointer-events: none; }
-    #bw-res { top: 15px; left: 15px; background: rgba(10,14,30,.82); padding: 8px 12px; border-radius: 8px; font-size: 16px; z-index: 95; }
-    #bw-st { top: 15px; right: 15px; background: rgba(10,14,30,.82); padding: 8px 12px; border-radius: 8px; text-align: right; z-index: 95; }
+    #bw-res { top: 10px; left: 10px; background: rgba(10,14,30,.82); padding: 8px 12px; border-radius: 8px; font-size: 16px; z-index: 95; }
+    #bw-st { top: 10px; right: 10px; background: rgba(10,14,30,.82); padding: 8px 12px; border-radius: 8px; text-align: right; z-index: 95; }
     #bw-hpw { bottom: 72px; left: 50%; transform: translateX(-50%); width: 240px; height: 10px; background: #0008; border-radius: 5px; overflow: hidden; z-index: 95; }
     #bw-hp { height: 100%; background: #e33; width: 100%; }
     #bw-cross { top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 22px; text-shadow: 0 0 3px #000; z-index: 95; }
     #bw-msg { top: 18%; left: 50%; transform: translateX(-50%); font-size: 18px; text-shadow: 0 0 4px #000; text-align: center; z-index: 95; }
+    #bw-combo { top: 28%; left: 50%; transform: translateX(-50%); font-weight: 800; text-shadow: 0 0 6px #000,0 0 14px #f60; opacity: 0; white-space: nowrap; transition: font-size .1s; z-index: 95; }
     #bw-bar { bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 95; }
     .bw-sl { width: 58px; height: 52px; background: rgba(10,14,30,.82); border: 2px solid #555; border-radius: 6px; text-align: center; font-size: 12px; padding-top: 4px; box-sizing: border-box; }
     .bw-sl.on { border-color: #ffd23f; }
     #bw-hurt { inset: 0; background: #f00; opacity: 0; transition: opacity .3s; z-index: 92; }
-    .bw-ov { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(5,8,20,.88); text-align: center; padding: 20px; gap: 10px; z-index: 96; }
+    .bw-ov { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(5,8,20,.88); text-align: center; padding: 20px; gap: 10px; z-index: 96; cursor: pointer; }
     .bw-ov[hidden] { display: none; }
     .bw-ov button { font: inherit; padding: 8px 14px; border-radius: 6px; border: 0; background: #ffd23f; color: #000; font-weight: bold; cursor: pointer; }
     #bw-modes { display: grid; gap: 10px; min-width: 290px; }
     .bw-mb { font-size: 18px; padding: 14px 20px; }
+    #bw-lobbies { background: rgba(10,14,30,.82); border-radius: 10px; padding: 12px 16px; min-width: 290px; max-height: 40vh; overflow: auto; display: grid; gap: 6px; text-align: left; }
+    #bw-lobbies[hidden] { display: none; }
     .btn-close-bedwars { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 99; background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; }
   </style>
 </head>
@@ -234,7 +238,6 @@
     </div>
   </div>
 
-  <!-- PANNELLO ADMIN RESTAURATO CON GRAFICA ESATTA DALLO SCREENSHOT -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal" style="max-width:650px;">
       <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
@@ -246,7 +249,6 @@
     </div>
   </div>
 
-  <!-- PARKOUR 3D NUOVO SORGENTE -->
   <div id="parkour3dView">
     <button class="btn-close-parkour" onclick="chiudiParkour()">⬅️ Esci dal Parkour</button>
     <div id="pk-hud">
@@ -267,25 +269,28 @@
     <div id="parkourCanvasContainer" style="width:100%; height:100%;"></div>
   </div>
 
+  <!-- BEDWARS CONTAINER INTEGRATO CORRETTO -->
   <div id="bedwarsView">
     <button class="btn-close-bedwars" onclick="chiudiBedwars()">⬅️ Esci da BedWars</button>
-    <div class="bw-ui" id="bw-res">🔩 Ferro <b id="bw-fe">0</b> · 🟨 Oro <b id="bw-go">0</b></div>
-    <div class="bw-ui" id="bw-st"></div>
-    <div class="bw-ui" id="bw-hurt"></div>
-    <div class="bw-ui" id="bw-cross">+</div>
-    <div class="bw-ui" id="bw-msg"></div>
-    <div class="bw-ui" id="bw-hpw"><div id="bw-hp"></div></div>
-    <div class="bw-ui" id="bw-bar"></div>
-    <div class="bw-ov" id="bw-shop" hidden style="cursor:default"><h2>🛒 Negozio</h2><div id="bw-items"></div><button id="bw-closeShop">Chiudi (B)</button></div>
-    <div class="bw-ov" id="bw-menu" style="cursor:default"><h1>🛏️ BedWars 3D</h1><h3>Scegli la modalità</h3>
-      <div id="bw-modes"><button class="bw-mb" id="bw-mBot">🤖 1 vs Bot</button><button class="bw-mb" id="bw-m1v1">⚔️ 1v1</button><button class="bw-mb" id="bw-mBr">🌉 Bridge Duel</button><button class="bw-mb" id="bw-mHits">🥊 Sfida Colpi</button></div>
-    </div>
-    <div class="bw-ov" id="bw-start" hidden><h1>🛏️ BedWars 3D</h1><p id="bw-modeInfo"></p>
-      <div onclick="event.stopPropagation()" style="cursor:default;background:rgba(10,14,30,.82);padding:8px 14px;border-radius:8px"><label>🖱️ Sensibilità mouse <input type="range" id="bw-sens" min="1" max="15" value="6"></label></div>
-      <p style="font-size:13px; max-width:450px;">Proteggi il tuo letto (blu) e distruggi quello rosso nell'isola nemica.<br><b>WASD</b> muovi · <b>Spazio</b> salta · <b>Shift</b> accovacciati · <b>Click sinistro</b> attacca / piazza blocchi · <b>1-5</b> hotbar · <b>B</b> negozio</p>
-      <button id="bw-btnPlay">Gioca / Riprendi</button>
-    </div>
-    <div class="bw-ov" id="bw-end" hidden><h1 id="bw-endT"></h1><button id="bw-btnAgain">🔁 Rigioca</button><button id="bw-btnMenu">🏠 Torna al menu</button></div>
+    <div class="ui" id="bw-res">🔩 Ferro <b id="fe">0</b> · 🟨 Oro <b id="go">0</b></div>
+    <div class="ui" id="bw-st"></div>
+    <div class="ui" id="bw-hurt"></div>
+    <div class="ui" id="bw-cross">+</div>
+    <div class="ui" id="bw-msg"></div>
+    <div class="ui" id="bw-combo"></div>
+    <div class="ui" id="bw-chg" style="top:56%;left:50%;transform:translateX(-50%);width:90px;height:7px;background:#0008;border-radius:4px;overflow:hidden;opacity:0"><i id="chgi" style="display:block;height:100%;width:0;background:#ffd23f"></i></div>
+    <div class="ui" id="bw-hpw"><div id="hp"></div></div>
+    <div class="ui" id="bar"></div>
+    <div class="bw-ov" id="shop" hidden style="cursor:default"><h2>🛒 Negozio</h2><div id="items"></div><button id="closeShop">Chiudi (B)</button></div>
+    <div class="bw-ov" id="menu" style="cursor:default"><h1>🛏️ BedWars 3D</h1><h3>Scegli la modalità</h3>
+    <div id="bw-modes"><button class="bw-mb" id="mBot">🤖 1 vs Bot</button><button class="bw-mb" id="m1v1">⚔️ 1v1</button><button class="bw-mb" id="mBr">🌉 Bridge Duel</button><button class="bw-mb" id="mBrMp">🌉 Bridge Duel online (2 giocatori)</button><button class="bw-mb" id="mHits">🥊 Sfida Colpi (primo a 100)</button><button class="bw-mb" id="mLob">🏠 Lobby (max 8 giocatori)</button></div>
+    <div id="bw-lobbies" hidden></div></div>
+    <div class="bw-ov" id="start" hidden><h1>🛏️ BedWars 3D</h1><p id="modeInfo"></p>
+    <div onclick="event.stopPropagation()" style="cursor:default;background:rgba(10,14,30,.82);padding:8px 14px;border-radius:8px"><label>🖱️ Sensibilità mouse <input type="range" id="sens" min="1" max="15" value="6"></label></div>
+    <p>Proteggi il tuo letto (blu) e distruggi quello rosso nell'isola nemica.<br><b>WASD / Frecce</b> muovi · <b>Spazio</b> salta · <b>Shift</b> accovacciati · <b>Muovi il mouse</b> per guardare · <b>Click sinistro</b> attacca / rompi / piazza blocchi<br><b>1-5 o rotella</b> hotbar (5 = 🏹 arco) · <b>B</b> negozio</p>
+    <div id="lockNote" hidden onclick="event.stopPropagation()" style="background:rgba(10,14,30,.82);padding:10px 14px;border-radius:8px;max-width:420px;cursor:default"><button id="btnNoLock" style="margin-top:6px">Gioca senza blocco mouse</button></div>
+    <button>Gioca / Riprendi</button></div>
+    <div class="bw-ov" id="end" hidden><h1 id="endT"></h1><button id="btnAgain">🔁 Rigioca</button><button id="btnMenu">🏠 Torna al menu</button></div>
     <div id="bwCanvasContainer" style="width:100%; height:100%;"></div>
   </div>
   <script>
@@ -380,13 +385,13 @@
         document.getElementById('shopItemsContainer').innerHTML = `
           <div class="shop-item-card">
             <div style="font-size:40px;">🎅</div>
-            <h3>Cappello di Natale 3D[cite: 2]</h3>
+            <h3>Cappello di Natale 3D</h3>
             <p style="font-size:12px; color:#9aa4b8; margin:8px 0;">Prezzo: 🪙 1000 Monete</p>
             ${items.hat ? `<button class="btn-play" onclick="equipaggiaItem('hat', ${!equip.hat})">${equip.hat ? '✔️ Equipaggiato' : 'Equipaggia'}</button>` : `<button class="btn-play" style="background:#eab308; color:black;" onclick="compraItem('hat', 'coins', 1000)">Acquista</button>`}
           </div>
           <div class="shop-item-card">
             <div style="font-size:40px;">🗡️🍬</div>
-            <h3>Spada di Zucchero 3D[cite: 1]</h3>
+            <h3>Spada di Zucchero 3D</h3>
             <p style="font-size:12px; color:#9aa4b8; margin:8px 0;">Prezzo: 💎 500 Platabux</p>
             ${items.sword ? `<button class="btn-play" onclick="equipaggiaItem('sword', ${!equip.sword})">${equip.sword ? '✔️ Equipaggiata' : 'Equipaggia'}</button>` : `<button class="btn-play" style="background:#3b82f6;" onclick="compraItem('sword', 'platabux', 500)">Acquista</button>`}
           </div>
@@ -414,17 +419,12 @@
       });
     }
 
-    /* NUOVO MOTORE PARKOUR INFINITO INTEGRATO */
+    /* MOTORE PARKOUR INFINITO */
     let pkInitialized = false, pkAnimId = null;
     function entraNellaStanzaParkour() {
       document.getElementById('hubView').style.display = "none";
       document.getElementById('parkour3dView').style.display = "block";
-      if (!pkInitialized) {
-        initParkourEngine();
-        pkInitialized = true;
-      } else {
-        resetParkourGame();
-      }
+      if (!pkInitialized) { initParkourEngine(); pkInitialized = true; } else { resetParkourGame(); }
     }
     function chiudiParkour() {
       document.getElementById('parkour3dView').style.display = "none";
@@ -641,7 +641,7 @@
       });
     }
 
-    /* SUPPORTO & ADMIN (CON VECCHIO SISTEMA PULSANTI DONAZIONI) */
+    /* SUPPORTO & ADMIN */
     function apriSupporto() {
       document.getElementById('authView').style.display = "none";
       document.getElementById('hubView').style.display = "none";
@@ -722,27 +722,30 @@
       });
     }
 
-    /* MOTORE BEDWARS */
+    /* MOTORE BEDWARS COMPLETO INTEGRATO */
     let bwInitialized = false;
     function avviaBedwarsGame() {
       document.getElementById('bedwarsView').style.display = "block";
-      if (!bwInitialized) { initBedwarsEngine(); bwInitialized = true; } else { bwResetWorld(); }
+      if (!bwInitialized) { initBedwarsEngine(); bwInitialized = true; } else { resetWorld(); }
     }
     function chiudiBedwars() { document.getElementById('bedwarsView').style.display = "none"; document.exitPointerLock && document.exitPointerLock(); }
 
     function initBedwarsEngine() {
-      const T = THREE, $i = id => document.getElementById(id);
-      let bridge = false, hitMode = false, combo = 0, charge = 0;
-      const score = { b: 0, r: 0 }, hits = { me: 0, bot: 0 }, WINS = 5, HITS = 100;
-      const SW = [{ d: 4, kb: 9, cd: .42, r: 4 }, { d: 5, kb: 10, cd: .38, r: 4.3 }, { d: 6, kb: 11, cd: .34, r: 4.6 }, { d: 8, kb: 12.5, cd: .3, r: 5 }];
+      const T = THREE;
+      let bridge = false, hitMode = false, side = 0, combo = 0, comboT = 0, mode = 'bot', charge = 0;
+      const score = { b: 0, r: 0 }, hits = { me: 0, bot: 0 }, WINS = 5, HITS = 100, SW = [{ d: 4, kb: 9, cd: .42, r: 4 }, { d: 5, kb: 10, cd: .38, r: 4.3 }, { d: 6, kb: 11, cd: .34, r: 4.6 }, { d: 8, kb: 12.5, cd: .3, r: 5 }];
+
+      const Net = { id: 'p_' + Math.random().toString(36).slice(2, 8), room: 'room1', db: null, t: 0, remote: new Map(),
+        init(cfg) {},
+        pushPlayer(s) {}, pushBed(team, alive) {}, pushBlock(op, x, y, z, type) {}, pushEvent(ev) {},
+        tick(dt) {}
+      };
 
       const scene = new T.Scene(); scene.background = new T.Color(0x87ceeb); scene.fog = new T.Fog(0x87ceeb, 40, 120);
       const cam = new T.PerspectiveCamera(75, innerWidth / innerHeight, .1, 200); cam.rotation.order = 'YXZ'; scene.add(cam);
       const ren = new T.WebGLRenderer({ antialias: true }); ren.setPixelRatio(Math.min(devicePixelRatio, 2)); ren.setSize(innerWidth, innerHeight);
-      $i('bwCanvasContainer').appendChild(ren.domElement);
-
-      scene.add(new T.HemisphereLight(0xffffff, 0x667788, 1));
-      const sun = new T.DirectionalLight(0xffffff, .55); sun.position.set(30, 50, 20); scene.add(sun);
+      document.getElementById('bwCanvasContainer').appendChild(ren.domElement);
+      scene.add(new T.HemisphereLight(0xffffff, 0x667788, 1)); const sun = new T.DirectionalLight(0xffffff, .55); sun.position.set(30, 50, 20); scene.add(sun);
       addEventListener('resize', () => { cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix(); ren.setSize(innerWidth, innerHeight); });
 
       for (let i = 0; i < 14; i++) {
@@ -751,74 +754,65 @@
       }
 
       function tex(c, stripe) {
-        const cv = document.createElement('canvas'); cv.width = cv.height = 16; const g = cv.getContext('2d');
-        g.fillStyle = c; g.fillRect(0, 0, 16, 16);
+        const cv = document.createElement('canvas'); cv.width = cv.height = 16; const g = cv.getContext('2d'); g.fillStyle = c; g.fillRect(0, 0, 16, 16);
         for (let i = 0; i < 40; i++) { g.fillStyle = 'rgba(0,0,0,' + Math.random() * .18 + ')'; g.fillRect(Math.random() * 16 | 0, Math.random() * 16 | 0, 2, 2); }
-        if (stripe) { g.fillStyle = '#fff'; g.fillRect(0, 5, 16, 6); }
-        g.strokeStyle = 'rgba(0,0,0,.4)'; g.strokeRect(.5, .5, 15, 15);
-        return new T.CanvasTexture(cv);
+        if (stripe) { g.fillStyle = '#fff'; g.fillRect(0, 5, 16, 6); } g.strokeStyle = 'rgba(0,0,0,.4)'; g.strokeRect(.5, .5, 15, 15);
+        const t = new T.CanvasTexture(cv); t.magFilter = T.NearestFilter; return t;
       }
       const M = {};
       [['grass', '#5fae3a'], ['dirt', '#8a5a2b'], ['stone', '#8c8c8c'], ['wool', '#3b6cff'], ['wood', '#c89b5a'], ['bedB', '#2255dd', 1], ['bedR', '#dd2222', 1], ['gold', '#ffd23f']]
         .forEach(([n, c, s]) => M[n] = new T.MeshLambertMaterial({ map: tex(c, s) }));
-
       const HP = { grass: 3, dirt: 3, stone: 8, wool: 2, wood: 4, bedB: 5, bedR: 5, gold: 999 }, BL = [null, 'wool', 'stone', 'wood'];
       const blocks = new Map(), geo = new T.BoxGeometry(1, 1, 1);
-      function setBlock(x, y, z, type) {
+      
+      function setBlock(x, y, z, type, net = true) {
         const k = x + ',' + y + ',' + z; if (blocks.has(k)) return;
-        const m = new T.Mesh(geo, M[type]); m.position.set(x + .5, y + .5, z + .5); m.updateMatrixWorld();
-        m.userData = { k, x, y, z, type, hp: HP[type] };
+        const m = new T.Mesh(geo, M[type]); m.position.set(x + .5, y + .5, z + .5); m.updateMatrixWorld(); m.userData = { k, x, y, z, type, hp: HP[type] };
         scene.add(m); blocks.set(k, m);
       }
-      function removeBlock(k) {
-        const m = blocks.get(k); if (!m) return; scene.remove(m); blocks.delete(k);
-        if (m.userData.type === 'bedB') breakBed('blue'); if (m.userData.type === 'bedR') breakBed('red');
+      function removeBlock(k, net = true) {
+        const m = blocks.get(k); if (!m) return; scene.remove(m); blocks.delete(k); const u = m.userData;
+        if (u.type === 'bedB') breakBed('blue', net); if (u.type === 'bedR') breakBed('red', net);
       }
       function dmg(m, d, byPlayer) {
-        if (byPlayer && m.userData.type === 'bedB') { bwMsg('Non puoi rompere il tuo letto!'); return; }
-        m.userData.hp -= d; m.scale.setScalar(.85); setTimeout(() => m.scale.setScalar(1), 90); if (m.userData.hp <= 0) removeBlock(m.userData.k);
+        const u = m.userData; if (byPlayer && u.type === 'bedB') { msg('Non puoi rompere il tuo letto!'); return; }
+        u.hp -= d; m.scale.setScalar(.85); setTimeout(() => m.scale.setScalar(1), 90); if (u.hp <= 0) removeBlock(u.k);
       }
       const bedAlive = { blue: true, red: true };
-      function breakBed(t) {
-        bedAlive[t] = false; bwSt();
-        bwMsg(t === 'red' ? '🛏️ Letto nemico distrutto!' : '💀 Il tuo letto è stato distrutto!', 3500);
-        if (t === 'red' && !bot.alive) bwEnd(true);
+      function breakBed(t, net) {
+        bedAlive[t] = false; st();
+        msg(t === 'red' ? '🛏️ Letto nemico distrutto! Il bot non rinascerà.' : '💀 Il tuo letto è stato distrutto! Niente più respawn.', 3500);
+        if (t === 'red' && !bot.alive) end(true);
       }
 
       function island(cx, cz, r) {
         for (let x = -r; x <= r; x++) for (let z = -r; z <= r; z++) {
           const d = Math.max(Math.abs(x), Math.abs(z));
-          for (let i = 0; i <= r - d + 1 && i < 4; i++) setBlock(cx + x, -i, cz + z, i ? (i > 2 ? 'stone' : 'dirt') : 'grass');
+          for (let i = 0; i <= r - d + 1 && i < 4; i++) setBlock(cx + x, -i, cz + z, i ? (i > 2 ? 'stone' : 'dirt') : 'grass', false);
         }
       }
-      function buildArena() { for (let x = -7; x <= 7; x++) for (let z = -7; z <= 7; z++) setBlock(x, 0, z, Math.max(Math.abs(x), Math.abs(z)) === 7 ? 'wood' : 'stone'); }
+      function buildArena() { for (let x = -7; x <= 7; x++) for (let z = -7; z <= 7; z++) setBlock(x, 0, z, Math.max(Math.abs(x), Math.abs(z)) === 7 ? 'wood' : 'stone', false); }
       function buildBridge() {
-        for (let x = -4; x <= 2; x++) for (let z = -3; z <= 3; z++) setBlock(x, 0, z, 'stone');
-        for (let x = 38; x <= 44; x++) for (let z = -3; z <= 3; z++) setBlock(x, 0, z, 'stone');
-        for (let x = 3; x <= 37; x++) setBlock(x, 0, 0, 'wood');
+        for (let x = -4; x <= 2; x++) for (let z = -3; z <= 3; z++) setBlock(x, 0, z, 'stone', false);
+        for (let x = 38; x <= 44; x++) for (let z = -3; z <= 3; z++) setBlock(x, 0, z, 'stone', false);
+        for (let x = 3; x <= 37; x++) setBlock(x, 0, 0, 'wood', false);
       }
       function buildMap() {
-        if (hitMode) return buildArena();
-        if (bridge) return buildBridge();
+        if (hitMode) return buildArena(); if (bridge) return buildBridge();
         island(0, 0, 4); island(18, 0, 2); island(36, 0, 4);
-        setBlock(-3, 1, 0, 'bedB'); setBlock(39, 1, 0, 'bedR');
-        [[38, 1, 0], [40, 1, 0], [39, 1, 1], [39, 1, -1], [39, 2, 0], [38, 2, 0]].forEach(([x, y, z]) => setBlock(x, y, z, 'wood'));
+        setBlock(-3, 1, 0, 'bedB', false); setBlock(39, 1, 0, 'bedR', false);
+        [[38, 1, 0], [40, 1, 0], [39, 1, 1], [39, 1, -1], [39, 2, 0], [38, 2, 0]].forEach(([x, y, z]) => setBlock(x, y, z, 'wood', false));
       }
       buildMap();
 
       const gens = [[2, -3, 1.5, 8], [18, 0, 4, 6], [34, -3, 1.5, 8]].map(([x, z, fi, gi]) => {
-        setBlock(x, 1, z, 'stone');
-        const m = new T.Mesh(new T.BoxGeometry(.6, .6, .6), new T.MeshLambertMaterial({ color: 0xffd23f, emissive: 0x553300 }));
-        m.position.set(x + .5, 2.4, z + .5); scene.add(m);
+        setBlock(x, 1, z, 'stone', false);
+        const m = new T.Mesh(new T.BoxGeometry(.6, .6, .6), new T.MeshLambertMaterial({ color: 0xffd23f, emissive: 0x553300 })); m.position.set(x + .5, 2.4, z + .5); scene.add(m);
         return { x, z, fi, gi, ft: 0, gt: 0, fe: 0, go: 0, m };
       });
 
       function hit(e) {
-        const p = e.pos;
-        for (let x = Math.floor(p.x - .3); x <= Math.floor(p.x + .3); x++)
-          for (let y = Math.floor(p.y); y <= Math.floor(p.y + 1.79); y++)
-            for (let z = Math.floor(p.z - .3); z <= Math.floor(p.z + .3); z++)
-              if (blocks.has(x + ',' + y + ',' + z)) return true;
+        const p = e.pos; for (let x = Math.floor(p.x - .3); x <= Math.floor(p.x + .3); x++) for (let y = Math.floor(p.y); y <= Math.floor(p.y + 1.79); y++) for (let z = Math.floor(p.z - .3); z <= Math.floor(p.z + .3); z++) if (blocks.has(x + ',' + y + ',' + z)) return true;
         return false;
       }
       const solid = (x, y, z) => blocks.has(Math.floor(x) + ',' + Math.floor(y) + ',' + Math.floor(z));
@@ -831,32 +825,28 @@
       }
 
       const P = { pos: new T.Vector3(1.5, 1.01, .5), vel: new T.Vector3(), hp: 20, alive: true, ground: false };
-      let yaw = -Math.PI / 2, pitch = 0, slot = 0, sw = 0, pick = 0, cd = 0, swing = 0, respT = 0, down = 0, paused = true, shopOpen = false, state = 'play', target = null;
+      let yaw = -Math.PI / 2, pitch = 0, slot = 0, sw = 0, pick = 0, cd = 0, swing = 0, respT = 0, down = 0, paused = true, shopOpen = false, noLock = false, everLocked = false, state = 'play', target = null;
       const inv = { fe: 0, go: 0, wool: 16, stone: 0, wood: 0, arrows: 12 }, k = {};
 
-      function bwHurt(n) {
-        if (!P.alive) return;
-        P.hp -= n; document.getElementById('bw-hurt').style.opacity = .5;
+      function hurt(n) {
+        if (!P.alive) return; P.hp -= n; document.getElementById('bw-hurt').style.opacity = .5;
         setTimeout(() => document.getElementById('bw-hurt').style.opacity = 0, 150);
-        if (P.hp <= 0) bwDie('Sei stato sconfitto!');
+        if (P.hp <= 0) die('Sei stato sconfitto!');
       }
-      function bwDie(r) { combo = 0; P.alive = false; P.vel.set(0, 0, 0); if (bedAlive.blue) { respT = 3; bwMsg(r + ' Respawn in 3s...', 3000); } else bwEnd(false); }
-      function bwRespawn() {
-        const q = hitMode ? [-4.5, -Math.PI / 2] : bridge ? [40.5, Math.PI / 2] : [1.5, -Math.PI / 2];
-        P.pos.set(q[0], 1.01, .5); P.vel.set(0, 0, 0); P.hp = 20; P.alive = true; yaw = q[1]; combo = 0; bwMsg('Respawn!');
+      function die(r) { combo = 0; P.alive = false; P.vel.set(0, 0, 0); if (bedAlive.blue) { respT = 3; msg(r + ' Respawn in 3s...', 3000); } else end(false); }
+      function respawn() {
+        const q = hitMode ? [-4.5, -Math.PI / 2] : bridge && side ? [40.5, Math.PI / 2] : [1.5, -Math.PI / 2];
+        P.pos.set(q[0], 1.01, .5); P.vel.set(0, 0, 0); P.hp = 20; P.alive = true; yaw = q[1]; combo = 0; msg('Respawn!');
       }
-      function bwEnd(win) {
-        if (state !== 'play') return;
-        state = 'over';
-        document.getElementById('bw-endT').textContent = win ? '🏆 Vittoria!' : '☠️ Sconfitta';
-        document.getElementById('bw-end').hidden = false;
-        document.exitPointerLock && document.exitPointerLock();
+      function end(win) {
+        if (state !== 'play') return; state = 'over';
+        document.getElementById('endT').textContent = win ? '🏆 Vittoria!' : '☠️ Sconfitta';
+        document.getElementById('end').hidden = false; document.exitPointerLock && document.exitPointerLock();
       }
 
       function mkBot() {
         const g = new T.Group(), cols = { sk: 0xf1c27d, sh: 0xdd2222, pn: 0x2b3a8a, hr: 0x3b2417, sw: 0xcccccc, bw: 0x8a5a2b }, ms = {};
-        for (const k in cols) ms[k] = new T.MeshLambertMaterial({ color: cols[k] });
-        g.rotation.order = 'YXZ';
+        for (const k in cols) ms[k] = new T.MeshLambertMaterial({ color: cols[k] }); g.rotation.order = 'YXZ';
         const box = (w, h, d, m, x, y, z, p) => { const o = new T.Mesh(new T.BoxGeometry(w, h, d), ms[m]); o.position.set(x, y, z); (p || g).add(o); return o; };
         const piv = (x, y, z) => { const p = new T.Group(); p.position.set(x, y, z); g.add(p); return p; };
         box(.55, .7, .28, 'sh', 0, 1.05, 0);
@@ -869,19 +859,17 @@
         scene.add(g); g.userData = { ms, head, lA, rA, lL, rL, sw, bw }; return g;
       }
 
-      const bot = { pos: new T.Vector3(), vel: new T.Vector3(), hp: 20, alive: false, g: mkBot(), t: 0, cd: 0, rt: 0, ground: false };
-      const arrows = [], arrowGeo = new T.BoxGeometry(.05, .05, .55), arrowMat = new T.MeshLambertMaterial({ color: 0xddddcc });
-      const hb = (e, p) => Math.abs(p.x - e.x) < .45 && Math.abs(p.z - e.z) < .45 && p.y > e.y && p.y < e.y + 1.9;
+      const bot = { pos: new T.Vector3(), vel: new T.Vector3(), hp: 20, alive: false, g: mkBot(), t: 0, cd: 0, bt: 0, rt: 0, ground: false };
+      const arrows = [], arrowGeo = new T.BoxGeometry(.05, .05, .55), arrowMat = new T.MeshLambertMaterial({ color: 0xddddcc }), hb = (e, p) => Math.abs(p.x - e.x) < .45 && Math.abs(p.z - e.z) < .45 && p.y > e.y && p.y < e.y + 1.9;
 
       function shoot(pos, vel, o) {
-        const m = new T.Mesh(arrowGeo, arrowMat); m.position.copy(pos); scene.add(m);
-        arrows.push({ m, v: vel.clone(), o, t: 0 });
+        const m = new T.Mesh(arrowGeo, arrowMat); m.position.copy(pos); scene.add(m); arrows.push({ m, v: vel.clone(), o, t: 0 });
       }
       function clearArrows() { arrows.forEach(a => scene.remove(a.m)); arrows.length = 0; }
       function fireBow() {
-        if (inv.arrows <= 0) { bwMsg('Frecce finite! Compra nel negozio (B)'); return; }
-        const d = cam.getWorldDirection(new T.Vector3()), pw = .35 + .65 * charge;
-        inv.arrows--; shoot(cam.position.clone().addScaledVector(d, .6), d.multiplyScalar(46 * pw), 'p');
+        if (inv.arrows <= 0) { msg('Frecce finite!'); return; }
+        const d = cam.getWorldDirection(new T.Vector3()), pw = .35 + .65 * charge; inv.arrows--;
+        shoot(cam.position.clone().addScaledVector(d, .6), d.multiplyScalar(46 * pw), 'p');
       }
       function arrowsUpdate(dt) {
         for (let i = arrows.length - 1; i >= 0; i--) {
@@ -891,8 +879,9 @@
             const p = a.m.position.addScaledVector(a.v, dt / n);
             if (solid(p.x, p.y, p.z)) { dead = true; break; }
             if (a.o === 'p' && bot.alive && hb(bot.pos, p)) {
-              bot.hp -= 6; knock(bot, a.v.x, a.v.z, 6); if (bot.hp <= 0) killBot(); dead = true;
-            } else if (a.o === 'b' && P.alive && hb(P.pos, p)) { bwHurt(4); knock(P, a.v.x, a.v.z, 6); dead = true; }
+              bot.hp -= 6; knock(bot, a.v.x, a.v.z, 6); msg('🏹 Colpito!', 600);
+              if (bot.hp <= 0) killBot(); dead = true;
+            } else if (a.o === 'b' && P.alive && hb(P.pos, p)) { hurt(4); knock(P, a.v.x, a.v.z, 6); dead = true; }
           }
           a.m.lookAt(a.m.position.x + a.v.x, a.m.position.y + a.v.y, a.m.position.z + a.v.z);
           if (dead || a.t > 6 || a.m.position.y < -40) { scene.remove(a.m); arrows.splice(i, 1); }
@@ -902,16 +891,21 @@
         const l = Math.hypot(dx, dz) || 1; e.vel.x = dx / l * pw; e.vel.z = dz / l * pw; e.vel.y = Math.max(e.vel.y, up); e.kb = .45; e.ground = false;
       }
       function spawnBot() { bot.pos.set(hitMode ? 4.5 : bridge ? 40.5 : 35.5, 1.01, .5); bot.vel.set(0, 0, 0); bot.hp = 20; bot.alive = true; bot.g.visible = true; }
-      function killBot() { bot.alive = false; bot.g.visible = false; bot.rt = hitMode ? 1.5 : 4; bwMsg('Bot eliminato!'); if (!bedAlive.red) bwEnd(true); }
+      function killBot() { bot.alive = false; bot.g.visible = false; bot.rt = hitMode ? 1.5 : 4; msg('Bot eliminato!'); if (!bedAlive.red) end(true); }
       spawnBot();
 
       function botUpdate(dt) {
         const b = bot;
         if (!b.alive) { if (bedAlive.red) { b.rt -= dt; if (b.rt <= 0) spawnBot(); } return; }
-        b.cd -= dt; const dp = Math.hypot(P.pos.x - b.pos.x, P.pos.z - b.pos.z), dyp = Math.abs(P.pos.y - b.pos.y);
-        let tx = P.pos.x, tz = P.pos.z;
-        if (dp < 1.8 && dyp < 1.5 && b.cd <= 0) { b.cd = hitMode ? .7 : 1; if (hitMode) { hits.bot++; bwSt(); if (hits.bot >= HITS) bwEnd(false); } else bwHurt(3); knock(P, P.pos.x - b.pos.x, P.pos.z - b.pos.z, 9.5); }
-        b.vel.x += ((tx - b.pos.x) * .1); b.vel.z += ((tz - b.pos.z) * .1);
+        b.t += dt; b.cd -= dt; b.bt -= dt;
+        const dp = Math.hypot(P.pos.x - b.pos.x, P.pos.z - b.pos.z), dyp = Math.abs(P.pos.y - b.pos.y);
+        let tx, tz, mode = 'guard';
+        if (P.alive && dp < 10 && dyp < 4) { tx = P.pos.x; tz = P.pos.z; mode = 'chase'; }
+        let dx = 0, dz = 0;
+        if (tx !== undefined) { dx = tx - b.pos.x; dz = tz - b.pos.z; const l = Math.hypot(dx, dz) || 1; dx /= l; dz /= l; }
+        if (mode === 'chase' && dp < 1.8 && dyp < 1.5 && b.cd <= 0) { b.cd = 1; hurt(3); knock(P, P.pos.x - b.pos.x, P.pos.z - b.pos.z, 9.5); }
+        b.kb = Math.max(0, (b.kb || 0) - dt);
+        b.vel.x += (dx * 3.6 - b.vel.x) * .1; b.vel.z += (dz * 3.6 - b.vel.z) * .1;
         phys(b, dt); if (b.pos.y < -25) { killBot(); return; }
         b.g.position.copy(b.pos); b.g.updateMatrixWorld(true);
       }
@@ -944,33 +938,32 @@
         if (state !== 'play' || !P.alive || cd > 0 || paused || shopOpen || slot === 4) return;
         const t = target, att = slot === 0 && t && t.bot; cd = Math.max(cd, -.1) + (slot > 0 ? .07 : att ? SW[sw].cd : .16); swing = 1;
         if (slot > 0) {
-          const ty = BL[slot]; if (inv[ty] <= 0) { bwMsg('Blocchi finiti!'); return; }
+          const ty = BL[slot]; if (inv[ty] <= 0) { msg('Blocchi finiti!'); return; }
           if (!t || !t.block) return; const u = t.block.userData, n = t.normal, x = u.x + n.x, y = u.y + n.y, z = u.z + n.z;
           if (blocks.has(x + ',' + y + ',' + z) || y > 45) return;
           setBlock(x, y, z, ty); inv[ty]--; return;
         }
         if (!t) return;
         if (t.bot) {
-          if (hitMode) { hits.me++; bwSt(); if (hits.me >= HITS) bwEnd(true); } else bot.hp -= SW[sw].d;
-          knock(bot, -Math.sin(yaw), -Math.cos(yaw), SW[sw].kb);
-          if (!hitMode && bot.hp <= 0) killBot();
+          bot.hp -= SW[sw].d; knock(bot, -Math.sin(yaw), -Math.cos(yaw), SW[sw].kb);
+          if (bot.hp <= 0) killBot();
         } else if (t.block) { dmg(t.block, 1, true); }
       }
 
       let mtt;
-      function bwMsg(t, ms = 2000) { document.getElementById('bw-msg').textContent = t; clearTimeout(mtt); mtt = setTimeout(() => document.getElementById('bw-msg').textContent = '', ms); }
-      function bwSt() {
-        document.getElementById('bw-st').innerHTML = bridge ? '🔵 Tu ' + score.b + ' - ' + score.r + ' Bot 🔴' : hitMode ? '🥊 Tu ' + hits.me + ' - ' + hits.bot + ' Colpi' : 'Letto tuo: ' + (bedAlive.blue ? '✅' : '❌') + ' | Nemico: ' + (bedAlive.red ? '✅' : '❌');
+      function msg(t, ms = 2000) { document.getElementById('bw-msg').textContent = t; clearTimeout(mtt); mtt = setTimeout(() => document.getElementById('bw-msg').textContent = '', ms); }
+      function st() {
+        document.getElementById('bw-st').innerHTML = bridge ? '🔵 Tu ' + score.b + ' - ' + score.r + ' Bot 🔴' : hitMode ? '🥊 Colpi ' + hits.me : 'Letto tuo: ' + (bedAlive.blue ? '✅' : '❌') + ' | Nemico: ' + (bedAlive.red ? '✅' : '❌');
       }
-      bwSt();
+      st();
 
-      const bwBar = document.getElementById('bw-bar'); bwBar.innerHTML = '';
+      const bwBar = document.getElementById('bar'); bwBar.innerHTML = '';
       ['⚔️ Spada', 'Lana', 'Pietra', 'Legno', '🏹 Arco'].forEach((n, i) => {
         const d = document.createElement('div'); d.className = 'bw-sl'; d.innerHTML = (i + 1) + ' ' + n + '<br><b></b>'; bwBar.appendChild(d);
       });
       function hud() {
-        document.getElementById('bw-fe').textContent = inv.fe; document.getElementById('bw-go').textContent = inv.go;
-        document.getElementById('bw-hp').style.width = Math.max(0, P.hp) / 20 * 100 + '%';
+        document.getElementById('fe').textContent = inv.fe; document.getElementById('go').textContent = inv.go;
+        document.getElementById('hp').style.width = Math.max(0, P.hp) / 20 * 100 + '%';
         [...bwBar.children].forEach((e, i) => { e.classList.toggle('on', i === slot); e.lastChild.textContent = i === 4 ? inv.arrows : i ? inv[BL[i]] : ''; });
       }
 
@@ -988,16 +981,16 @@
         { n: 'Pietra ×12', c: { fe: 12 }, f: () => inv.stone += 12 }
       ];
       function shopRender() {
-        document.getElementById('bw-items').innerHTML = ITEMS.map((it, i) => '<button data-i="' + i + '">' + it.n + '</button>').join('');
+        document.getElementById('items').innerHTML = ITEMS.map((it, i) => '<button data-i="' + i + '">' + it.n + '</button>').join('');
       }
-      document.getElementById('bw-items').onclick = e => { const b = e.target.closest('button'); if (b) ITEMS[b.dataset.i].f(); shopRender(); hud(); };
+      document.getElementById('items').onclick = e => { const b = e.target.closest('button'); if (b) ITEMS[b.dataset.i].f(); shopRender(); hud(); };
 
       function lock() { try { ren.domElement.requestPointerLock(); } catch (e) {} }
       function toggleShop() {
-        shopOpen = !shopOpen; document.getElementById('bw-shop').hidden = !shopOpen;
+        shopOpen = !shopOpen; document.getElementById('shop').hidden = !shopOpen;
         if (shopOpen) { document.exitPointerLock && document.exitPointerLock(); shopRender(); } else lock();
       }
-      document.getElementById('bw-closeShop').onclick = toggleShop;
+      document.getElementById('closeShop').onclick = toggleShop;
 
       document.addEventListener('keydown', e => {
         if (document.getElementById('bedwarsView').style.display === "none") return;
@@ -1015,22 +1008,22 @@
         }
       });
 
-      function bwEnter(m) {
-        bridge = m === 'bridge'; hitMode = m === 'hits'; bwResetWorld();
-        document.getElementById('bw-menu').hidden = true; document.getElementById('bw-start').hidden = false;
+      function enter(m) {
+        bridge = m === 'bridge'; hitMode = m === 'hits'; resetWorld();
+        document.getElementById('menu').hidden = true; document.getElementById('start').hidden = false;
       }
-      document.getElementById('bw-mBot').onclick = () => bwEnter('bot');
-      document.getElementById('bw-mBr').onclick = () => bwEnter('bridge');
-      document.getElementById('bw-mHits').onclick = () => bwEnter('hits');
-      document.getElementById('bw-m1v1').onclick = () => bwEnter('1v1');
-      document.getElementById('bw-btnPlay').onclick = () => { document.getElementById('bw-start').hidden = true; paused = false; lock(); };
-      document.getElementById('bw-btnAgain').onclick = bwResetWorld;
-      document.getElementById('bw-btnMenu').onclick = () => { document.getElementById('bw-end').hidden = true; document.getElementById('bw-menu').hidden = false; };
+      document.getElementById('mBot').onclick = () => enter('bot');
+      document.getElementById('mBr').onclick = () => enter('bridge');
+      document.getElementById('mHits').onclick = () => enter('hits');
+      document.getElementById('m1v1').onclick = () => enter('1v1');
+      document.getElementById('btnPlay').onclick = () => { document.getElementById('start').hidden = true; paused = false; lock(); };
+      document.getElementById('btnAgain').onclick = resetWorld;
+      document.getElementById('btnMenu').onclick = () => { document.getElementById('end').hidden = true; document.getElementById('menu').hidden = false; };
 
-      function bwResetWorld() {
+      function resetWorld() {
         clearArrows(); blocks.forEach(m => scene.remove(m)); blocks.clear(); buildMap();
-        spawnBot(); bwRespawn(); paused = false; shopOpen = false;
-        document.getElementById('bw-shop').hidden = true; document.getElementById('bw-end').hidden = true; document.getElementById('bw-start').hidden = true;
+        spawnBot(); respawn(); paused = false; shopOpen = false;
+        document.getElementById('shop').hidden = true; document.getElementById('end').hidden = true; document.getElementById('start').hidden = true;
         lock();
       }
 
@@ -1046,10 +1039,10 @@
             P.vel.x += ((-Math.sin(yaw) * f + Math.cos(yaw) * s) * 5.2 - P.vel.x) * .2;
             P.vel.z += ((-Math.cos(yaw) * f - Math.sin(yaw) * s) * 5.2 - P.vel.z) * .2;
             if (k.Space && P.ground) P.vel.y = 9;
-            phys(P, dt); if (P.pos.y < -25) bwDie('Caduto nel vuoto!');
+            phys(P, dt); if (P.pos.y < -25) die('Caduto nel vuoto!');
             for (let i = 0; i < 4 && down; i++) act();
           } else {
-            respT -= dt; if (respT <= 0) { if (bedAlive.blue) bwRespawn(); else bwEnd(false); }
+            respT -= dt; if (respT <= 0) { if (bedAlive.blue) respawn(); else end(false); }
           }
           arrowsUpdate(dt); botUpdate(dt);
         }
@@ -1059,7 +1052,7 @@
       requestAnimationFrame(bwLoop);
     }
 
-    /* AUTH & NAVIGAZIONE HUB */
+    /* AUTH & HUB (CON DETTAGLI AGGIUNTI: VISUALIZZAZIONI, LIKE, DATA E GIOCATORI ATTIVI) */
     function apriHub() {
       document.getElementById('authView').style.display = "none";
       document.getElementById('supportView').style.display = "none";
@@ -1067,7 +1060,51 @@
       document.getElementById('parkour3dView').style.display = "none";
       document.getElementById('hubView').style.display = "block";
       caricaInterfaccia();
+      caricaStatisticheHub();
     }
+
+    function caricaStatisticheHub() {
+      // Aggiorna dinamicamente i dati di visualizzazioni, like, data e giocatori attivi
+      document.getElementById('hubView').innerHTML = `
+        <div class="welcome-box">
+          <div>
+            <h1 style="color:#a855f7;">Bentornato, <span id="welcomeUser">-</span>! 👋</h1>
+            <p style="color:#9aa4b8; font-size:14px; margin-top:5px;">Scegli la tua esperienza di gioco</p>
+          </div>
+          <div class="avatar-3d-box" id="avatarHubContainer"></div>
+        </div>
+
+        <h2>🕹️ Esperienze Disponibili</h2>
+        <div class="games-grid">
+          <div class="game-card">
+            <h3>🏃‍♂️ Infinite Parkour 3D</h3>
+            <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Salta sulle piattaforme infinite e supera i livelli!</p>
+            <div style="font-size: 11px; color: #8892b0; margin-bottom: 8px; display: flex; gap: 10px; flex-wrap: wrap;">
+              <span>👁️ 45.2k vis.</span><span>👍 94%</span><span>📅 12/10/2025</span><span>🟢 142 attivi</span>
+            </div>
+            <button class="btn-play" onclick="entraNellaStanzaParkour()">GIOCA ORA</button>
+          </div>
+          <div class="game-card">
+            <h3>🛏️ BedWars 3D</h3>
+            <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Proteggi il tuo letto e combatti nell'isola voxel 3D!</p>
+            <div style="font-size: 11px; color: #8892b0; margin-bottom: 8px; display: flex; gap: 10px; flex-wrap: wrap;">
+              <span>👁️ 89.1k vis.</span><span>👍 98%</span><span>📅 01/09/2025</span><span>🟢 310 attivi</span>
+            </div>
+            <button class="btn-play" onclick="avviaBedwarsGame()">GIOCA ORA</button>
+          </div>
+          <div class="game-card">
+            <h3>🖱️ Platabux Clicker</h3>
+            <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Fai 10.000 click per vincere 500 Platabux e scalare la classifica!</p>
+            <div style="font-size: 11px; color: #8892b0; margin-bottom: 8px; display: flex; gap: 10px; flex-wrap: wrap;">
+              <span>👁️ 32.4k vis.</span><span>👍 91%</span><span>📅 20/11/2025</span><span>🟢 78 attivi</span>
+            </div>
+            <button class="btn-play" onclick="avviaClickerGame()">GIOCA ORA</button>
+          </div>
+        </div>
+      `;
+      setTimeout(() => caricaAvatar3D('avatarHubContainer'), 100);
+    }
+
     function cambiaModalita() {
       isLoginMode = !isLoginMode;
       document.getElementById('title').textContent = isLoginMode ? "BLOX PLATFORM" : "REGISTRAZIONE";
@@ -1113,7 +1150,7 @@
         document.getElementById('statsHeader').style.display = "flex";
         document.getElementById('userHeader').style.display = "flex";
         document.getElementById('usernameDisplay').textContent = currentUser;
-        document.getElementById('welcomeUser').textContent = currentUser;
+        const wUser = document.getElementById('welcomeUser'); if(wUser) wUser.textContent = currentUser;
         document.getElementById('coinDisplay').textContent = u.coins || 0;
         document.getElementById('platabuxDisplay').textContent = u.platabux || 0;
 
@@ -1121,7 +1158,6 @@
           document.getElementById('adminTagDisplay').style.display = "inline-block";
           document.getElementById('adminBtn').style.display = (currentUser === OWNER_NAME) ? "inline-block" : "none";
         }
-        setTimeout(() => caricaAvatar3D('avatarHubContainer'), 100);
       });
     }
     function logout() { localStorage.removeItem('bloxi_session'); location.reload(); }
