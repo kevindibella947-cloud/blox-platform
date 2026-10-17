@@ -5,15 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Blox Platform - Online & Global</title>
   
-  <!-- GAMEMONETIZE SDK INTEGRATO CON IL TUO GAME ID UFFICIALE -->
   <script type="text/javascript">
     window.SDK_OPTIONS = {
         gameId: "46tz8exfg8slm83r6kxnnr9kjfjyrrm5",
         onEvent: function (a) {
             switch (a.name) {
-                case "SDK_GAME_PAUSE": console.log("Gioco in pausa per pubblicità"); break;
-                case "SDK_GAME_START": console.log("Pubblicità finita, gioco ripreso"); break;
-                case "SDK_READY": console.log("SDK GameMonetize Pronto"); break;
+                case "SDK_GAME_PAUSE": console.log("Pausa pubblicità"); break;
+                case "SDK_GAME_START": console.log("Ripresa gioco"); break;
+                case "SDK_READY": console.log("SDK Pronto"); break;
             }
         }
     };
@@ -23,11 +22,8 @@
     })(document, "script", "gamemonetize-sdk");
   </script>
 
-  <!-- Firebase SDK (v9 Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
-  <!-- Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <style>
@@ -35,40 +31,52 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0b0e; color: white; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
-    /* NAVBAR */
     header { background: #16161e; border-bottom: 1px solid #272736; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; z-index: 50; position: relative; }
     .logo { font-size: 20px; font-weight: bold; color: #a855f7; cursor: pointer; }
     .stats-bar { display: flex; align-items: center; gap: 15px; }
     .stat-card { background: #0b0b0e; border: 1px solid #272736; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: bold; }
     .coins { color: #eab308; } .platabux { color: #3b82f6; }
     .user-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .btn-shop { background: #f59e0b; border: none; color: black; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    .btn-logout { background: #ef4444; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .admin-badge { background: linear-gradient(135deg, #9333ea, #3b82f6); color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+    .btn-admin { background: #9333ea; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+    .btn-support { background: #3b82f6; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+    .btn-shop { background: #f59e0b; border: none; color: black; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+    .btn-logout { background: #ef4444; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
 
-    /* CONTENITORE PRINCIPALE */
     main { flex: 1; padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; z-index: 10; }
-    .auth-card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; max-width: 400px; margin: 40px auto; text-align: center; }
+    .auth-card, .support-card, .room-selector-card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; max-width: 400px; margin: 40px auto; text-align: center; }
+    .support-card { max-width: 600px; text-align: left; display: none; }
+    .room-selector-card { display: none; border-color: #a855f7; }
     h2 { margin-bottom: 8px; color: #a855f7; }
-    input { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; margin-bottom: 10px; }
+    input, textarea, select { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; margin-bottom: 10px; outline: none; }
     .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
 
-    /* HUB GIOCHI */
     .hub-view { display: none; }
     .welcome-box { background: linear-gradient(135deg, rgba(147,51,234,0.15), rgba(59,130,246,0.15)); border: 1px solid #3b82f6; border-radius: 12px; padding: 20px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; }
     .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     .game-card { background: #16161e; border: 1px solid #272736; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
     .btn-play { width: 100%; padding: 10px; background: #22c55e; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
-    /* AVATAR 3D */
     .avatar-3d-box { width: 120px; height: 120px; background: rgba(0,0,0,0.3); border-radius: 50%; border: 2px solid #a855f7; overflow: hidden; }
 
-    /* MARKETPLACE MODAL */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; }
-    .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 600px; padding: 20px; }
+    /* SCHERMATA CLICKER */
+    .game-view { display: none; }
+    .card-game { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 16px; max-width: 520px; margin: 0 auto; text-align: center; }
+    .click-btn { padding: 20px 40px; font-size: 1.5rem; font-weight: bold; color: white; background: linear-gradient(145deg, #007bff, #0056b3); border: none; border-radius: 50px; cursor: pointer; margin: 15px 0; }
+    .claim-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #3b82f6, #9333ea); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; margin-bottom: 10px; }
+
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; padding: 15px; }
+    .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 600px; padding: 20px; max-height: 80vh; overflow-y: auto; }
+    .modal-captcha { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 360px; padding: 25px; text-align: center; }
     .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
     .shop-item-card { background: #0b0b0e; border: 1px solid #272736; border-radius: 10px; padding: 15px; text-align: center; }
 
-    /* VISTA BEDWARS FULLSCREEN CON MAPPA 3D */
+    .account-item, .ticket-item, .leaderboard-item { background: #0b0b0e; border: 1px solid #272736; padding: 10px 15px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+    .ticket-item { flex-direction: column; align-items: flex-start; gap: 5px; }
+    .btn-give { padding: 5px 10px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 11px; }
+    .btn-give-coin { background: #eab308; color: black; }
+    .btn-give-pbux { background: #3b82f6; color: white; }
+
     #bedwarsView { display: none; position: fixed; inset: 0; background: #87ceeb; z-index: 90; }
     #bedwarsCanvasContainer { width: 100%; height: 100%; display: block; }
     .btn-close-bedwars { position: fixed; top: 15px; right: 15px; z-index: 95; background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; }
@@ -84,21 +92,29 @@
     </div>
     <div class="user-info" id="userHeader" style="display: none;">
       <button class="btn-shop" onclick="apriShopModal()">🛒 Shop Avatar</button>
+      <button class="btn-support" onclick="apriSupporto()">🛠️ Supporto</button>
+      <button class="btn-admin" id="adminBtn" onclick="apriSupervisione()" style="display:none;">👑 Admin</button>
+      <span id="adminTagDisplay" class="admin-badge" style="display:none;">👑 ADMIN</span>
       <span id="usernameDisplay" style="font-weight: bold;">-</span>
       <button class="btn-logout" onclick="logout()">Esci</button>
     </div>
   </header>
 
   <main>
-    <!-- LOGIN -->
+    <!-- LOGIN / REGISTRAZIONE -->
     <div class="auth-card" id="authView">
-      <h2>BLOX PLATFORM</h2>
+      <h2 id="title">BLOX PLATFORM</h2>
+      <p id="subtitle" style="font-size:12px; color:#9aa4b8; margin-bottom:15px;">Accedi o registrati</p>
       <input type="text" id="username" placeholder="Nickname...">
       <input type="password" id="password" placeholder="Password...">
-      <button class="btn-main" onclick="inviaForm()">ACCEDI / REGISTRATI</button>
+      <button class="btn-main" id="submitBtn" onclick="inviaForm()">ACCEDI</button>
+      <div style="margin-top:15px; font-size:12px; color:#9aa4b8;">
+        Non hai un account? <span style="color:#3b82f6; cursor:pointer; text-decoration:underline;" onclick="cambiaModalita()">Registrati</span>
+      </div>
+      <div id="msg" style="margin-top:10px; font-size:12px; display:none;"></div>
     </div>
 
-    <!-- HUB -->
+    <!-- HUB GIOCHI -->
     <div class="hub-view" id="hubView">
       <div class="welcome-box">
         <div>
@@ -110,11 +126,72 @@
 
       <h2>🕹️ Esperienze Disponibili</h2>
       <div class="games-grid">
+        <!-- ESPERIENZA 1: PARKOUR -->
+        <div class="game-card">
+          <h3>🏃‍♂️ Infinite Parkour 3D</h3>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Salta sulle piattaforme e gioca nelle stanze multiplayer!</p>
+          <button class="btn-play" onclick="mostraSelettoreStanze()">GIOCA ORA</button>
+        </div>
+        <!-- ESPERIENZA 2: BEDWARS -->
         <div class="game-card">
           <h3>🛏️ BedWars 3D</h3>
-          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Proteggi il tuo letto e combatti nell'isola voxel 3D[cite: 3]!</p>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Proteggi il tuo letto e combatti nell'isola voxel 3D!</p>
           <button class="btn-play" onclick="avviaBedwarsGame()">GIOCA ORA</button>
         </div>
+        <!-- ESPERIENZA 3: CLICKER -->
+        <div class="game-card">
+          <h3>🖱️ Platabux Clicker</h3>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Fai 10.000 click per vincere 500 Platabux e scalare la classifica!</p>
+          <button class="btn-play" onclick="avviaClickerGame()">GIOCA ORA</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SELETTORE STANZE PARKOUR -->
+    <div class="room-selector-card" id="roomSelectorView">
+      <h3 style="color:#a855f7; margin-bottom:10px;">🌐 Seleziona Stanza Multiplayer</h3>
+      <p style="font-size:13px; color:#9aa4b8; margin-bottom:20px;">Scegli la stanza per giocare:</p>
+      <select id="selectedRoomId" style="margin-bottom:15px;">
+        <option value="room_1">Stanza 1 (Lobby Principale)</option>
+        <option value="room_2">Stanza 2 (Pro)</option>
+        <option value="room_3">Stanza 3 (Speedrun)</option>
+      </select>
+      <button class="btn-main" onclick="entraNellaStanzaParkour()">ENTRA NELLA STANZA</button>
+      <button class="btn-main" style="background:none; border:1px solid #3b82f6; margin-top:10px;" onclick="apriHub()">Indietro</button>
+    </div>
+
+    <!-- SCHERMATA CLICKER -->
+    <div class="game-view" id="gameView">
+      <div class="card-game">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+          <span style="font-weight:bold; color:#3b82f6;">Platabux Clicker</span>
+          <button class="btn-main" style="width:auto; padding:5px 12px;" onclick="apriHub()">⬅️ Hub</button>
+        </div>
+        <div style="font-size:2rem; font-weight:bold; margin-bottom:10px;">Punti: <span id="clickScore">0</span></div>
+        <button class="click-btn" onclick="faiClick()">CLICCAMI!</button>
+        <button class="claim-btn" id="claimBtn" onclick="riscattaPlatabux()">🎁 RISCATTA +500 PLATABUX! 🎁</button>
+        <button class="btn-main" style="background:#22c55e;" onclick="salvaPunteggio()">💾 Salva in Classifica</button>
+        
+        <div style="margin-top:20px; border-top:1px solid #272736; padding-top:15px; text-align:left;">
+          <h4 style="color:#a855f7; margin-bottom:10px; text-align:center;">🏆 Classifica TOP 5</h4>
+          <div id="leaderboardList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPORTO -->
+    <div class="support-card" id="supportView">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h3>🛠️ Centro Supporto e Segnalazioni</h3>
+        <button class="btn-main" style="width:auto; padding:5px 12px;" onclick="apriHub()">⬅️ Indietro</button>
+      </div>
+      <input type="text" id="ticketSubject" placeholder="Oggetto del problema...">
+      <textarea id="ticketMessage" rows="4" placeholder="Descrivi il bug o la richiesta..."></textarea>
+      <button class="btn-main" onclick="inviaSegnalazioneSupporto()">INVIA SEGNALAZIONE</button>
+      
+      <div id="adminTicketSection" style="margin-top:20px; display:none;">
+        <h4 style="color:#a855f7; margin-bottom:10px;">📥 Segnalazioni Ricevute (Admin)</h4>
+        <div id="ticketListContainer"></div>
       </div>
     </div>
   </main>
@@ -130,7 +207,29 @@
     </div>
   </div>
 
-  <!-- BEDWARS FULLSCREEN CON CANVAS INTEGRATO -->
+  <!-- CAPTCHA ADMIN MODAL -->
+  <div class="modal-overlay" id="captchaModal">
+    <div class="modal-captcha">
+      <h3 style="color:#a855f7; margin-bottom:10px;">🛡️ Verifica Captcha Admin</h3>
+      <p style="font-size:12px; color:#9aa4b8; margin-bottom:15px;">Inserisci il codice di sicurezza:</p>
+      <input type="text" id="popupCaptchaInput" placeholder="Codice..." style="text-align:center; font-weight:bold;">
+      <button class="btn-main" onclick="confermaCaptchaPopup()">VERIFICA ED ENTRA</button>
+    </div>
+  </div>
+
+  <!-- PANNELLO ADMIN MODAL -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal">
+      <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+        <h3 style="color:#a855f7;">👑 Pannello Gestione Utenti & Donazioni</h3>
+        <button onclick="chiudiSupervisione()" style="background:none; border:none; color:red; font-size:18px; cursor:pointer;">✕</button>
+      </div>
+      <input type="text" id="searchInput" placeholder="🔍 Cerca utente..." oninput="renderAccountList()" style="margin-bottom:12px;">
+      <div id="accountListContainer"></div>
+    </div>
+  </div>
+
+  <!-- BEDWARS FULLSCREEN -->
   <div id="bedwarsView">
     <button class="btn-close-bedwars" onclick="chiudiBedwars()">⬅️ Esci da BedWars</button>
     <div id="bedwarsCanvasContainer"></div>
@@ -141,13 +240,29 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const dbRef = firebase.database();
 
+    const OWNER_NAME = "huggy_huggy223";
+    const OWNER_PASS = "Kevindibella18";
+    const OWNER_CAPTCHA = "947947";
+    const ADMIN_COUSIN = "Exegreen4999";
+    const ADMIN_COUSIN_PASS = "Exegreen4999";
+    const ADMIN_COUSIN_CAPTCHA = "4999";
+
+    let isLoginMode = true;
     let currentUser = localStorage.getItem('bloxi_session');
+    let pendingUserLogin = null;
     let userEquip = { hat: false, sword: false };
     let bedwarsScene, bedwarsRenderer, bedwarsCamera, bedwarsActive = false;
+    let clickerScore = 0, unrewardedClicks = 0;
+    const TARGET_CLICKS = 10000, REWARD_PLATABUX = 500;
 
     function sanitizeKey(k) { return k ? k.trim().toLowerCase().replace(/[.#$\[\]]/g, "_") : ""; }
 
-    /* RENDERER AVATAR 3D NELL'HUB CON CAPPELLO E SPADA */
+    function initAdminAccounts() {
+      dbRef.ref('users/' + sanitizeKey(OWNER_NAME)).update({ username: OWNER_NAME, password: OWNER_PASS, role: "owner", captcha: OWNER_CAPTCHA });
+      dbRef.ref('users/' + sanitizeKey(ADMIN_COUSIN)).update({ username: ADMIN_COUSIN, password: ADMIN_COUSIN_PASS, role: "admin", captcha: ADMIN_COUSIN_CAPTCHA });
+    }
+    initAdminAccounts();
+
     function caricaAvatar3D(containerId) {
       const container = document.getElementById(containerId);
       if (!container) return; container.innerHTML = '';
@@ -169,7 +284,6 @@
       const torso = new THREE.Mesh(new THREE.BoxGeometry(40, 50, 20), matShirt); torso.position.y = 10;
       group.add(head, torso);
 
-      /* CAPPELLO DI NATALE[cite: 2] */
       if (userEquip.hat) {
         const hatGroup = new THREE.Group();
         const hatCone = new THREE.Mesh(new THREE.ConeGeometry(18, 35, 16), new THREE.MeshStandardMaterial({ color: 0xc4122f }));
@@ -177,7 +291,6 @@
         hatGroup.add(hatCone); group.add(hatGroup);
       }
 
-      /* SPADA DI ZUCCHERO[cite: 1] */
       if (userEquip.sword) {
         const swordGroup = new THREE.Group();
         const blade = new THREE.Mesh(new THREE.CylinderGeometry(2, 3, 50, 16), new THREE.MeshStandardMaterial({ color: 0xc8102e }));
@@ -240,18 +353,63 @@
       });
     }
 
-    /* AVVIO MAPPA 3D BEDWARS INTEGRATA */
+    /* ESPERIENZA 1: PARKOUR */
+    function mostraSelettoreStanze() {
+      document.getElementById('hubView').style.display = "none";
+      document.getElementById('roomSelectorView').style.display = "block";
+    }
+    function entraNellaStanzaParkour() {
+      alert("Entrato nella stanza multiplayer!");
+      apriHub();
+    }
+
+    /* ESPERIENZA 2: CLICKER */
+    function avviaClickerGame() {
+      document.getElementById('hubView').style.display = "none";
+      document.getElementById('gameView').style.display = "block";
+      clickerScore = 0; unrewardedClicks = 0;
+      document.getElementById('clickScore').textContent = clickerScore;
+      caricaClassificaClicker();
+    }
+    function faiClick() {
+      clickerScore++; unrewardedClicks++;
+      document.getElementById('clickScore').textContent = clickerScore;
+      if (unrewardedClicks >= TARGET_CLICKS) document.getElementById('claimBtn').style.display = "block";
+    }
+    function riscattaPlatabux() {
+      dbRef.ref('users/' + sanitizeKey(currentUser) + '/platabux').transaction((p) => (p || 0) + REWARD_PLATABUX, (err, ok) => {
+        if (ok) { alert("+500 Platabux riscattati!"); unrewardedClicks = 0; document.getElementById('claimBtn').style.display = "none"; caricaInterfaccia(); }
+      });
+    }
+    function salvaPunteggio() {
+      dbRef.ref('leaderboard/' + sanitizeKey(currentUser)).set({ name: currentUser, score: clickerScore }, () => {
+        alert("Punteggio salvato in classifica!");
+      });
+    }
+    function caricaClassificaClicker() {
+      dbRef.ref('leaderboard').on('value', (snap) => {
+        const list = snap.val() || {};
+        const container = document.getElementById('leaderboardList');
+        container.innerHTML = "";
+        let arr = Object.values(list).sort((a,b) => b.score - a.score).slice(0, 5);
+        arr.forEach((item, idx) => {
+          const div = document.createElement('div');
+          div.className = "leaderboard-item";
+          div.innerHTML = `<span>#${idx+1} ${item.name}</span><span>${item.score} pt</span>`;
+          container.appendChild(div);
+        });
+      });
+    }
+
+    /* ESPERIENZA 3: BEDWARS 3D */
     function avviaBedwarsGame() {
       document.getElementById('bedwarsView').style.display = "block";
       bedwarsActive = true;
-
       const container = document.getElementById('bedwarsCanvasContainer');
       container.innerHTML = "";
 
       bedwarsScene = new THREE.Scene();
       bedwarsScene.background = new THREE.Color(0x87ceeb);
-      bedwarsScene.fog = new THREE.Fog(0x87ceeb, 30, 100);
-
       bedwarsCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
       bedwarsCamera.position.set(0, 10, 20);
       bedwarsCamera.lookAt(0, 0, 0);
@@ -261,34 +419,23 @@
       container.appendChild(bedwarsRenderer.domElement);
 
       bedwarsScene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1));
-      const sun = new THREE.DirectionalLight(0xffffff, 0.8);
-      sun.position.set(20, 40, 20);
-      bedwarsScene.add(sun);
 
-      /* COSTRUZIONE MAPPA VOXEL ISOLLE BEDWARS */
       const boxGeo = new THREE.BoxGeometry(1, 1, 1);
       const matIsland = new THREE.MeshLambertMaterial({ color: 0x5fae3a });
       const matStone = new THREE.MeshLambertMaterial({ color: 0x8c8c8c });
       const matBedBlue = new THREE.MeshLambertMaterial({ color: 0x2255dd });
       const matBedRed = new THREE.MeshLambertMaterial({ color: 0xdd2222 });
 
-      // Isola blu (giocatore)
       for(let x=-4; x<=4; x++) for(let z=-4; z<=4; z++) {
-        const m = new THREE.Mesh(boxGeo, x===0 && z===0 ? matStone : matIsland);
-        m.position.set(x, 0, z); bedwarsScene.add(m);
+        const m = new THREE.Mesh(boxGeo, matIsland); m.position.set(x, 0, z); bedwarsScene.add(m);
       }
-      // Letto Blu
       const bedB = new THREE.Mesh(boxGeo, matBedBlue); bedB.position.set(-2, 1, 0); bedwarsScene.add(bedB);
 
-      // Isola nemica rossa
       for(let x=14; x<=22; x++) for(let z=-4; z<=4; z++) {
-        const m = new THREE.Mesh(boxGeo, matStone);
-        m.position.set(x, 0, z); bedwarsScene.add(m);
+        const m = new THREE.Mesh(boxGeo, matStone); m.position.set(x, 0, z); bedwarsScene.add(m);
       }
-      // Letto Rosso
       const bedR = new THREE.Mesh(boxGeo, matBedRed); bedR.position.set(18, 1, 0); bedwarsScene.add(bedR);
 
-      // Ponte centrale di collegamento
       for(let x=-3; x<=15; x++) {
         const bridge = new THREE.Mesh(boxGeo, new THREE.MeshLambertMaterial({ color: 0xc89b5a }));
         bridge.position.set(x, 0, 0); bedwarsScene.add(bridge);
@@ -301,32 +448,122 @@
       }
       animateBedwars();
     }
+    function chiudiBedwars() { bedwarsActive = false; document.getElementById('bedwarsView').style.display = "none"; }
 
-    function chiudiBedwars() { 
-      bedwarsActive = false;
-      document.getElementById('bedwarsView').style.display = "none"; 
-    }
-
-    function apriHub() {
+    /* SUPPORTO E ADMIN */
+    function apriSupporto() {
       document.getElementById('authView').style.display = "none";
-      document.getElementById('hubView').style.display = "block";
-      caricaInterfaccia();
+      document.getElementById('hubView').style.display = "none";
+      document.getElementById('supportView').style.display = "block";
+      if (currentUser === OWNER_NAME) {
+        document.getElementById('adminTicketSection').style.display = "block";
+        caricaSegnalazioniAdmin();
+      }
     }
-
-    function inviaForm() {
-      const user = document.getElementById('username').value.trim();
-      const pass = document.getElementById('password').value.trim();
-      if (!user || !pass) return alert("Inserisci nickname e password!");
-      const userKey = sanitizeKey(user);
-      dbRef.ref('users/' + userKey).once('value', (snap) => {
-        if (!snap.exists()) {
-          dbRef.ref('users/' + userKey).set({ username: user, password: pass, coins: 1000, platabux: 500 });
-        }
-        localStorage.setItem('bloxi_session', user);
-        currentUser = user; apriHub();
+    function inviaSegnalazioneSupporto() {
+      const sub = document.getElementById('ticketSubject').value.trim();
+      const msg = document.getElementById('ticketMessage').value.trim();
+      if (!sub || !msg) return alert("Compila tutti i campi!");
+      dbRef.ref('support_tickets').push({ user: currentUser, subject: sub, message: msg }, () => {
+        alert("Segnalazione inviata!"); apriHub();
+      });
+    }
+    function caricaSegnalazioniAdmin() {
+      dbRef.ref('support_tickets').on('value', (snap) => {
+        const list = snap.val() || {};
+        const container = document.getElementById('ticketListContainer');
+        container.innerHTML = "";
+        Object.keys(list).reverse().forEach(k => {
+          const t = list[k];
+          const div = document.createElement('div');
+          div.className = "ticket-item";
+          div.innerHTML = `<strong>👤 ${t.user}</strong> — <i>${t.subject}</i><br>${t.message}`;
+          container.appendChild(div);
+        });
       });
     }
 
+    function apriSupervisione() { renderAccountList(); document.getElementById('adminModal').style.display = "flex"; }
+    function chiudiSupervisione() { document.getElementById('adminModal').style.display = "none"; }
+    function renderAccountList() {
+      const filter = document.getElementById('searchInput').value.toLowerCase();
+      dbRef.ref('users').once('value', (snap) => {
+        const users = snap.val() || {};
+        const container = document.getElementById('accountListContainer');
+        container.innerHTML = "";
+        Object.keys(users).forEach(k => {
+          const u = users[k];
+          if (filter && !u.username.toLowerCase().includes(filter)) return;
+          const div = document.createElement('div');
+          div.className = "account-item";
+          div.innerHTML = `
+            <span><b>${u.username}</b> (🪙 ${u.coins || 0} | 💎 ${u.platabux || 0})</span>
+            <div style="display:flex; gap:4px;">
+              <button class="btn-give btn-give-coin" onclick="regalaValuta('${k}', 'coins', 500)">+500 🪙</button>
+              <button class="btn-give btn-give-pbux" onclick="regalaValuta('${k}', 'platabux', 100)">+100 💎</button>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      });
+    }
+    function regalaValuta(userKey, valuta, quantita) {
+      dbRef.ref('users/' + userKey + '/' + valuta).transaction((curr) => (curr || 0) + quantita, () => {
+        renderAccountList();
+      });
+    }
+
+    /* NAVIGAZIONE */
+    function apriHub() {
+      document.getElementById('authView').style.display = "none";
+      document.getElementById('supportView').style.display = "none";
+      document.getElementById('roomSelectorView').style.display = "none";
+      document.getElementById('gameView').style.display = "none";
+      document.getElementById('hubView').style.display = "block";
+      caricaInterfaccia();
+    }
+    function cambiaModalita() {
+      isLoginMode = !isLoginMode;
+      document.getElementById('title').textContent = isLoginMode ? "BLOX PLATFORM" : "REGISTRAZIONE";
+      document.getElementById('subtitle').textContent = isLoginMode ? "Accedi o registrati" : "Crea un nuovo account";
+      document.getElementById('submitBtn').textContent = isLoginMode ? "ACCEDI" : "REGISTRATI";
+    }
+    function inviaForm() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      if (!user || !pass) return alert("Compila tutti i campi!");
+      const userKey = sanitizeKey(user);
+
+      dbRef.ref('users/' + userKey).once('value', (snap) => {
+        const uData = snap.val();
+        if (isLoginMode) {
+          if (!uData || uData.password !== pass) return alert("Credenziali errate!");
+          if (uData.role === "owner" || uData.role === "admin") {
+            pendingUserLogin = user; document.getElementById('captchaModal').style.display = "flex"; return;
+          }
+          completaLogin(user);
+        } else {
+          if (uData) return alert("Utente già esistente!");
+          dbRef.ref('users/' + userKey).set({ username: user, password: pass, coins: 1000, platabux: 500, role: "user", captcha: "1234" }, () => completaLogin(user));
+        }
+      });
+    }
+    function confermaCaptchaPopup() {
+      const code = document.getElementById('popupCaptchaInput').value.trim();
+      dbRef.ref('users/' + sanitizeKey(pendingUserLogin)).once('value', (snap) => {
+        const u = snap.val();
+        if (u && u.captcha === code) {
+          document.getElementById('captchaModal').style.display = "none";
+          completaLogin(pendingUserLogin);
+        } else {
+          alert("Codice Captcha errato!");
+        }
+      });
+    }
+    function completaLogin(user) {
+      localStorage.setItem('bloxi_session', user);
+      currentUser = user; apriHub();
+    }
     function caricaInterfaccia() {
       if (!currentUser) return;
       dbRef.ref('users/' + sanitizeKey(currentUser)).on('value', (snap) => {
@@ -338,10 +575,14 @@
         document.getElementById('welcomeUser').textContent = currentUser;
         document.getElementById('coinDisplay').textContent = u.coins || 0;
         document.getElementById('platabuxDisplay').textContent = u.platabux || 0;
+
+        if (u.role === "owner" || u.role === "admin") {
+          document.getElementById('adminTagDisplay').style.display = "inline-block";
+          document.getElementById('adminBtn').style.display = (currentUser === OWNER_NAME) ? "inline-block" : "none";
+        }
         setTimeout(() => caricaAvatar3D('avatarHubContainer'), 100);
       });
     }
-
     function logout() { localStorage.removeItem('bloxi_session'); location.reload(); }
     if (currentUser) apriHub();
   </script>
