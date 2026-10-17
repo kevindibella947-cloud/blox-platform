@@ -70,11 +70,35 @@
     .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
     .shop-item-card { background: #0b0b0e; border: 1px solid #272736; border-radius: 10px; padding: 15px; text-align: center; }
 
-    .account-item, .ticket-item, .leaderboard-item { background: #0b0b0e; border: 1px solid #272736; padding: 10px 15px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-    .ticket-item { flex-direction: column; align-items: flex-start; gap: 5px; }
-    .btn-give { padding: 5px 10px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 11px; }
-    .btn-give-coin { background: #eab308; color: black; }
-    .btn-give-pbux { background: #3b82f6; color: white; }
+    /* PANNELLO ADMIN DONAZIONI VECCHIA STILE */
+    .admin-card-row { background: #121218; border: 1px solid #272736; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .admin-card-header { display: flex; justify-content: space-between; align-items: center; }
+    .admin-user-title { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 8px; color: white; }
+    .admin-user-pass { font-size: 12px; color: #9aa4b8; margin-top: 2px; }
+    .admin-badge-tag { background: #7c3aed; color: white; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 10px; text-transform: uppercase; }
+    .admin-stats-right { display: flex; gap: 12px; font-weight: bold; font-size: 15px; }
+    .admin-controls-flex { display: flex; gap: 10px; align-items: center; }
+    .admin-input-val { width: 100px; padding: 10px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; font-weight: bold; text-align: center; margin-bottom: 0; }
+    .btn-add-coin { flex: 1; padding: 10px; background: #f59e0b; border: none; border-radius: 6px; color: black; font-weight: bold; cursor: pointer; }
+    .btn-add-pbux { flex: 1; padding: 10px; background: #3b82f6; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
+
+    /* PARKOUR 3D STILE NUOVO INTEGRATO */
+    #parkour3dView { display: none; position: fixed; inset: 0; background: #9cc7e8; z-index: 90; }
+    #pk-hud { position: fixed; left: 16px; top: 16px; background: rgba(20,28,38,.88); padding: 10px 14px 12px; border-radius: 10px; min-width: 160px; box-shadow: 0 3px 0 rgba(0,0,0,.2); z-index: 95; color: white; }
+    #pk-lvl { font-size: 15px; } #pk-L { display: block; font-size: 40px; line-height: 1.05; color: #1f6fe0; }
+    #pk-bar { height: 10px; background: rgba(127,127,127,.3); border-radius: 5px; margin: 6px 0; overflow: hidden; }
+    #pk-fill { display: block; height: 100%; width: 0; background: #1f6fe0; transition: width .25s; }
+    #pk-sub { font-size: 13px; line-height: 1.5; }
+    #pk-banner { position: fixed; left: 0; right: 0; top: 26%; text-align: center; font-size: clamp(40px,10vw,84px); font-weight: 900; color: #fff; text-shadow: 0 4px 0 #1f6fe0,0 0 14px rgba(0,0,0,.35); opacity: 0; transform: scale(.7); transition: opacity .3s,transform .3s; pointer-events: none; z-index: 95; }
+    #pk-banner.show { opacity: 1; transform: scale(1); }
+    .btn-close-parkour { position: fixed; top: 16px; right: 16px; z-index: 99; background: #ef4444; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    #pk-touch { display: none; position: fixed; left: 0; right: 0; bottom: 16px; padding: 0 14px; justify-content: space-between; align-items: flex-end; touch-action: none; z-index: 95; }
+    #pk-touch button { width: 56px; height: 56px; border: 0; border-radius: 12px; background: rgba(20,28,38,.88); color: white; font-size: 22px; touch-action: none; box-shadow: 0 3px 0 rgba(0,0,0,.2); }
+    #pk-touch .pad { display: grid; grid-template-columns: repeat(3,56px); gap: 6px; }
+    #pk-touch .pad button:nth-child(1) { grid-column: 2; }
+    #pk-touch .pad button:nth-child(4) { grid-column: 2; }
+    #pk-touch #pk-j { width: 96px; height: 96px; font-size: 18px; font-weight: 700; background: #1f6fe0; color: #fff; }
+    @media (pointer:coarse){#pk-touch{display:flex}}
 
     #bedwarsView { display: none; position: fixed; inset: 0; background: #87ceeb; z-index: 90; font-family: system-ui, sans-serif; color: #fff; user-select: none; }
     #bedwarsView canvas { display: block; cursor: none; width: 100%; height: 100%; }
@@ -95,11 +119,6 @@
     #bw-modes { display: grid; gap: 10px; min-width: 290px; }
     .bw-mb { font-size: 18px; padding: 14px 20px; }
     .btn-close-bedwars { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 99; background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-    #parkour3dView { display: none; position: fixed; inset: 0; background: #111; z-index: 90; }
-    #parkourCanvasContainer { width: 100%; height: 100%; }
-    .pk-hud { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); padding: 10px 18px; border-radius: 10px; z-index: 95; font-size: 16px; }
-    .btn-close-parkour { position: absolute; top: 15px; right: 15px; z-index: 99; background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -146,12 +165,12 @@
       <div class="games-grid">
         <div class="game-card">
           <h3>🏃‍♂️ Infinite Parkour 3D</h3>
-          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Salta sulle piattaforme e gioca nelle stanze multiplayer!</p>
-          <button class="btn-play" onclick="mostraSelettoreStanze()">GIOCA ORA</button>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Salta sulle piattaforme infinite e supera i livelli!</p>
+          <button class="btn-play" onclick="entraNellaStanzaParkour()">GIOCA ORA</button>
         </div>
         <div class="game-card">
           <h3>🛏️ BedWars 3D</h3>
-          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Proteggi il tuo letto e combatti nell'isola voxel 3D[cite: 3]!</p>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Proteggi il tuo letto e combatti nell'isola voxel 3D!</p>
           <button class="btn-play" onclick="avviaBedwarsGame()">GIOCA ORA</button>
         </div>
         <div class="game-card">
@@ -160,18 +179,6 @@
           <button class="btn-play" onclick="avviaClickerGame()">GIOCA ORA</button>
         </div>
       </div>
-    </div>
-
-    <div class="room-selector-card" id="roomSelectorView">
-      <h3 style="color:#a855f7; margin-bottom:10px;">🌐 Seleziona Stanza Parkour</h3>
-      <p style="font-size:13px; color:#9aa4b8; margin-bottom:20px;">Scegli la stanza per giocare:</p>
-      <select id="selectedRoomId" style="margin-bottom:15px;">
-        <option value="room_1">Stanza 1 (Lobby Principale)</option>
-        <option value="room_2">Stanza 2 (Pro)</option>
-        <option value="room_3">Stanza 3 (Speedrun)</option>
-      </select>
-      <button class="btn-main" onclick="entraNellaStanzaParkour()">ENTRA NELLA STANZA</button>
-      <button class="btn-main" style="background:none; border:1px solid #3b82f6; margin-top:10px;" onclick="apriHub()">Indietro</button>
     </div>
 
     <div class="game-view" id="gameView">
@@ -208,7 +215,6 @@
     </div>
   </main>
 
-  <!-- MARKETPLACE MODAL -->
   <div class="modal-overlay" id="shopModal">
     <div class="modal">
       <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
@@ -228,21 +234,37 @@
     </div>
   </div>
 
+  <!-- PANNELLO ADMIN RESTAURATO CON GRAFICA ESATTA DALLO SCREENSHOT -->
   <div class="modal-overlay" id="adminModal">
-    <div class="modal">
-      <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-        <h3 style="color:#a855f7;">👑 Pannello Gestione Utenti & Donazioni</h3>
-        <button onclick="chiudiSupervisione()" style="background:none; border:none; color:red; font-size:18px; cursor:pointer;">✕</button>
+    <div class="modal" style="max-width:650px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
+        <h3 style="color:#a855f7; font-size:22px;">👑 Pannello Gestione Donazioni</h3>
+        <button onclick="chiudiSupervisione()" style="background:none; border:none; color:#ef4444; font-size:20px; font-weight:bold; cursor:pointer;">✕</button>
       </div>
-      <input type="text" id="searchInput" placeholder="🔍 Cerca utente..." oninput="renderAccountList()" style="margin-bottom:12px;">
+      <input type="text" id="searchInput" placeholder="🔍 Cerca utente per Nickname..." oninput="renderAccountList()" style="margin-bottom:15px; padding:12px; background:#0b0b0e; border:1px solid #272736; border-radius:8px;">
       <div id="accountListContainer"></div>
     </div>
   </div>
 
+  <!-- PARKOUR 3D NUOVO SORGENTE -->
   <div id="parkour3dView">
     <button class="btn-close-parkour" onclick="chiudiParkour()">⬅️ Esci dal Parkour</button>
-    <div class="pk-hud">Punteggio: <b id="pkScoreDisplay">0</b> | Monete: 🪙 <b id="pkCoinsDisplay">0</b></div>
-    <div id="parkourCanvasContainer"></div>
+    <div id="pk-hud">
+      <span id="pk-lvl">Livello <b id="pk-L">1</b></span>
+      <div id="pk-bar"><i id="pk-fill"></i></div>
+      <div id="pk-sub">Piattaforme: <span id="pk-p">0</span> su 11<br>Cadute: <span id="pk-f">0</span></div>
+    </div>
+    <div id="pk-banner"></div>
+    <div id="pk-touch">
+      <div class="pad">
+        <button data-k="ArrowUp">▲</button>
+        <button data-k="ArrowLeft">◀</button>
+        <button data-k="ArrowDown">▼</button>
+        <button data-k="ArrowRight">▶</button>
+      </div>
+      <button id="pk-j" data-k="Space">Salta</button>
+    </div>
+    <div id="parkourCanvasContainer" style="width:100%; height:100%;"></div>
   </div>
 
   <div id="bedwarsView">
@@ -266,7 +288,6 @@
     <div class="bw-ov" id="bw-end" hidden><h1 id="bw-endT"></h1><button id="bw-btnAgain">🔁 Rigioca</button><button id="bw-btnMenu">🏠 Torna al menu</button></div>
     <div id="bwCanvasContainer" style="width:100%; height:100%;"></div>
   </div>
-
   <script>
     const firebaseConfig = { databaseURL: "https://blox-platform-67f39-default-rtdb.europe-west1.firebasedatabase.app/" };
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -294,60 +315,58 @@
     }
     initAdminAccounts();
 
-    /* CARICAMENTO AVATAR 3D HUB CON ACCESSORI MARKETPLACE */
+    /* PERSONAGGIO NOOB CLASSICO 3D (BASE) */
     function caricaAvatar3D(containerId) {
       const container = document.getElementById(containerId);
       if (!container) return; container.innerHTML = '';
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
-      camera.position.set(0, 45, 180);
+      const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
+      camera.position.set(0, 2.5, 7);
 
       const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(container.clientWidth, container.clientHeight);
       container.appendChild(renderer.domElement);
 
-      scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-      const group = new THREE.Group();
+      scene.add(new THREE.AmbientLight(0xffffff, 1));
+      const sun = new THREE.DirectionalLight(0xffffff, 0.7); sun.position.set(4, 8, 6); scene.add(sun);
 
-      const matYellow = new THREE.MeshPhongMaterial({ color: 0xffd700 });
-      const matBlue = new THREE.MeshPhongMaterial({ color: 0x0055ff });
-      const matGreen = new THREE.MeshPhongMaterial({ color: 0x00aa00 });
+      const YEL = 0xf5cd30, BLU = 0x0d69ac, GRN = 0xa4bd47;
+      const lam = c => new THREE.MeshLambertMaterial({ color: c });
+      function part(w, h, d, c, y) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), lam(c)); m.position.y = y; return m; }
+      function limb(x, y, c) { const g = new THREE.Group(); g.position.set(x, y, 0); g.add(part(.5, 1, .5, c, -.5)); return g; }
 
-      const head = new THREE.Mesh(new THREE.BoxGeometry(30, 30, 30), matYellow); head.position.y = 50;
-      const torso = new THREE.Mesh(new THREE.BoxGeometry(40, 45, 20), matBlue); torso.position.y = 10;
-      const leftArm = new THREE.Mesh(new THREE.BoxGeometry(15, 45, 15), matYellow); leftArm.position.set(-28, 10, 0);
-      const rightArm = new THREE.Mesh(new THREE.BoxGeometry(15, 45, 15), matYellow); rightArm.position.set(28, 10, 0);
-      const leftLeg = new THREE.Mesh(new THREE.BoxGeometry(18, 45, 18), matGreen); leftLeg.position.set(-10, -35, 0);
-      const rightLeg = new THREE.Mesh(new THREE.BoxGeometry(18, 45, 18), matGreen); rightLeg.position.set(10, -35, 0);
+      const av = new THREE.Group();
+      av.add(part(1, 1, .5, BLU, 1.5));
+      const fc = document.createElement('canvas'); fc.width = fc.height = 64;
+      const fg = fc.getContext('2d'); fg.fillStyle = '#f5cd30'; fg.fillRect(0, 0, 64, 64);
+      fg.fillStyle = '#16212b'; fg.fillRect(18, 20, 6, 10); fg.fillRect(40, 20, 6, 10);
+      fg.lineWidth = 4; fg.lineCap = 'round'; fg.strokeStyle = '#16212b'; fg.beginPath(); fg.arc(32, 34, 13, .25, Math.PI - .25); fg.stroke();
+      const hm = [0, 1, 2, 3, 4, 5].map(i => i === 4 ? new THREE.MeshLambertMaterial({ map: new THREE.CanvasTexture(fc) }) : lam(YEL));
+      const head = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), hm); head.position.y = 2.5; av.add(head);
+      const aL = limb(-.75, 2, YEL), aR = limb(.75, 2, YEL), lL = limb(-.25, 1, GRN), lR = limb(.25, 1, GRN);
+      av.add(aL, aR, lL, lR);
 
-      group.add(head, torso, leftArm, rightArm, leftLeg, rightLeg);
-
-      // MOSTRA OGGETTI EQUIPAGGIATI DAL MARKETPLACE
       if (userEquip.hat) {
-        const hatCone = new THREE.Mesh(new THREE.ConeGeometry(18, 35, 16), new THREE.MeshStandardMaterial({ color: 0xc4122f }));
-        hatCone.position.set(0, 78, 0);
-        group.add(hatCone);
+        const hatCone = new THREE.Mesh(new THREE.ConeGeometry(.4, .8, 16), new THREE.MeshStandardMaterial({ color: 0xc4122f }));
+        hatCone.position.set(0, 3.3, 0); av.add(hatCone);
       }
-
       if (userEquip.sword) {
-        const blade = new THREE.Mesh(new THREE.CylinderGeometry(2, 3, 50, 16), new THREE.MeshStandardMaterial({ color: 0xc8102e }));
-        blade.position.set(38, 20, 5);
-        blade.rotation.z = -0.3;
-        group.add(blade);
+        const blade = new THREE.Mesh(new THREE.CylinderGeometry(.05, .08, 1.2, 16), new THREE.MeshStandardMaterial({ color: 0xc8102e }));
+        blade.position.set(.9, 1.8, .2); blade.rotation.z = -0.3; av.add(blade);
       }
 
-      scene.add(group);
+      scene.add(av);
       function anim() { 
         if (container.style.display === "none") return;
-        group.rotation.y += 0.015; 
+        av.rotation.y += 0.02; 
         renderer.render(scene, camera); 
         requestAnimationFrame(anim); 
       }
       anim();
     }
 
-    /* GESTIONE MARKETPLACE & ACQUISTI */
+    /* MARKETPLACE & SHOP */
     function apriShopModal() { document.getElementById('shopModal').style.display = "flex"; caricaItemsShop(); }
     function chiudiShopModal() { document.getElementById('shopModal').style.display = "none"; }
 
@@ -384,13 +403,8 @@
         if (!u.equip) u.equip = {}; u.equip[itemKey] = true;
         return u;
       }, (err, ok) => { 
-        if (ok) { 
-          caricaInterfaccia(); 
-          caricaItemsShop(); 
-          alert("Acquisto completato con successo!");
-        } else {
-          alert("Valuta insufficiente!");
-        }
+        if (ok) { caricaInterfaccia(); caricaItemsShop(); alert("Acquisto completato!"); } 
+        else { alert("Valuta insufficiente!"); }
       });
     }
 
@@ -400,13 +414,10 @@
       });
     }
 
+    /* NUOVO MOTORE PARKOUR INFINITO INTEGRATO */
     let pkInitialized = false, pkAnimId = null;
-    function mostraSelettoreStanze() {
-      document.getElementById('hubView').style.display = "none";
-      document.getElementById('roomSelectorView').style.display = "block";
-    }
     function entraNellaStanzaParkour() {
-      document.getElementById('roomSelectorView').style.display = "none";
+      document.getElementById('hubView').style.display = "none";
       document.getElementById('parkour3dView').style.display = "block";
       if (!pkInitialized) {
         initParkourEngine();
@@ -421,100 +432,178 @@
       apriHub();
     }
 
-    let pkScore = 0, pkCoins = 0;
+    let plats = [], G = { n: 0, x: 0, y: 0, z: 0, dp: 0, w: 0 }, pkP = { x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, ground: false, on: null, lastY: 0 };
+    let cpPlat, bestScore = 0, fallsCount = 0, pkTime = 0, pkPh = 0, jb = 0, coy = 0, snapCam = true;
+
     function initParkourEngine() {
       const container = document.getElementById('parkourCanvasContainer');
       container.innerHTML = "";
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x1a1a2e);
+      const Rpk = new THREE.WebGLRenderer({ antialias: true });
+      Rpk.setPixelRatio(Math.min(devicePixelRatio, 2));
+      Rpk.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(Rpk.domElement);
 
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      container.appendChild(renderer.domElement);
+      const Spk = new THREE.Scene(), Cpk = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, .1, 400);
+      Spk.background = new THREE.Color(0x9cc7e8); Spk.fog = new THREE.Fog(0x9cc7e8, 45, 150);
+      Spk.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, .95));
+      const sunPk = new THREE.DirectionalLight(0xffffff, .65); sunPk.position.set(5, 12, 8); Spk.add(sunPk);
 
-      scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-      const light = new THREE.DirectionalLight(0xffffff, 0.6);
-      light.position.set(10, 20, 10);
-      scene.add(light);
+      window.addEventListener('resize', () => {
+        Rpk.setSize(window.innerWidth, window.innerHeight);
+        Cpk.aspect = window.innerWidth / window.innerHeight;
+        Cpk.updateProjectionMatrix();
+      });
 
-      const playerGroup = new THREE.Group();
-      const pMatY = new THREE.MeshPhongMaterial({ color: 0xffd700 });
-      const pMatB = new THREE.MeshPhongMaterial({ color: 0x0055ff });
-      const pHead = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.8), pMatY); pHead.position.y = 1.2;
-      const pBody = new THREE.Mesh(new THREE.BoxGeometry(1, 1.2, 0.6), pMatB); pBody.position.y = 0.4;
-      playerGroup.add(pHead, pBody);
-      scene.add(playerGroup);
+      const YEL = 0xf5cd30, BLU = 0x0d69ac, GRN = 0xa4bd47;
+      const lam = c => new THREE.MeshLambertMaterial({ color: c });
+      function part(w, h, d, c, y) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), lam(c)); m.position.y = y; return m; }
+      function limb(x, y, c) { const g = new THREE.Group(); g.position.set(x, y, 0); g.add(part(.5, 1, .5, c, -.5)); return g; }
+      const avPk = new THREE.Group();
+      avPk.add(part(1, 1, .5, BLU, 1.5));
+      const fc = document.createElement('canvas'); fc.width = fc.height = 64;
+      const fg = fc.getContext('2d'); fg.fillStyle = '#f5cd30'; fg.fillRect(0, 0, 64, 64);
+      fg.fillStyle = '#16212b'; fg.fillRect(18, 20, 6, 10); fg.fillRect(40, 20, 6, 10);
+      fg.lineWidth = 4; fg.lineCap = 'round'; fg.strokeStyle = '#16212b'; fg.beginPath(); fg.arc(32, 34, 13, .25, Math.PI - .25); fg.stroke();
+      const hm = [0, 1, 2, 3, 4, 5].map(i => i === 4 ? new THREE.MeshLambertMaterial({ map: new THREE.CanvasTexture(fc) }) : lam(YEL));
+      const head = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), hm); head.position.y = 2.5; avPk.add(head);
+      const aL = limb(-.75, 2, YEL), aR = limb(.75, 2, YEL), lL = limb(-.25, 1, GRN), lR = limb(.25, 1, GRN);
+      avPk.add(aL, aR, lL, lR); Spk.add(avPk);
 
-      let pPos = { x: 0, y: 3, z: 0 };
-      let pVel = { x: 0, y: 0, z: 0 };
-      let isGrounded = false;
-
-      const platforms = [];
-      function createPlatform(x, y, z, w, d) {
-        const mesh = new THREE.Mesh(
-          new THREE.BoxGeometry(w, 0.5, d),
-          new THREE.MeshPhongMaterial({ color: 0xa855f7 })
-        );
-        mesh.position.set(x, y, z);
-        scene.add(mesh);
-        platforms.push({ x, y, z, w, d, mesh });
+      if (userEquip.hat) {
+        const hatCone = new THREE.Mesh(new THREE.ConeGeometry(.4, .8, 16), new THREE.MeshStandardMaterial({ color: 0xc4122f }));
+        hatCone.position.set(0, 3.3, 0); avPk.add(hatCone);
+      }
+      if (userEquip.sword) {
+        const blade = new THREE.Mesh(new THREE.CylinderGeometry(.05, .08, 1.2, 16), new THREE.MeshStandardMaterial({ color: 0xc8102e }));
+        blade.position.set(.9, 1.8, .2); blade.rotation.z = -0.3; avPk.add(blade);
       }
 
-      createPlatform(0, 0, 0, 4, 4);
-      for (let i = 1; i < 25; i++) {
-        createPlatform((Math.random() - 0.5) * 6, i * 2.5, -i * 5, 3, 3);
+      function label(t) {
+        const c = document.createElement('canvas'); c.width = 256; c.height = 64; const g = c.getContext('2d');
+        g.font = 'bold 44px Trebuchet MS,Verdana,sans-serif'; g.textAlign = 'center'; g.lineWidth = 8; g.strokeStyle = '#16212b'; g.fillStyle = '#fff';
+        g.strokeText(t, 128, 46); g.fillText(t, 128, 46);
+        return new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthWrite: false }));
       }
 
-      const keys = {};
-      window.addEventListener('keydown', e => keys[e.code] = true);
-      window.addEventListener('keyup', e => keys[e.code] = false);
-
-      function resetParkourGame() {
-        pPos = { x: 0, y: 3, z: 0 };
-        pVel = { x: 0, y: 0, z: 0 };
-        pkScore = 0; pkCoins = 0;
-        document.getElementById('pkScoreDisplay').textContent = pkScore;
-        document.getElementById('pkCoinsDisplay').textContent = pkCoins;
+      plats = []; G = { n: 0, x: 0, y: 0, z: 0, dp: 0, w: 0 };
+      function addPlat() {
+        const n = G.n++, L = Math.floor(n / 11) + 1, cp = n % 11 === 0, D = (L - 1) + (n % 11) / 11;
+        const w = cp ? 10 : Math.max(1.7, 6 - D * .25 - Math.random() * 1.2);
+        const dp = cp ? 10 : Math.max(1.7, 5.4 - D * .22 - Math.random());
+        let y = n ? G.y + (Math.random() * 2 - 1) * (Math.random() < .5 ? .5 : 1.1) : 0; y = Math.max(0, Math.min(9, y));
+        const R = 6.4 - Math.max(0, y - G.y) * .7;
+        const gap = n ? Math.min(Math.min(1.6 + D * .28, 4.8) + Math.random() * Math.min(.5 + D * .06, 1.2), R - .3) : 0;
+        const z = n ? G.z - G.dp / 2 - gap - dp / 2 : 0;
+        let x = 0;
+        if (n) { const reach = (w + G.w) / 2 + Math.sqrt(Math.max(0, R * R - gap * gap)), off = (Math.random() * 2 - 1) * Math.min(2 + D * .35, 7); x = G.x + Math.max(-reach, Math.min(reach, off)); x = Math.max(-12, Math.min(12, x)); }
+        const mv = !cp && L >= 3 && Math.random() < Math.min(.15 + D * .05, .7);
+        const col = new THREE.Color().setHSL((L * .137) % 1, cp ? .8 : .6, cp ? .72 : .46 + Math.random() * .1);
+        if (mv) col.offsetHSL(0, 0, .14);
+        const m = new THREE.Mesh(new THREE.BoxGeometry(w, .7, dp), new THREE.MeshLambertMaterial({ color: col }));
+        m.position.set(x, y - .35, z);
+        if (cp) { const s = label('LIVELLO ' + L); s.position.set(0, 4, 0); m.add(s); }
+        Spk.add(m);
+        plats.push({ m, x0: x, x, y, z, w, dp, n, cp, mv, amp: Math.min(1.5 + D * .2, 4), sp: .8 + Math.min(D * .07, 1.2) + Math.random() * .4, ph: Math.random() * 6, dx: 0 });
+        G.x = x; G.y = y; G.z = z; G.dp = dp; G.w = w;
       }
 
-      function parkourLoop() {
-        if (document.getElementById('parkour3dView').style.display === "none") return;
-        pkAnimId = requestAnimationFrame(parkourLoop);
+      addPlat(); cpPlat = plats[0];
+      pkP = { x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, ground: false, on: null, lastY: 0 };
+      bestScore = 0; fallsCount = 0; snapCam = true;
 
-        if (keys['KeyW']) pPos.z -= 0.12;
-        if (keys['KeyS']) pPos.z += 0.12;
-        if (keys['KeyA']) pPos.x -= 0.12;
-        if (keys['KeyD']) pPos.x += 0.12;
-        if (keys['Space'] && isGrounded) { pVel.y = 0.35; isGrounded = false; }
+      const tint = new THREE.Color(0x9cc7e8);
+      function updateLevelUI(L) {
+        document.getElementById('pk-L').textContent = L;
+        const h = (L * .137) % 1; tint.setHSL(h, .5, .78);
+      }
+      let bTimer;
+      function showBanner(txt) {
+        const b = document.getElementById('pk-banner'); b.textContent = txt; b.classList.add('show');
+        clearTimeout(bTimer); bTimer = setTimeout(() => b.classList.remove('show'), 1700);
+      }
+      updateLevelUI(1); showBanner('Livello 1');
 
-        pVel.y -= 0.015;
-        pPos.y += pVel.y;
+      const K = {};
+      function press(k) { K[k] = true; if (k === 'Space') jb = .12; }
+      function rel(k) { K[k] = false; }
+      const keyListenerDown = e => { if (e.code === 'Space' || e.code.indexOf('Arrow') === 0) e.preventDefault(); if (!e.repeat) press(e.code); };
+      const keyListenerUp = e => rel(e.code);
+      window.addEventListener('keydown', keyListenerDown);
+      window.addEventListener('keyup', keyListenerUp);
 
-        isGrounded = false;
-        platforms.forEach(p => {
-          if (Math.abs(pPos.x - p.x) < p.w / 2 && Math.abs(pPos.z - p.z) < p.d / 2) {
-            if (pPos.y >= p.y + 0.25 && pPos.y + pVel.y <= p.y + 0.4) {
-              pPos.y = p.y + 0.4;
-              pVel.y = 0;
-              isGrounded = true;
-              pkScore = Math.max(pkScore, Math.abs(Math.floor(p.z)));
-              document.getElementById('pkScoreDisplay').textContent = pkScore;
+      const touchBtns = document.querySelectorAll('#pk-touch button');
+      touchBtns.forEach(b => {
+        const k = b.dataset.k;
+        b.onpointerdown = e => { e.preventDefault(); press(k); };
+        ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => b.onpointerleave = () => rel(k));
+      });
+
+      function respawnPk() {
+        pkP.x = cpPlat.x; pkP.y = cpPlat.y; pkP.z = cpPlat.z; pkP.vx = pkP.vy = pkP.vz = 0; pkP.lastY = cpPlat.y; pkP.on = null; fallsCount++;
+        document.getElementById('pk-f').textContent = fallsCount; snapCam = true;
+      }
+
+      let lastT = performance.now();
+      function pkLoop(now) {
+        if (document.getElementById('parkour3dView').style.display === "none") {
+          window.removeEventListener('keydown', keyListenerDown);
+          window.removeEventListener('keyup', keyListenerUp);
+          return;
+        }
+        pkAnimId = requestAnimationFrame(pkLoop);
+        const dt = Math.min((now - lastT) / 1000, .05); lastT = now; pkTime += dt;
+
+        for (const q of plats) {
+          if (q.mv) { const nx = q.x0 + Math.sin(pkTime * q.sp + q.ph) * q.amp; q.dx = nx - q.x; q.x = nx; q.m.position.x = nx; }
+        }
+
+        const ix = (K.KeyD || K.ArrowRight ? 1 : 0) - (K.KeyA || K.ArrowLeft ? 1 : 0);
+        const iz = (K.KeyS || K.ArrowDown ? 1 : 0) - (K.KeyW || K.ArrowUp ? 1 : 0);
+        const len = Math.hypot(ix, iz) || 1; pkP.vx = ix / len * 10; pkP.vz = iz / len * 10;
+        if (pkP.on) pkP.x += pkP.on.dx;
+        jb -= dt; coy = pkP.ground ? .1 : coy - dt;
+        if (jb > 0 && coy > 0) { pkP.vy = 17; jb = 0; coy = 0; pkP.ground = false; }
+
+        const oy = pkP.y; pkP.vy -= 40 * dt; pkP.y += pkP.vy * dt; pkP.x += pkP.vx * dt; pkP.z += pkP.vz * dt;
+        pkP.ground = false; pkP.on = null;
+
+        for (const q of plats) {
+          if (pkP.vy <= 0 && oy >= q.y - .15 && pkP.y <= q.y && Math.abs(q.z - pkP.z) < q.dp / 2 + .35 && Math.abs(q.x - pkP.x) < q.w / 2 + .35) {
+            pkP.y = q.y; pkP.vy = 0; pkP.ground = true; pkP.on = q; pkP.lastY = q.y;
+            if (q.n > bestScore) {
+              bestScore = q.n; const L = Math.floor(q.n / 11) + 1, k = q.n % 11;
+              document.getElementById('pk-p').textContent = k;
+              document.getElementById('pk-fill').style.width = (k * 10) + '%';
+              if (q.cp) { cpPlat = q; updateLevelUI(L); if (q.n > 0) showBanner('Livello ' + L); }
             }
+            break;
           }
-        });
+        }
 
-        if (pPos.y < -15) resetParkourGame();
+        if (pkP.y < pkP.lastY - 16) respawnPk();
+        while (G.z > pkP.z - 150) addPlat();
+        for (let i = plats.length - 1; i >= 0; i--) {
+          const q = plats[i];
+          if (q.z > cpPlat.z + 50) { Spk.remove(q.m); q.m.geometry.dispose(); q.m.material.dispose(); plats.splice(i, 1); }
+        }
 
-        playerGroup.position.set(pPos.x, pPos.y, pPos.z);
-        camera.position.set(pPos.x, pPos.y + 4, pPos.z + 10);
-        camera.lookAt(pPos.x, pPos.y, pPos.z);
+        avPk.position.set(pkP.x, pkP.y, pkP.z);
+        const mov = Math.hypot(pkP.vx, pkP.vz) > .1;
+        if (mov) { const ta = Math.atan2(pkP.vx, pkP.vz); let da = ta - avPk.rotation.y; da = Math.atan2(Math.sin(da), Math.cos(da)); avPk.rotation.y += da * Math.min(1, dt * 12); }
+        if (!pkP.ground) { aL.rotation.x = aR.rotation.x = -2.6; lL.rotation.x = .4; lR.rotation.x = -.4; }
+        else if (mov) { pkPh += dt * 12; const s = Math.sin(pkPh) * .8; aL.rotation.x = s; aR.rotation.x = -s; lL.rotation.x = -s; lR.rotation.x = s; }
+        else { aL.rotation.x = aR.rotation.x = lL.rotation.x = lR.rotation.x = 0; }
 
-        renderer.render(scene, camera);
+        const tp = new THREE.Vector3(pkP.x * .7, pkP.lastY + 6.5, pkP.z + 12);
+        if (snapCam) { Cpk.position.copy(tp); snapCam = false; } else Cpk.position.lerp(tp, 1 - Math.exp(-5 * dt));
+        Cpk.lookAt(pkP.x * .85, pkP.lastY + 2.2, pkP.z - 7);
+        Spk.background.lerp(tint, .02); Spk.fog.color.copy(Spk.background);
+        Rpk.render(Spk, Cpk);
       }
-      parkourLoop();
+      requestAnimationFrame(pkLoop);
     }
 
+    /* CLICKER GAME */
     function avviaClickerGame() {
       document.getElementById('hubView').style.display = "none";
       document.getElementById('gameView').style.display = "block";
@@ -552,6 +641,7 @@
       });
     }
 
+    /* SUPPORTO & ADMIN (CON VECCHIO SISTEMA PULSANTI DONAZIONI) */
     function apriSupporto() {
       document.getElementById('authView').style.display = "none";
       document.getElementById('hubView').style.display = "none";
@@ -586,6 +676,7 @@
 
     function apriSupervisione() { renderAccountList(); document.getElementById('adminModal').style.display = "flex"; }
     function chiudiSupervisione() { document.getElementById('adminModal').style.display = "none"; }
+    
     function renderAccountList() {
       const filter = document.getElementById('searchInput').value.toLowerCase();
       dbRef.ref('users').once('value', (snap) => {
@@ -595,43 +686,53 @@
         Object.keys(users).forEach(k => {
           const u = users[k];
           if (filter && !u.username.toLowerCase().includes(filter)) return;
+          const isAdmin = u.role === "owner" || u.role === "admin";
           const div = document.createElement('div');
-          div.className = "account-item";
+          div.className = "admin-card-row";
           div.innerHTML = `
-            <span><b>${u.username}</b> (🪙 ${u.coins || 0} | 💎 ${u.platabux || 0})</span>
-            <div style="display:flex; gap:4px;">
-              <button class="btn-give btn-give-coin" onclick="regalaValuta('${k}', 'coins', 500)">+500 🪙</button>
-              <button class="btn-give btn-give-pbux" onclick="regalaValuta('${k}', 'platabux', 100)">+100 💎</button>
+            <div class="admin-card-header">
+              <div>
+                <div class="admin-user-title">
+                  ${u.username} ${isAdmin ? '<span class="admin-badge-tag">👑 ADMIN</span>' : ''}
+                </div>
+                <div class="admin-user-pass">Password: ${u.password || '-'}</div>
+              </div>
+              <div class="admin-stats-right">
+                <span style="color:#eab308;">🪙 ${u.coins || 0}</span>
+                <span style="color:#3b82f6;">💎 ${u.platabux || 0}</span>
+              </div>
+            </div>
+            <div class="admin-controls-flex">
+              <input type="number" id="val_${k}" value="1000" class="admin-input-val">
+              <button class="btn-add-coin" onclick="aggiungiValutaAdmin('${k}', 'coins')">+ 🪙 Monete</button>
+              <button class="btn-add-pbux" onclick="aggiungiValutaAdmin('${k}', 'platabux')">+ 💎 Platabux</button>
             </div>
           `;
           container.appendChild(div);
         });
       });
     }
-    function regalaValuta(userKey, valuta, quantita) {
-      dbRef.ref('users/' + userKey + '/' + valuta).transaction((curr) => (curr || 0) + quantita, () => {
+
+    function aggiungiValutaAdmin(userKey, valuta) {
+      const valInput = document.getElementById('val_' + userKey);
+      const q = parseInt(valInput.value) || 0;
+      if (q <= 0) return alert("Inserisci una quantità valida!");
+      dbRef.ref('users/' + userKey + '/' + valuta).transaction((curr) => (curr || 0) + q, () => {
         renderAccountList();
       });
     }
 
+    /* MOTORE BEDWARS */
     let bwInitialized = false;
     function avviaBedwarsGame() {
       document.getElementById('bedwarsView').style.display = "block";
-      if (!bwInitialized) {
-        initBedwarsEngine();
-        bwInitialized = true;
-      } else {
-        bwResetWorld();
-      }
+      if (!bwInitialized) { initBedwarsEngine(); bwInitialized = true; } else { bwResetWorld(); }
     }
-    function chiudiBedwars() { 
-      document.getElementById('bedwarsView').style.display = "none"; 
-      document.exitPointerLock && document.exitPointerLock();
-    }
+    function chiudiBedwars() { document.getElementById('bedwarsView').style.display = "none"; document.exitPointerLock && document.exitPointerLock(); }
 
     function initBedwarsEngine() {
       const T = THREE, $i = id => document.getElementById(id);
-      let bridge = false, hitMode = false, side = 0, combo = 0, comboT = 0, mode = 'bot', charge = 0;
+      let bridge = false, hitMode = false, combo = 0, charge = 0;
       const score = { b: 0, r: 0 }, hits = { me: 0, bot: 0 }, WINS = 5, HITS = 100;
       const SW = [{ d: 4, kb: 9, cd: .42, r: 4 }, { d: 5, kb: 10, cd: .38, r: 4.3 }, { d: 6, kb: 11, cd: .34, r: 4.6 }, { d: 8, kb: 12.5, cd: .3, r: 5 }];
 
@@ -655,7 +756,7 @@
         for (let i = 0; i < 40; i++) { g.fillStyle = 'rgba(0,0,0,' + Math.random() * .18 + ')'; g.fillRect(Math.random() * 16 | 0, Math.random() * 16 | 0, 2, 2); }
         if (stripe) { g.fillStyle = '#fff'; g.fillRect(0, 5, 16, 6); }
         g.strokeStyle = 'rgba(0,0,0,.4)'; g.strokeRect(.5, .5, 15, 15);
-        const t = new T.CanvasTexture(cv); t.magFilter = T.NearestFilter; return t;
+        return new T.CanvasTexture(cv);
       }
       const M = {};
       [['grass', '#5fae3a'], ['dirt', '#8a5a2b'], ['stone', '#8c8c8c'], ['wool', '#3b6cff'], ['wood', '#c89b5a'], ['bedB', '#2255dd', 1], ['bedR', '#dd2222', 1], ['gold', '#ffd23f']]
@@ -663,50 +764,50 @@
 
       const HP = { grass: 3, dirt: 3, stone: 8, wool: 2, wood: 4, bedB: 5, bedR: 5, gold: 999 }, BL = [null, 'wool', 'stone', 'wood'];
       const blocks = new Map(), geo = new T.BoxGeometry(1, 1, 1);
-      function setBlock(x, y, z, type, net = true) {
+      function setBlock(x, y, z, type) {
         const k = x + ',' + y + ',' + z; if (blocks.has(k)) return;
         const m = new T.Mesh(geo, M[type]); m.position.set(x + .5, y + .5, z + .5); m.updateMatrixWorld();
         m.userData = { k, x, y, z, type, hp: HP[type] };
         scene.add(m); blocks.set(k, m);
       }
-      function removeBlock(k, net = true) {
-        const m = blocks.get(k); if (!m) return; scene.remove(m); blocks.delete(k); const u = m.userData;
-        if (u.type === 'bedB') breakBed('blue', net); if (u.type === 'bedR') breakBed('red', net);
+      function removeBlock(k) {
+        const m = blocks.get(k); if (!m) return; scene.remove(m); blocks.delete(k);
+        if (m.userData.type === 'bedB') breakBed('blue'); if (m.userData.type === 'bedR') breakBed('red');
       }
       function dmg(m, d, byPlayer) {
-        const u = m.userData; if (byPlayer && u.type === 'bedB') { bwMsg('Non puoi rompere il tuo letto!'); return; }
-        u.hp -= d; m.scale.setScalar(.85); setTimeout(() => m.scale.setScalar(1), 90); if (u.hp <= 0) removeBlock(u.k);
+        if (byPlayer && m.userData.type === 'bedB') { bwMsg('Non puoi rompere il tuo letto!'); return; }
+        m.userData.hp -= d; m.scale.setScalar(.85); setTimeout(() => m.scale.setScalar(1), 90); if (m.userData.hp <= 0) removeBlock(m.userData.k);
       }
       const bedAlive = { blue: true, red: true };
-      function breakBed(t, net) {
+      function breakBed(t) {
         bedAlive[t] = false; bwSt();
-        bwMsg(t === 'red' ? '🛏️ Letto nemico distrutto! Il bot non rinascerà.' : '💀 Il tuo letto è stato distrutto!', 3500);
+        bwMsg(t === 'red' ? '🛏️ Letto nemico distrutto!' : '💀 Il tuo letto è stato distrutto!', 3500);
         if (t === 'red' && !bot.alive) bwEnd(true);
       }
 
       function island(cx, cz, r) {
         for (let x = -r; x <= r; x++) for (let z = -r; z <= r; z++) {
           const d = Math.max(Math.abs(x), Math.abs(z));
-          for (let i = 0; i <= r - d + 1 && i < 4; i++) setBlock(cx + x, -i, cz + z, i ? (i > 2 ? 'stone' : 'dirt') : 'grass', false);
+          for (let i = 0; i <= r - d + 1 && i < 4; i++) setBlock(cx + x, -i, cz + z, i ? (i > 2 ? 'stone' : 'dirt') : 'grass');
         }
       }
-      function buildArena() { for (let x = -7; x <= 7; x++) for (let z = -7; z <= 7; z++) setBlock(x, 0, z, Math.max(Math.abs(x), Math.abs(z)) === 7 ? 'wood' : 'stone', false); }
+      function buildArena() { for (let x = -7; x <= 7; x++) for (let z = -7; z <= 7; z++) setBlock(x, 0, z, Math.max(Math.abs(x), Math.abs(z)) === 7 ? 'wood' : 'stone'); }
       function buildBridge() {
-        for (let x = -4; x <= 2; x++) for (let z = -3; z <= 3; z++) setBlock(x, 0, z, 'stone', false);
-        for (let x = 38; x <= 44; x++) for (let z = -3; z <= 3; z++) setBlock(x, 0, z, 'stone', false);
-        for (let x = 3; x <= 37; x++) setBlock(x, 0, 0, 'wood', false);
+        for (let x = -4; x <= 2; x++) for (let z = -3; z <= 3; z++) setBlock(x, 0, z, 'stone');
+        for (let x = 38; x <= 44; x++) for (let z = -3; z <= 3; z++) setBlock(x, 0, z, 'stone');
+        for (let x = 3; x <= 37; x++) setBlock(x, 0, 0, 'wood');
       }
       function buildMap() {
         if (hitMode) return buildArena();
         if (bridge) return buildBridge();
         island(0, 0, 4); island(18, 0, 2); island(36, 0, 4);
-        setBlock(-3, 1, 0, 'bedB', false); setBlock(39, 1, 0, 'bedR', false);
-        [[38, 1, 0], [40, 1, 0], [39, 1, 1], [39, 1, -1], [39, 2, 0], [38, 2, 0]].forEach(([x, y, z]) => setBlock(x, y, z, 'wood', false));
+        setBlock(-3, 1, 0, 'bedB'); setBlock(39, 1, 0, 'bedR');
+        [[38, 1, 0], [40, 1, 0], [39, 1, 1], [39, 1, -1], [39, 2, 0], [38, 2, 0]].forEach(([x, y, z]) => setBlock(x, y, z, 'wood'));
       }
       buildMap();
 
       const gens = [[2, -3, 1.5, 8], [18, 0, 4, 6], [34, -3, 1.5, 8]].map(([x, z, fi, gi]) => {
-        setBlock(x, 1, z, 'stone', false);
+        setBlock(x, 1, z, 'stone');
         const m = new T.Mesh(new T.BoxGeometry(.6, .6, .6), new T.MeshLambertMaterial({ color: 0xffd23f, emissive: 0x553300 }));
         m.position.set(x + .5, 2.4, z + .5); scene.add(m);
         return { x, z, fi, gi, ft: 0, gt: 0, fe: 0, go: 0, m };
@@ -741,7 +842,7 @@
       }
       function bwDie(r) { combo = 0; P.alive = false; P.vel.set(0, 0, 0); if (bedAlive.blue) { respT = 3; bwMsg(r + ' Respawn in 3s...', 3000); } else bwEnd(false); }
       function bwRespawn() {
-        const q = hitMode ? [-4.5, -Math.PI / 2] : bridge && side ? [40.5, Math.PI / 2] : [1.5, -Math.PI / 2];
+        const q = hitMode ? [-4.5, -Math.PI / 2] : bridge ? [40.5, Math.PI / 2] : [1.5, -Math.PI / 2];
         P.pos.set(q[0], 1.01, .5); P.vel.set(0, 0, 0); P.hp = 20; P.alive = true; yaw = q[1]; combo = 0; bwMsg('Respawn!');
       }
       function bwEnd(win) {
@@ -768,7 +869,7 @@
         scene.add(g); g.userData = { ms, head, lA, rA, lL, rL, sw, bw }; return g;
       }
 
-      const bot = { pos: new T.Vector3(), vel: new T.Vector3(), hp: 20, alive: false, g: mkBot(), t: 0, cd: 0, bt: 0, rt: 0, ground: false };
+      const bot = { pos: new T.Vector3(), vel: new T.Vector3(), hp: 20, alive: false, g: mkBot(), t: 0, cd: 0, rt: 0, ground: false };
       const arrows = [], arrowGeo = new T.BoxGeometry(.05, .05, .55), arrowMat = new T.MeshLambertMaterial({ color: 0xddddcc });
       const hb = (e, p) => Math.abs(p.x - e.x) < .45 && Math.abs(p.z - e.z) < .45 && p.y > e.y && p.y < e.y + 1.9;
 
@@ -778,7 +879,7 @@
       }
       function clearArrows() { arrows.forEach(a => scene.remove(a.m)); arrows.length = 0; }
       function fireBow() {
-        if (inv.arrows <= 0) { bwMsg('Frecce finite! Compra altre frecce nel negozio (B)'); return; }
+        if (inv.arrows <= 0) { bwMsg('Frecce finite! Compra nel negozio (B)'); return; }
         const d = cam.getWorldDirection(new T.Vector3()), pw = .35 + .65 * charge;
         inv.arrows--; shoot(cam.position.clone().addScaledVector(d, .6), d.multiplyScalar(46 * pw), 'p');
       }
@@ -789,60 +890,30 @@
           for (let s = 0; s < n && !dead; s++) {
             const p = a.m.position.addScaledVector(a.v, dt / n);
             if (solid(p.x, p.y, p.z)) { dead = true; break; }
-            if (a.o === 'p') {
-              if (bot.alive && hb(bot.pos, p)) {
-                bot.hp -= 6; knock(bot, a.v.x, a.v.z, 6);
-                if (bot.hp <= 0) killBot(); dead = true;
-              }
-            } else if (P.alive && hb(P.pos, p)) { bwHurt(4); knock(P, a.v.x, a.v.z, 6); dead = true; }
+            if (a.o === 'p' && bot.alive && hb(bot.pos, p)) {
+              bot.hp -= 6; knock(bot, a.v.x, a.v.z, 6); if (bot.hp <= 0) killBot(); dead = true;
+            } else if (a.o === 'b' && P.alive && hb(P.pos, p)) { bwHurt(4); knock(P, a.v.x, a.v.z, 6); dead = true; }
           }
           a.m.lookAt(a.m.position.x + a.v.x, a.m.position.y + a.v.y, a.m.position.z + a.v.z);
           if (dead || a.t > 6 || a.m.position.y < -40) { scene.remove(a.m); arrows.splice(i, 1); }
         }
       }
-      function botAnim(dt) {
-        const b = bot, u = b.g.userData, sp = Math.hypot(b.vel.x, b.vel.z);
-        b.ph = (b.ph || 0) + sp * dt * 2.4; const am = Math.min(1, sp / 3) * .9 * (b.ground ? 1 : .3);
-        u.lL.rotation.x = Math.sin(b.ph) * am; u.rL.rotation.x = -Math.sin(b.ph) * am;
-        let ra = Math.sin(b.ph) * am * .8, la = -Math.sin(b.ph) * am * .8;
-        b.atk = Math.max(0, (b.atk || 0) - dt); if (b.atk > 0) ra = -Math.sin(b.atk / .25 * Math.PI) * 2.2 - .2;
-        u.rA.rotation.x = ra; u.lA.rotation.x = la; b.g.rotation.x = b.kb > 0 ? -.3 : 0;
-      }
       function knock(e, dx, dz, pw, up = 6.5) {
         const l = Math.hypot(dx, dz) || 1; e.vel.x = dx / l * pw; e.vel.z = dz / l * pw; e.vel.y = Math.max(e.vel.y, up); e.kb = .45; e.ground = false;
       }
-      function botHits() {
-        hits.bot++; combo = 0; document.getElementById('bw-hurt').style.opacity = .4;
-        setTimeout(() => document.getElementById('bw-hurt').style.opacity = 0, 120);
-        bwSt(); if (hits.bot >= HITS) bwEnd(false);
-      }
       function spawnBot() { bot.pos.set(hitMode ? 4.5 : bridge ? 40.5 : 35.5, 1.01, .5); bot.vel.set(0, 0, 0); bot.hp = 20; bot.alive = true; bot.g.visible = true; }
-      function killBot() { bot.alive = false; bot.g.visible = false; bot.rt = hitMode ? 1.5 : 4; bwMsg('Bot nemico eliminato!'); if (!bedAlive.red) bwEnd(true); }
+      function killBot() { bot.alive = false; bot.g.visible = false; bot.rt = hitMode ? 1.5 : 4; bwMsg('Bot eliminato!'); if (!bedAlive.red) bwEnd(true); }
       spawnBot();
 
       function botUpdate(dt) {
         const b = bot;
         if (!b.alive) { if (bedAlive.red) { b.rt -= dt; if (b.rt <= 0) spawnBot(); } return; }
-        b.t += dt; b.cd -= dt; b.bt -= dt;
-        const dp = Math.hypot(P.pos.x - b.pos.x, P.pos.z - b.pos.z), dyp = Math.abs(P.pos.y - b.pos.y);
-        let tx, tz, mode = 'guard';
-        if (P.alive && dp < (hitMode ? 80 : bridge ? 4 : 10) && dyp < 4) { tx = P.pos.x; tz = P.pos.z; mode = 'chase'; }
-        else if (bridge) { tx = -3.8; tz = .5; mode = 'dash'; }
-        let dx = 0, dz = 0;
-        if (tx !== undefined) { dx = tx - b.pos.x; dz = tz - b.pos.z; const l = Math.hypot(dx, dz) || 1; dx /= l; dz /= l; if (l < 1.2) dx = dz = 0; }
-        if (mode === 'chase' && dp < 1.8 && dyp < 1.5 && b.cd <= 0) {
-          b.cd = hitMode ? .7 : 1; b.atk = .25;
-          if (hitMode) botHits(); else bwHurt(3);
-          knock(P, P.pos.x - b.pos.x, P.pos.z - b.pos.z, 9.5);
-        }
-        b.kb = Math.max(0, (b.kb || 0) - dt);
-        const spd = (mode === 'chase' ? 4.4 : 3.6);
-        b.vel.x += (dx * spd - b.vel.x) * .1; b.vel.z += (dz * spd - b.vel.z) * .1;
+        b.cd -= dt; const dp = Math.hypot(P.pos.x - b.pos.x, P.pos.z - b.pos.z), dyp = Math.abs(P.pos.y - b.pos.y);
+        let tx = P.pos.x, tz = P.pos.z;
+        if (dp < 1.8 && dyp < 1.5 && b.cd <= 0) { b.cd = hitMode ? .7 : 1; if (hitMode) { hits.bot++; bwSt(); if (hits.bot >= HITS) bwEnd(false); } else bwHurt(3); knock(P, P.pos.x - b.pos.x, P.pos.z - b.pos.z, 9.5); }
+        b.vel.x += ((tx - b.pos.x) * .1); b.vel.z += ((tz - b.pos.z) * .1);
         phys(b, dt); if (b.pos.y < -25) { killBot(); return; }
-        b.g.position.copy(b.pos);
-        let fa = (dx || dz) ? Math.atan2(dx, dz) : null;
-        if (fa !== null) { let d = fa - b.g.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); b.g.rotation.y += d * Math.min(1, dt * 12); }
-        botAnim(dt); b.g.updateMatrixWorld(true);
+        b.g.position.copy(b.pos); b.g.updateMatrixWorld(true);
       }
 
       const hl = new T.LineSegments(new T.EdgesGeometry(new T.BoxGeometry(1.01, 1.01, 1.01)), new T.LineBasicMaterial({ color: 0 })); scene.add(hl);
@@ -873,25 +944,23 @@
         if (state !== 'play' || !P.alive || cd > 0 || paused || shopOpen || slot === 4) return;
         const t = target, att = slot === 0 && t && t.bot; cd = Math.max(cd, -.1) + (slot > 0 ? .07 : att ? SW[sw].cd : .16); swing = 1;
         if (slot > 0) {
-          const ty = BL[slot]; if (inv[ty] <= 0) { bwMsg('Blocchi finiti! Apri il negozio (B)'); return; }
+          const ty = BL[slot]; if (inv[ty] <= 0) { bwMsg('Blocchi finiti!'); return; }
           if (!t || !t.block) return; const u = t.block.userData, n = t.normal, x = u.x + n.x, y = u.y + n.y, z = u.z + n.z;
           if (blocks.has(x + ',' + y + ',' + z) || y > 45) return;
           setBlock(x, y, z, ty); inv[ty]--; return;
         }
         if (!t) return;
         if (t.bot) {
-          const S = SW[sw], crit = !P.ground && P.vel.y < 0, m = crit ? 1.5 : 1, kb = S.kb * (crit ? 1.25 : 1);
-          if (hitMode) { hits.me += crit ? 2 : 1; combo++; bwSt(); if (hits.me >= HITS) bwEnd(true); }
-          else bot.hp -= S.d * m;
-          knock(bot, -Math.sin(yaw), -Math.cos(yaw), kb);
+          if (hitMode) { hits.me++; bwSt(); if (hits.me >= HITS) bwEnd(true); } else bot.hp -= SW[sw].d;
+          knock(bot, -Math.sin(yaw), -Math.cos(yaw), SW[sw].kb);
           if (!hitMode && bot.hp <= 0) killBot();
-        } else if (t.block) { dmg(t.block, pick ? 2 : 1, true); }
+        } else if (t.block) { dmg(t.block, 1, true); }
       }
 
       let mtt;
       function bwMsg(t, ms = 2000) { document.getElementById('bw-msg').textContent = t; clearTimeout(mtt); mtt = setTimeout(() => document.getElementById('bw-msg').textContent = '', ms); }
       function bwSt() {
-        document.getElementById('bw-st').innerHTML = bridge ? '🔵 Tu ' + score.b + ' - ' + score.r + ' Bot 🔴<br>Primo a ' + WINS + ' punti' : hitMode ? '🥊 Tu ' + hits.me + ' - ' + hits.bot + ' Bot<br>Primo a ' + HITS + ' colpi' : 'Tuo letto: ' + (bedAlive.blue ? '✅' : '❌') + '<br>Letto nemico: ' + (bedAlive.red ? '✅' : '❌');
+        document.getElementById('bw-st').innerHTML = bridge ? '🔵 Tu ' + score.b + ' - ' + score.r + ' Bot 🔴' : hitMode ? '🥊 Tu ' + hits.me + ' - ' + hits.bot + ' Colpi' : 'Letto tuo: ' + (bedAlive.blue ? '✅' : '❌') + ' | Nemico: ' + (bedAlive.red ? '✅' : '❌');
       }
       bwSt();
 
@@ -902,17 +971,12 @@
       function hud() {
         document.getElementById('bw-fe').textContent = inv.fe; document.getElementById('bw-go').textContent = inv.go;
         document.getElementById('bw-hp').style.width = Math.max(0, P.hp) / 20 * 100 + '%';
-        [...bwBar.children].forEach((e, i) => { e.classList.toggle('on', i === slot); e.lastChild.textContent = i === 4 ? inv.arrows : i ? inv[BL[i]] : 'T' + (sw + 1); });
+        [...bwBar.children].forEach((e, i) => { e.classList.toggle('on', i === slot); e.lastChild.textContent = i === 4 ? inv.arrows : i ? inv[BL[i]] : ''; });
       }
 
       const swordM = new T.Mesh(new T.BoxGeometry(.08, .08, .8), new T.MeshLambertMaterial({ color: 0xc89b5a })); swordM.position.set(.35, -.3, -.7);
       const blockM = new T.Mesh(new T.BoxGeometry(.3, .3, .3), M.wool); blockM.position.set(.35, -.3, -.6);
-      const dk = new T.MeshLambertMaterial({ color: 0x4a2f14 }), grd = new T.Mesh(new T.BoxGeometry(.28, .07, .07), dk), hnd = new T.Mesh(new T.BoxGeometry(.07, .07, .22), dk);
-      grd.position.z = .4; hnd.position.z = .52; swordM.add(grd, hnd);
-      
-      const bowM = new T.Mesh(new T.BoxGeometry(.05, .62, .05), new T.MeshLambertMaterial({ color: 0x8a5a2b }));
-      const bstr = new T.Mesh(new T.BoxGeometry(.012, .58, .012), new T.MeshBasicMaterial({ color: 0xffffff }));
-      bstr.position.z = .07; bowM.add(bstr); bowM.position.set(.3, -.25, -.6); bowM.rotation.z = .15;
+      const bowM = new T.Mesh(new T.BoxGeometry(.05, .62, .05), new T.MeshLambertMaterial({ color: 0x8a5a2b })); bowM.position.set(.3, -.25, -.6);
       cam.add(bowM, swordM, blockM);
 
       function selectSlot(i) { slot = i; swordM.visible = i === 0; blockM.visible = i > 0 && i < 4; bowM.visible = i === 4; if (i > 0 && i < 4) blockM.material = M[BL[i]]; charge = 0; }
@@ -921,24 +985,15 @@
       const ITEMS = [
         { n: 'Frecce ×8', c: { go: 3 }, f: () => inv.arrows += 8 },
         { n: 'Lana ×16', c: { fe: 4 }, f: () => inv.wool += 16 },
-        { n: 'Pietra ×12', c: { fe: 12 }, f: () => inv.stone += 12 },
-        { n: 'Legno ×12', c: { go: 6 }, f: () => inv.wood += 12 },
-        { n: 'Mela dorata (+10 vita)', c: { go: 3 }, f: () => P.hp = Math.min(20, P.hp + 10) }
+        { n: 'Pietra ×12', c: { fe: 12 }, f: () => inv.stone += 12 }
       ];
       function shopRender() {
-        document.getElementById('bw-items').innerHTML = ITEMS.map((it, i) => {
-          const c = it.c, ok = inv.fe >= (c.fe || 0) && inv.go >= (c.go || 0);
-          return '<button data-i="' + i + '" ' + (ok ? '' : 'disabled') + '>' + it.n + ' — ' + (c.fe ? c.fe + ' 🔩' : '') + (c.go ? c.go + ' 🟨' : '') + '</button>';
-        }).join('') + '<div style="margin-top:8px">🔩 ' + inv.fe + ' · 🟨 ' + inv.go + '</div>';
+        document.getElementById('bw-items').innerHTML = ITEMS.map((it, i) => '<button data-i="' + i + '">' + it.n + '</button>').join('');
       }
-      document.getElementById('bw-items').onclick = e => {
-        const b = e.target.closest('button'); if (!b || b.disabled) return;
-        const it = ITEMS[b.dataset.i]; inv.fe -= it.c.fe || 0; inv.go -= it.c.go || 0; it.f(); shopRender(); hud();
-      };
-      
+      document.getElementById('bw-items').onclick = e => { const b = e.target.closest('button'); if (b) ITEMS[b.dataset.i].f(); shopRender(); hud(); };
+
       function lock() { try { ren.domElement.requestPointerLock(); } catch (e) {} }
       function toggleShop() {
-        if (state !== 'play' || paused || bridge || hitMode) return;
         shopOpen = !shopOpen; document.getElementById('bw-shop').hidden = !shopOpen;
         if (shopOpen) { document.exitPointerLock && document.exitPointerLock(); shopRender(); } else lock();
       }
@@ -946,52 +1001,38 @@
 
       document.addEventListener('keydown', e => {
         if (document.getElementById('bedwarsView').style.display === "none") return;
-        if (e.code === 'KeyB' || (e.code === 'Escape' && shopOpen)) { toggleShop(); return; }
+        if (e.code === 'KeyB') toggleShop();
         if (shopOpen) return; k[e.code] = 1; const n = +e.key; if (n >= 1 && n <= 5) selectSlot(n - 1);
       });
       document.addEventListener('keyup', e => { delete k[e.code]; });
-      document.addEventListener('wheel', e => { if (!paused && !shopOpen && document.getElementById('bedwarsView').style.display !== "none") selectSlot((slot + (e.deltaY > 0 ? 1 : 4)) % 5); });
 
-      const cv = ren.domElement; let mx = innerWidth / 2, my = innerHeight / 2;
-      cv.addEventListener('mousedown', e => { if (!document.pointerLockElement && !paused && !shopOpen) lock(); if (e.button === 0) { down = 1; act(); } });
+      ren.domElement.onclick = () => { if (!paused && !shopOpen) lock(); };
+      addEventListener('mousedown', e => { if (e.button === 0) { down = 1; act(); } });
       addEventListener('mouseup', e => { if (e.button === 0) down = 0; });
       addEventListener('mousemove', e => {
-        if (document.getElementById('bedwarsView').style.display === "none") return;
-        const dx = e.movementX || (e.clientX - mx), dy = e.movementY || (e.clientY - my); mx = e.clientX; my = e.clientY;
-        if (!paused && !shopOpen && state === 'play') {
-          yaw -= dx * sensVal; pitch = Math.max(-1.5, Math.min(1.5, pitch - dy * sensVal));
+        if (!paused && !shopOpen && document.pointerLockElement) {
+          yaw -= e.movementX * .0042; pitch = Math.max(-1.5, Math.min(1.5, pitch - e.movementY * .0042));
         }
       });
 
       function bwEnter(m) {
-        mode = m; bridge = m === 'bridge'; hitMode = m === 'hits'; bwResetWorld();
-        if (m === 'bot' || m === 'bridge' || m === 'hits') { spawnBot(); }
-        else { bot.alive = false; bot.g.visible = false; }
-        document.getElementById('bw-modeInfo').textContent = bridge ? 'Bridge Duel: primo a ' + WINS : hitMode ? 'Sfida Colpi: primo a ' + HITS : '1 vs Bot';
+        bridge = m === 'bridge'; hitMode = m === 'hits'; bwResetWorld();
         document.getElementById('bw-menu').hidden = true; document.getElementById('bw-start').hidden = false;
       }
       document.getElementById('bw-mBot').onclick = () => bwEnter('bot');
       document.getElementById('bw-mBr').onclick = () => bwEnter('bridge');
       document.getElementById('bw-mHits').onclick = () => bwEnter('hits');
       document.getElementById('bw-m1v1').onclick = () => bwEnter('1v1');
-
-      document.getElementById('bw-btnPlay').onclick = () => { document.getElementById('bw-start').hidden = true; paused = false; charge = 0; lock(); };
-      document.getElementById('bw-btnAgain').onclick = () => { bwResetWorld(); };
+      document.getElementById('bw-btnPlay').onclick = () => { document.getElementById('bw-start').hidden = true; paused = false; lock(); };
+      document.getElementById('bw-btnAgain').onclick = bwResetWorld;
       document.getElementById('bw-btnMenu').onclick = () => { document.getElementById('bw-end').hidden = true; document.getElementById('bw-menu').hidden = false; };
 
       function bwResetWorld() {
         clearArrows(); blocks.forEach(m => scene.remove(m)); blocks.clear(); buildMap();
-        gens.forEach(g => { g.m.visible = !bridge && !hitMode; g.fe = g.go = g.ft = g.gt = 0; });
-        bwRespawn(); pitch = 0; hits.me = hits.bot = 0; score.b = score.r = 0;
-        Object.assign(inv, { fe: 0, go: 0, wool: bridge || hitMode ? 64 : 16, arrows: 12 });
-        selectSlot(0); bedAlive.blue = bedAlive.red = true; bwSt();
-        state = 'play'; respT = 0; down = 0; shopOpen = false; paused = false;
+        spawnBot(); bwRespawn(); paused = false; shopOpen = false;
         document.getElementById('bw-shop').hidden = true; document.getElementById('bw-end').hidden = true; document.getElementById('bw-start').hidden = true;
         lock();
       }
-
-      let sensVal = .0042;
-      document.getElementById('bw-sens').oninput = e => { sensVal = .0007 * e.target.value; };
 
       let last = performance.now();
       function bwLoop(now) {
@@ -999,44 +1040,29 @@
         requestAnimationFrame(bwLoop);
         const dt = Math.min(.05, (now - last) / 1000); last = now;
         if (!paused && state === 'play') {
-          cd -= dt; P.kb = Math.max(0, (P.kb || 0) - dt); swing = Math.max(0, swing - dt * 5);
-          if (!bridge && !hitMode) {
-            gens.forEach(g => {
-              g.ft += dt; g.gt += dt;
-              if (g.ft >= g.fi) { g.ft = 0; g.fe = Math.min(g.fe + 1, 40); }
-              if (g.gt >= g.gi) { g.gt = 0; g.go = Math.min(g.go + 1, 12); }
-              g.m.rotation.y += dt * 2;
-              if (P.alive && Math.hypot(P.pos.x - g.x - .5, P.pos.z - g.z - .5) < 5 && (g.fe || g.go)) {
-                inv.fe += g.fe; inv.go += g.go; g.fe = g.go = 0;
-              }
-            });
-          }
+          cd -= dt; swing = Math.max(0, swing - dt * 5);
           if (P.alive) {
             const f = (k.KeyW ? 1 : 0) - (k.KeyS ? 1 : 0), s = (k.KeyD ? 1 : 0) - (k.KeyA ? 1 : 0);
-            const cr = k.ShiftLeft || k.ShiftRight, sp = cr ? 2.3 : 5.2, l = Math.hypot(f, s) || 1, a = Math.min(1, dt * 12);
-            P.vel.x += ((-Math.sin(yaw) * f + Math.cos(yaw) * s) / l * sp - P.vel.x) * a;
-            P.vel.z += ((-Math.cos(yaw) * f - Math.sin(yaw) * s) / l * sp - P.vel.z) * a;
-            if (k.Space && P.ground) P.vel.y = cr ? 7 : 9;
-            phys(P, dt); if (P.pos.y < -25) bwDie('Sei caduto nel vuoto!');
+            P.vel.x += ((-Math.sin(yaw) * f + Math.cos(yaw) * s) * 5.2 - P.vel.x) * .2;
+            P.vel.z += ((-Math.cos(yaw) * f - Math.sin(yaw) * s) * 5.2 - P.vel.z) * .2;
+            if (k.Space && P.ground) P.vel.y = 9;
+            phys(P, dt); if (P.pos.y < -25) bwDie('Caduto nel vuoto!');
             for (let i = 0; i < 4 && down; i++) act();
-            if (slot === 4 && !shopOpen) { if (down) charge = Math.min(1, charge + dt / .9); else { if (charge > .15) fireBow(); charge = 0; } } else charge = 0;
           } else {
             respT -= dt; if (respT <= 0) { if (bedAlive.blue) bwRespawn(); else bwEnd(false); }
           }
           arrowsUpdate(dt); botUpdate(dt);
         }
         cam.position.set(P.pos.x, P.pos.y + 1.6, P.pos.z); cam.rotation.set(pitch, yaw, 0); cam.updateMatrixWorld();
-        updateTarget(); hud();
-        swordM.rotation.x = -Math.sin(swing * Math.PI) * 1.4; swordM.rotation.z = Math.sin(swing * Math.PI) * .6;
-        ren.render(scene, cam);
+        updateTarget(); hud(); ren.render(scene, cam);
       }
       requestAnimationFrame(bwLoop);
     }
 
+    /* AUTH & NAVIGAZIONE HUB */
     function apriHub() {
       document.getElementById('authView').style.display = "none";
       document.getElementById('supportView').style.display = "none";
-      document.getElementById('roomSelectorView').style.display = "none";
       document.getElementById('gameView').style.display = "none";
       document.getElementById('parkour3dView').style.display = "none";
       document.getElementById('hubView').style.display = "block";
@@ -1075,15 +1101,10 @@
         if (u && u.captcha === code) {
           document.getElementById('captchaModal').style.display = "none";
           completaLogin(pendingUserLogin);
-        } else {
-          alert("Codice Captcha errato!");
-        }
+        } else { alert("Codice Captcha errato!"); }
       });
     }
-    function completaLogin(user) {
-      localStorage.setItem('bloxi_session', user);
-      currentUser = user; apriHub();
-    }
+    function completaLogin(user) { localStorage.setItem('bloxi_session', user); currentUser = user; apriHub(); }
     function caricaInterfaccia() {
       if (!currentUser) return;
       dbRef.ref('users/' + sanitizeKey(currentUser)).on('value', (snap) => {
