@@ -59,7 +59,6 @@
 
     .avatar-3d-box { width: 120px; height: 120px; background: rgba(0,0,0,0.3); border-radius: 50%; border: 2px solid #a855f7; overflow: hidden; }
 
-    /* SCHERMATA CLICKER */
     .game-view { display: none; }
     .card-game { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 16px; max-width: 520px; margin: 0 auto; text-align: center; }
     .click-btn { padding: 20px 40px; font-size: 1.5rem; font-weight: bold; color: white; background: linear-gradient(145deg, #007bff, #0056b3); border: none; border-radius: 50px; cursor: pointer; margin: 15px 0; }
@@ -101,7 +100,6 @@
   </header>
 
   <main>
-    <!-- LOGIN / REGISTRAZIONE -->
     <div class="auth-card" id="authView">
       <h2 id="title">BLOX PLATFORM</h2>
       <p id="subtitle" style="font-size:12px; color:#9aa4b8; margin-bottom:15px;">Accedi o registrati</p>
@@ -114,7 +112,6 @@
       <div id="msg" style="margin-top:10px; font-size:12px; display:none;"></div>
     </div>
 
-    <!-- HUB GIOCHI -->
     <div class="hub-view" id="hubView">
       <div class="welcome-box">
         <div>
@@ -126,19 +123,16 @@
 
       <h2>🕹️ Esperienze Disponibili</h2>
       <div class="games-grid">
-        <!-- ESPERIENZA 1: PARKOUR -->
         <div class="game-card">
           <h3>🏃‍♂️ Infinite Parkour 3D</h3>
           <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Salta sulle piattaforme e gioca nelle stanze multiplayer!</p>
           <button class="btn-play" onclick="mostraSelettoreStanze()">GIOCA ORA</button>
         </div>
-        <!-- ESPERIENZA 2: BEDWARS -->
         <div class="game-card">
           <h3>🛏️ BedWars 3D</h3>
           <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Proteggi il tuo letto e combatti nell'isola voxel 3D!</p>
           <button class="btn-play" onclick="avviaBedwarsGame()">GIOCA ORA</button>
         </div>
-        <!-- ESPERIENZA 3: CLICKER -->
         <div class="game-card">
           <h3>🖱️ Platabux Clicker</h3>
           <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Fai 10.000 click per vincere 500 Platabux e scalare la classifica!</p>
@@ -147,7 +141,6 @@
       </div>
     </div>
 
-    <!-- SELETTORE STANZE PARKOUR -->
     <div class="room-selector-card" id="roomSelectorView">
       <h3 style="color:#a855f7; margin-bottom:10px;">🌐 Seleziona Stanza Multiplayer</h3>
       <p style="font-size:13px; color:#9aa4b8; margin-bottom:20px;">Scegli la stanza per giocare:</p>
@@ -160,7 +153,6 @@
       <button class="btn-main" style="background:none; border:1px solid #3b82f6; margin-top:10px;" onclick="apriHub()">Indietro</button>
     </div>
 
-    <!-- SCHERMATA CLICKER -->
     <div class="game-view" id="gameView">
       <div class="card-game">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -179,7 +171,6 @@
       </div>
     </div>
 
-    <!-- SUPPORTO -->
     <div class="support-card" id="supportView">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
         <h3>🛠️ Centro Supporto e Segnalazioni</h3>
@@ -196,7 +187,6 @@
     </div>
   </main>
 
-  <!-- MARKETPLACE MODAL -->
   <div class="modal-overlay" id="shopModal">
     <div class="modal">
       <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
@@ -207,7 +197,6 @@
     </div>
   </div>
 
-  <!-- CAPTCHA ADMIN MODAL -->
   <div class="modal-overlay" id="captchaModal">
     <div class="modal-captcha">
       <h3 style="color:#a855f7; margin-bottom:10px;">🛡️ Verifica Captcha Admin</h3>
@@ -217,7 +206,6 @@
     </div>
   </div>
 
-  <!-- PANNELLO ADMIN MODAL -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal">
       <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
@@ -229,7 +217,6 @@
     </div>
   </div>
 
-  <!-- BEDWARS FULLSCREEN -->
   <div id="bedwarsView">
     <button class="btn-close-bedwars" onclick="chiudiBedwars()">⬅️ Esci da BedWars</button>
     <div id="bedwarsCanvasContainer"></div>
@@ -308,7 +295,6 @@
       anim();
     }
 
-    /* MARKETPLACE */
     function apriShopModal() { document.getElementById('shopModal').style.display = "flex"; caricaItemsShop(); }
     function chiudiShopModal() { document.getElementById('shopModal').style.display = "none"; }
 
@@ -353,7 +339,6 @@
       });
     }
 
-    /* ESPERIENZA 1: PARKOUR */
     function mostraSelettoreStanze() {
       document.getElementById('hubView').style.display = "none";
       document.getElementById('roomSelectorView').style.display = "block";
@@ -363,7 +348,6 @@
       apriHub();
     }
 
-    /* ESPERIENZA 2: CLICKER */
     function avviaClickerGame() {
       document.getElementById('hubView').style.display = "none";
       document.getElementById('gameView').style.display = "block";
@@ -401,7 +385,6 @@
       });
     }
 
-    /* ESPERIENZA 3: BEDWARS 3D */
     function avviaBedwarsGame() {
       document.getElementById('bedwarsView').style.display = "block";
       bedwarsActive = true;
@@ -450,7 +433,6 @@
     }
     function chiudiBedwars() { bedwarsActive = false; document.getElementById('bedwarsView').style.display = "none"; }
 
-    /* SUPPORTO E ADMIN */
     function apriSupporto() {
       document.getElementById('authView').style.display = "none";
       document.getElementById('hubView').style.display = "none";
@@ -513,7 +495,6 @@
       });
     }
 
-    /* NAVIGAZIONE */
     function apriHub() {
       document.getElementById('authView').style.display = "none";
       document.getElementById('supportView').style.display = "none";
