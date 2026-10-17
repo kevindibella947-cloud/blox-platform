@@ -97,7 +97,6 @@
     #pk-touch #pk-j { width: 96px; height: 96px; font-size: 18px; font-weight: 700; background: #1f6fe0; color: #fff; }
     @media (pointer:coarse){#pk-touch{display:flex}}
 
-    /* Stili aggiornati per Bedwars dal file ufficiale */
     #bedwarsView { display: none; position: fixed; inset: 0; background: #87ceeb; z-index: 90; font-family: system-ui, sans-serif; color: #fff; user-select: none; }
     #bedwarsView canvas { display: block; cursor: none; width: 100%; height: 100%; }
     .bw-ui { position: fixed; pointer-events: none; }
@@ -170,8 +169,8 @@
           <h3>🏃‍♂️ Infinite Parkour 3D</h3>
           <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Salta sulle piattaforme infinite e supera i livelli!</p>
           <div style="font-size: 11px; color: #38bdf8; margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span>👁️ <b id="stat_pk_v">1450</b> vis.</span>
-            <span>👍 <b id="stat_pk_l">320</b> like</span>
+            <span>👁️ <b id="stat_pk_v">0</b> vis.</span>
+            <span>👍 <b id="stat_pk_l">0</b> like</span>
             <span>📅 15/10/2025</span>
             <span>🟢 <b id="stat_active">1</b> attivi</span>
           </div>
@@ -181,8 +180,8 @@
           <h3>🛏️ BedWars 3D</h3>
           <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Nuova mappa con generatori, bot e shop in-game!</p>
           <div style="font-size: 11px; color: #38bdf8; margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span>👁️ <b id="stat_bw_v">4120</b> vis.</span>
-            <span>👍 <b id="stat_bw_l">980</b> like</span>
+            <span>👁️ <b id="stat_bw_v">0</b> vis.</span>
+            <span>👍 <b id="stat_bw_l">0</b> like</span>
             <span>📅 01/10/2025</span>
             <span>🟢 <b id="stat_active2">1</b> attivi</span>
           </div>
@@ -192,8 +191,8 @@
           <h3>🖱️ Platabux Clicker</h3>
           <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Fai 10.000 click per vincere 500 Platabux e scalare la classifica!</p>
           <div style="font-size: 11px; color: #38bdf8; margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span>👁️ <b id="stat_cl_v">930</b> vis.</span>
-            <span>👍 <b id="stat_cl_l">210</b> like</span>
+            <span>👁️ <b id="stat_cl_v">0</b> vis.</span>
+            <span>👍 <b id="stat_cl_l">0</b> like</span>
             <span>📅 20/11/2025</span>
             <span>🟢 <b id="stat_active3">1</b> attivi</span>
           </div>
@@ -286,7 +285,6 @@
     <div id="parkourCanvasContainer" style="width:100%; height:100%;"></div>
   </div>
 
-  <!-- STRUTTURA BEDWARS AGGIORNATA INTEGRATA -->
   <div id="bedwarsView">
     <button class="btn-close-bedwars" onclick="chiudiBedwars()">⬅️ Esci da BedWars</button>
     <div class="bw-ui" id="bw-res">🔩 Ferro <b id="fe">0</b> · 🟨 Oro <b id="go">0</b></div>
@@ -373,21 +371,19 @@
       });
 
       dbRef.ref('game_stats').on('value', (snap) => {
-        const stats = snap.val();
-        if (!stats) return;
-        if (stats.parkour) { document.getElementById('stat_pk_v').textContent = stats.parkour.views || 1450; document.getElementById('stat_pk_l').textContent = stats.parkour.likes || 320; }
-        if (stats.bedwars) { document.getElementById('stat_bw_v').textContent = stats.bedwars.views || 4120; document.getElementById('stat_bw_l').textContent = stats.bedwars.likes || 980; }
-        if (stats.clicker) { document.getElementById('stat_cl_v').textContent = stats.clicker.views || 930; document.getElementById('stat_cl_l').textContent = stats.clicker.likes || 210; }
+        const stats = snap.val() || {};
+        if (stats.parkour) { document.getElementById('stat_pk_v').textContent = stats.parkour.views || 0; document.getElementById('stat_pk_l').textContent = stats.parkour.likes || 0; }
+        if (stats.bedwars) { document.getElementById('stat_bw_v').textContent = stats.bedwars.views || 0; document.getElementById('stat_bw_l').textContent = stats.bedwars.likes || 0; }
+        if (stats.clicker) { document.getElementById('stat_cl_v').textContent = stats.clicker.views || 0; document.getElementById('stat_cl_l').textContent = stats.clicker.likes || 0; }
       });
     }
 
     function incrementaStatEGioca(gameKey, callbackFunc) {
-      dbRef.ref('game_stats/' + gameKey + '/views').transaction((v) => (v || 1000) + 1, () => {
+      dbRef.ref('game_stats/' + gameKey + '/views').transaction((v) => (v || 0) + 1, () => {
         callbackFunc();
       });
     }
 
-    // Avatar 3D con supporto accessori (Cappello di Natale e Spada di Zucchero)
     function caricaAvatar3D(containerId) {
       const container = document.getElementById(containerId);
       if (!container) return; container.innerHTML = '';
@@ -419,7 +415,6 @@
       const aL = limb(-.75, 2, YEL), aR = limb(.75, 2, YEL), lL = limb(-.25, 1, GRN), lR = limb(.25, 1, GRN);
       av.add(aL, aR, lL, lR);
 
-      // Equipaggiamento Cappello di Natale 3D
       if (userEquip.hat) {
         const hatGroup = new THREE.Group();
         const redMat = new THREE.MeshStandardMaterial({ color: 0xc4122f, roughness: 0.85 });
@@ -435,7 +430,6 @@
         av.add(hatGroup);
       }
 
-      // Equipaggiamento Spada di Zucchero 3D
       if (userEquip.sword) {
         const swordGroup = new THREE.Group();
         const bladeMat = new THREE.MeshStandardMaterial({ color: 0xc8102e });
@@ -805,7 +799,6 @@
       });
     }
 
-    /* ENGINE BEDWARS AGGIORNATO (DA FILE UFFICIALE) */
     let bwInitialized = false;
     function avviaBedwarsGame() {
       document.getElementById('bedwarsView').style.display = "block";
@@ -1137,115 +1130,3 @@
       function resetWorld() {
         clearArrows(); blocks.forEach(m => scene.remove(m)); blocks.clear(); buildMap();
         gens.forEach(g => { if (!bridge && !hitMode) setBlock(g.x, 1, g.z, 'stone', false); g.m.visible = !bridge && !hitMode; g.fe = g.go = g.ft = g.gt = 0; });
-        spawnBot(); respawn(); paused = false; shopOpen = false;
-        document.getElementById('shop').hidden = true; document.getElementById('end').hidden = true; document.getElementById('start').hidden = true;
-        lock();
-      }
-
-      let last = performance.now();
-      function bwLoop(now) {
-        if (document.getElementById('bedwarsView').style.display === "none") return;
-        requestAnimationFrame(bwLoop);
-        const dt = Math.min(.05, (now - last) / 1000); last = now;
-        if (!paused && state === 'play') {
-          cd -= dt; swing = Math.max(0, swing - dt * 5);
-          if (!bridge && !hitMode) {
-            gens.forEach(g => {
-              g.ft += dt; g.gt += dt;
-              if (g.ft >= g.fi) { g.ft = 0; g.fe = Math.min(g.fe + 1, 40); }
-              if (g.gt >= g.gi) { g.gt = 0; g.go = Math.min(g.go + 1, 12); }
-              if (P.alive && Math.hypot(P.pos.x - g.x - .5, P.pos.z - g.z - .5) < 5 && Math.abs(P.pos.y - 1) < 4 && (g.fe || g.go)) {
-                inv.fe += g.fe; inv.go += g.go; g.fe = g.go = 0;
-              }
-            });
-          }
-          if (P.alive) {
-            const f = (k.KeyW || k.ArrowUp ? 1 : 0) - (k.KeyS || k.ArrowDown ? 1 : 0), s = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0);
-            P.vel.x += ((-Math.sin(yaw) * f + Math.cos(yaw) * s) * 5.2 - P.vel.x) * .2;
-            P.vel.z += ((-Math.cos(yaw) * f - Math.sin(yaw) * s) * 5.2 - P.vel.z) * .2;
-            if (k.Space && P.ground) P.vel.y = 9;
-            phys(P, dt); if (P.pos.y < -25) die('Caduto nel vuoto!');
-            for (let i = 0; i < 4 && down; i++) act();
-          } else {
-            respT -= dt; if (respT <= 0) { if (bedAlive.blue) respawn(); else end(false); }
-          }
-          arrowsUpdate(dt); botUpdate(dt);
-        }
-        cam.position.set(P.pos.x, P.pos.y + 1.6, P.pos.z); cam.rotation.set(pitch, yaw, 0); cam.updateMatrixWorld();
-        updateTarget(); hud(); swordM.rotation.x = -Math.sin(swing * Math.PI) * 1.4; swordM.rotation.z = Math.sin(swing * Math.PI) * .6; ren.render(scene, cam);
-      }
-      requestAnimationFrame(bwLoop);
-    }
-
-    function apriHub() {
-      document.getElementById('authView').style.display = "none";
-      document.getElementById('supportView').style.display = "none";
-      document.getElementById('gameView').style.display = "none";
-      document.getElementById('parkour3dView').style.display = "none";
-      document.getElementById('bedwarsView').style.display = "none";
-      document.getElementById('hubView').style.display = "block";
-      caricaInterfaccia();
-      avviaPresenceHeartbeat();
-    }
-
-    function cambiaModalita() {
-      isLoginMode = !isLoginMode;
-      document.getElementById('title').textContent = isLoginMode ? "BLOX PLATFORM" : "REGISTRAZIONE";
-      document.getElementById('subtitle').textContent = isLoginMode ? "Accedi o registrati" : "Crea un nuovo account";
-      document.getElementById('submitBtn').textContent = isLoginMode ? "ACCEDI" : "REGISTRATI";
-    }
-    function inviaForm() {
-      const user = document.getElementById('username').value.trim();
-      const pass = document.getElementById('password').value.trim();
-      if (!user || !pass) return alert("Compila tutti i campi!");
-      const userKey = sanitizeKey(user);
-
-      dbRef.ref('users/' + userKey).once('value', (snap) => {
-        const uData = snap.val();
-        if (isLoginMode) {
-          if (!uData || uData.password !== pass) return alert("Credenziali errate!");
-          if (uData.role === "owner" || uData.role === "admin") {
-            pendingUserLogin = user; document.getElementById('captchaModal').style.display = "flex"; return;
-          }
-          completaLogin(user);
-        } else {
-          if (uData) return alert("Utente già esistente!");
-          dbRef.ref('users/' + userKey).set({ username: user, password: pass, coins: 1000, platabux: 500, role: "user", captcha: "1234" }, () => completaLogin(user));
-        }
-      });
-    }
-    function confermaCaptchaPopup() {
-      const code = document.getElementById('popupCaptchaInput').value.trim();
-      dbRef.ref('users/' + sanitizeKey(pendingUserLogin)).once('value', (snap) => {
-        const u = snap.val();
-        if (u && u.captcha === code) {
-          document.getElementById('captchaModal').style.display = "none";
-          completaLogin(pendingUserLogin);
-        } else { alert("Codice Captcha errato!"); }
-      });
-    }
-    function completaLogin(user) { localStorage.setItem('bloxi_session', user); currentUser = user; apriHub(); }
-    function caricaInterfaccia() {
-      if (!currentUser) return;
-      dbRef.ref('users/' + sanitizeKey(currentUser)).on('value', (snap) => {
-        const u = snap.val(); if (!u) return;
-        userEquip = u.equip || { hat: false, sword: false };
-        document.getElementById('statsHeader').style.display = "flex";
-        document.getElementById('userHeader').style.display = "flex";
-        document.getElementById('usernameDisplay').textContent = currentUser;
-        const wUser = document.getElementById('welcomeUser'); if(wUser) wUser.textContent = currentUser;
-        document.getElementById('coinDisplay').textContent = u.coins || 0;
-        document.getElementById('platabuxDisplay').textContent = u.platabux || 0;
-
-        if (u.role === "owner" || u.role === "admin") {
-          document.getElementById('adminTagDisplay').style.display = "inline-block";
-          document.getElementById('adminBtn').style.display = (currentUser === OWNER_NAME) ? "inline-block" : "none";
-        }
-        setTimeout(() => caricaAvatar3D('avatarHubContainer'), 100);
-      });
-    }
-    function logout() { localStorage.removeItem('bloxi_session'); location.reload(); }
-    if (currentUser) apriHub();
-  </script>
-</body>
-</html>
