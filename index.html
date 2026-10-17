@@ -44,10 +44,10 @@
     .btn-logout { background: #ef4444; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
 
     main { flex: 1; padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; z-index: 10; }
-    .auth-card, .support-card, .room-selector-card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; max-width: 400px; margin: 40px auto; text-align: center; }
+    .auth-card, .support-card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; max-width: 400px; margin: 40px auto; text-align: center; }
     .support-card { max-width: 600px; text-align: left; display: none; }
     h2 { margin-bottom: 8px; color: #a855f7; }
-    input, textarea, select { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; margin-bottom: 10px; outline: none; }
+    input, textarea { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; margin-bottom: 10px; outline: none; }
     .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
 
     .hub-view { display: none; }
@@ -97,7 +97,6 @@
     #pk-touch #pk-j { width: 96px; height: 96px; font-size: 18px; font-weight: 700; background: #1f6fe0; color: #fff; }
     @media (pointer:coarse){#pk-touch{display:flex}}
 
-    /* BEDWARS UI */
     #bedwarsView { display: none; position: fixed; inset: 0; background: #87ceeb; z-index: 90; font-family: system-ui, sans-serif; color: #fff; user-select: none; }
     #bedwarsView canvas { display: block; cursor: none; width: 100%; height: 100%; }
     .bw-ui { position: fixed; pointer-events: none; }
@@ -107,7 +106,6 @@
     #bw-hp { height: 100%; background: #e33; width: 100%; }
     #bw-cross { top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 22px; text-shadow: 0 0 3px #000; z-index: 95; }
     #bw-msg { top: 18%; left: 50%; transform: translateX(-50%); font-size: 18px; text-shadow: 0 0 4px #000; text-align: center; z-index: 95; }
-    #bw-combo { top: 28%; left: 50%; transform: translateX(-50%); font-weight: 800; text-shadow: 0 0 6px #000,0 0 14px #f60; opacity: 0; white-space: nowrap; transition: font-size .1s; z-index: 95; }
     #bw-bar { bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 95; }
     .bw-sl { width: 58px; height: 52px; background: rgba(10,14,30,.82); border: 2px solid #555; border-radius: 6px; text-align: center; font-size: 12px; padding-top: 4px; box-sizing: border-box; }
     .bw-sl.on { border-color: #ffd23f; }
@@ -151,6 +149,7 @@
       <div id="msg" style="margin-top:10px; font-size:12px; display:none;"></div>
     </div>
 
+    <!-- HUB VIEW CON GRIGLIA GIOCHI SEMPRE VISIBILE -->
     <div class="hub-view" id="hubView">
       <div class="welcome-box">
         <div>
@@ -161,8 +160,40 @@
       </div>
 
       <h2>🕹️ Esperienze Disponibili</h2>
-      <div class="games-grid" id="realGamesGridContainer">
-        <!-- Generato dinamicamente con dati reali -->
+      <div class="games-grid">
+        <div class="game-card">
+          <h3>🏃‍♂️ Infinite Parkour 3D</h3>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Salta sulle piattaforme infinite e supera i livelli!</p>
+          <div style="font-size: 11px; color: #38bdf8; margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <span>👁️ <b id="stat_pk_v">1450</b> vis.</span>
+            <span>👍 <b id="stat_pk_l">320</b> like</span>
+            <span>📅 15/10/2025</span>
+            <span>🟢 <b id="stat_active">1</b> attivi</span>
+          </div>
+          <button class="btn-play" onclick="incrementaStatEGioca('parkour', entraNellaStanzaParkour)">GIOCA ORA</button>
+        </div>
+        <div class="game-card">
+          <h3>🛏️ BedWars 3D</h3>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Proteggi il tuo letto e combatti nell'isola voxel 3D!</p>
+          <div style="font-size: 11px; color: #38bdf8; margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <span>👁️ <b id="stat_bw_v">4120</b> vis.</span>
+            <span>👍 <b id="stat_bw_l">980</b> like</span>
+            <span>📅 01/10/2025</span>
+            <span>🟢 <b id="stat_active2">1</b> attivi</span>
+          </div>
+          <button class="btn-play" onclick="incrementaStatEGioca('bedwars', avviaBedwarsGame)">GIOCA ORA</button>
+        </div>
+        <div class="game-card">
+          <h3>🖱️ Platabux Clicker</h3>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Fai 10.000 click per vincere 500 Platabux e scalare la classifica!</p>
+          <div style="font-size: 11px; color: #38bdf8; margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <span>👁️ <b id="stat_cl_v">930</b> vis.</span>
+            <span>👍 <b id="stat_cl_l">210</b> like</span>
+            <span>📅 20/11/2025</span>
+            <span>🟢 <b id="stat_active3">1</b> attivi</span>
+          </div>
+          <button class="btn-play" onclick="incrementaStatEGioca('clicker', avviaClickerGame)">GIOCA ORA</button>
+        </div>
       </div>
     </div>
 
@@ -250,7 +281,6 @@
     <div id="parkourCanvasContainer" style="width:100%; height:100%;"></div>
   </div>
 
-  <!-- BEDWARS VERO CORRETTO -->
   <div id="bedwarsView">
     <button class="btn-close-bedwars" onclick="chiudiBedwars()">⬅️ Esci da BedWars</button>
     <div class="bw-ui" id="bw-res">🔩 Ferro <b id="fe">0</b> · 🟨 Oro <b id="go">0</b></div>
@@ -300,7 +330,6 @@
     }
     initAdminAccounts();
 
-    /* REGISTRAZIONE PRESENZA REALE UTENTE ONLINE (ATTIVI) */
     function avviaPresenceHeartbeat() {
       if (!currentUser) return;
       const userPresenceRef = dbRef.ref('active_presence/' + sanitizeKey(currentUser));
@@ -309,10 +338,7 @@
       setInterval(() => {
         userPresenceRef.update({ lastSeen: firebase.database.ServerValue.TIMESTAMP });
       }, 10000);
-    }
 
-    /* STATISTICHE REALI DEI GIOCHI DA FIREBASE */
-    function caricaStatisticheRealiGiochi() {
       dbRef.ref('active_presence').on('value', (snap) => {
         const presences = snap.val() || {};
         const now = Date.now();
@@ -320,54 +346,19 @@
         Object.keys(presences).forEach(k => {
           if (now - (presences[k].lastSeen || 0) < 25000) activeCount++;
         });
-        if (activeCount === 0) activeCount = 1; // Almeno l'utente corrente
-
-        dbRef.ref('game_stats').once('value', (sSnap) => {
-          let stats = sSnap.val() || {
-            parkour: { views: 1240, likes: 310, created: "15/10/2025" },
-            bedwars: { views: 3890, likes: 950, created: "01/10/2025" },
-            clicker: { views: 820, likes: 190, created: "20/11/2025" }
-          };
-
-          const container = document.getElementById('realGamesGridContainer');
-          if (!container) return;
-
-          container.innerHTML = `
-            <div class="game-card">
-              <h3>🏃‍♂️ Infinite Parkour 3D</h3>
-              <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Salta sulle piattaforme infinite e supera i livelli!</p>
-              <div style="font-size: 11px; color: #38bdf8; margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
-                <span>👁️ ${stats.parkour.views} vis.</span>
-                <span>👍 ${stats.parkour.likes} like</span>
-                <span>📅 ${stats.parkour.created}</span>
-                <span>🟢 ${Math.max(1, Math.floor(activeCount * 0.4))} attivi</span>
-              </div>
-              <button class="btn-play" onclick="incrementaStatEGioca('parkour', entraNellaStanzaParkour)">GIOCA ORA</button>
-            </div>
-            <div class="game-card">
-              <h3>🛏️ BedWars 3D</h3>
-              <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Proteggi il tuo letto e combatti nell'isola voxel 3D!</p>
-              <div style="font-size: 11px; color: #38bdf8; margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
-                <span>👁️ ${stats.bedwars.views} vis.</span>
-                <span>👍 ${stats.bedwars.likes} like</span>
-                <span>📅 ${stats.bedwars.created}</span>
-                <span>🟢 ${Math.max(1, Math.floor(activeCount * 0.5))} attivi</span>
-              </div>
-              <button class="btn-play" onclick="incrementaStatEGioca('bedwars', avviaBedwarsGame)">GIOCA ORA</button>
-            </div>
-            <div class="game-card">
-              <h3>🖱️ Platabux Clicker</h3>
-              <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Fai 10.000 click per vincere 500 Platabux e scalare la classifica!</p>
-              <div style="font-size: 11px; color: #38bdf8; margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
-                <span>👁️ ${stats.clicker.views} vis.</span>
-                <span>👍 ${stats.clicker.likes} like</span>
-                <span>📅 ${stats.clicker.created}</span>
-                <span>🟢 ${Math.max(1, Math.floor(activeCount * 0.1))} attivi</span>
-              </div>
-              <button class="btn-play" onclick="incrementaStatEGioca('clicker', avviaClickerGame)">GIOCA ORA</button>
-            </div>
-          `;
+        if (activeCount === 0) activeCount = 1;
+        ['stat_active', 'stat_active2', 'stat_active3'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = activeCount;
         });
+      });
+
+      dbRef.ref('game_stats').on('value', (snap) => {
+        const stats = snap.val();
+        if (!stats) return;
+        if (stats.parkour) { document.getElementById('stat_pk_v').textContent = stats.parkour.views || 1450; document.getElementById('stat_pk_l').textContent = stats.parkour.likes || 320; }
+        if (stats.bedwars) { document.getElementById('stat_bw_v').textContent = stats.bedwars.views || 4120; document.getElementById('stat_bw_l').textContent = stats.bedwars.likes || 980; }
+        if (stats.clicker) { document.getElementById('stat_cl_v').textContent = stats.clicker.views || 930; document.getElementById('stat_cl_l').textContent = stats.clicker.likes || 210; }
       });
     }
 
@@ -377,7 +368,6 @@
       });
     }
 
-    /* PERSONAGGIO NOOB CLASSICO 3D (BASE) */
     function caricaAvatar3D(containerId) {
       const container = document.getElementById(containerId);
       if (!container) return; container.innerHTML = '';
@@ -428,7 +418,6 @@
       anim();
     }
 
-    /* MARKETPLACE & SHOP */
     function apriShopModal() { document.getElementById('shopModal').style.display = "flex"; caricaItemsShop(); }
     function chiudiShopModal() { document.getElementById('shopModal').style.display = "none"; }
 
@@ -476,12 +465,12 @@
       });
     }
 
-    /* MOTORE PARKOUR INFINITO */
+    /* PARKOUR ENGINE */
     let pkInitialized = false, pkAnimId = null;
     function entraNellaStanzaParkour() {
       document.getElementById('hubView').style.display = "none";
       document.getElementById('parkour3dView').style.display = "block";
-      if (!pkInitialized) { initParkourEngine(); pkInitialized = true; } else { resetParkourGame(); }
+      if (!pkInitialized) { initParkourEngine(); pkInitialized = true; }
     }
     function chiudiParkour() {
       document.getElementById('parkour3dView').style.display = "none";
@@ -698,7 +687,6 @@
       });
     }
 
-    /* SUPPORTO & ADMIN */
     function apriSupporto() {
       document.getElementById('authView').style.display = "none";
       document.getElementById('hubView').style.display = "none";
@@ -779,7 +767,7 @@
       });
     }
 
-    /* MOTORE BEDWARS FUNZIONANTE */
+    /* BEDWARS ENGINE */
     let bwInitialized = false;
     function avviaBedwarsGame() {
       document.getElementById('bedwarsView').style.display = "block";
@@ -790,7 +778,7 @@
     function initBedwarsEngine() {
       const T = THREE;
       let bridge = false, hitMode = false, combo = 0, charge = 0;
-      const score = { b: 0, r: 0 }, hits = { me: 0, bot: 0 }, WINS = 5, HITS = 100, SW = [{ d: 4, kb: 9, cd: .42, r: 4 }, { d: 5, kb: 10, cd: .38, r: 4.3 }, { d: 6, kb: 11, cd: .34, r: 4.6 }, { d: 8, kb: 12.5, cd: .3, r: 5 }];
+      const score = { b: 0, r: 0 }, hits = { me: 0, bot: 0 }, SW = [{ d: 4, kb: 9, cd: .42, r: 4 }, { d: 5, kb: 10, cd: .38, r: 4.3 }, { d: 6, kb: 11, cd: .34, r: 4.6 }, { d: 8, kb: 12.5, cd: .3, r: 5 }];
 
       const scene = new T.Scene(); scene.background = new T.Color(0x87ceeb); scene.fog = new T.Fog(0x87ceeb, 40, 120);
       const cam = new T.PerspectiveCamera(75, innerWidth / innerHeight, .1, 200); cam.rotation.order = 'YXZ'; scene.add(cam);
@@ -856,12 +844,6 @@
       }
       buildMap();
 
-      const gens = [[2, -3, 1.5, 8], [18, 0, 4, 6], [34, -3, 1.5, 8]].map(([x, z, fi, gi]) => {
-        setBlock(x, 1, z, 'stone');
-        const m = new T.Mesh(new T.BoxGeometry(.6, .6, .6), new T.MeshLambertMaterial({ color: 0xffd23f, emissive: 0x553300 })); m.position.set(x + .5, 2.4, z + .5); scene.add(m);
-        return { x, z, fi, gi, ft: 0, gt: 0, fe: 0, go: 0, m };
-      });
-
       function hit(e) {
         const p = e.pos; for (let x = Math.floor(p.x - .3); x <= Math.floor(p.x + .3); x++) for (let y = Math.floor(p.y); y <= Math.floor(p.y + 1.79); y++) for (let z = Math.floor(p.z - .3); z <= Math.floor(p.z + .3); z++) if (blocks.has(x + ',' + y + ',' + z)) return true;
         return false;
@@ -876,7 +858,7 @@
       }
 
       const P = { pos: new T.Vector3(1.5, 1.01, .5), vel: new T.Vector3(), hp: 20, alive: true, ground: false };
-      let yaw = -Math.PI / 2, pitch = 0, slot = 0, sw = 0, pick = 0, cd = 0, swing = 0, respT = 0, down = 0, paused = true, shopOpen = false, state = 'play', target = null;
+      let yaw = -Math.PI / 2, pitch = 0, slot = 0, sw = 0, cd = 0, swing = 0, respT = 0, down = 0, paused = true, shopOpen = false, state = 'play', target = null;
       const inv = { fe: 0, go: 0, wool: 16, stone: 0, wood: 0, arrows: 12 }, k = {};
 
       function hurt(n) {
@@ -886,7 +868,7 @@
       }
       function die(r) { combo = 0; P.alive = false; P.vel.set(0, 0, 0); if (bedAlive.blue) { respT = 3; msg(r + ' Respawn in 3s...', 3000); } else end(false); }
       function respawn() {
-        const q = hitMode ? [-4.5, -Math.PI / 2] : bridge && side ? [40.5, Math.PI / 2] : [1.5, -Math.PI / 2];
+        const q = hitMode ? [-4.5, -Math.PI / 2] : [1.5, -Math.PI / 2];
         P.pos.set(q[0], 1.01, .5); P.vel.set(0, 0, 0); P.hp = 20; P.alive = true; yaw = q[1]; combo = 0; msg('Respawn!');
       }
       function end(win) {
@@ -910,32 +892,8 @@
         scene.add(g); g.userData = { ms, head, lA, rA, lL, rL, sw, bw }; return g;
       }
 
-      const bot = { pos: new T.Vector3(), vel: new T.Vector3(), hp: 20, alive: false, g: mkBot(), t: 0, cd: 0, bt: 0, rt: 0, ground: false };
-      const arrows = [], arrowGeo = new T.BoxGeometry(.05, .05, .55), arrowMat = new T.MeshLambertMaterial({ color: 0xddddcc }), hb = (e, p) => Math.abs(p.x - e.x) < .45 && Math.abs(p.z - e.z) < .45 && p.y > e.y && p.y < e.y + 1.9;
+      const bot = { pos: new T.Vector3(), vel: new T.Vector3(), hp: 20, alive: false, g: mkBot(), t: 0, cd: 0, rt: 0, ground: false };
 
-      function shoot(pos, vel, o) {
-        const m = new T.Mesh(arrowGeo, arrowMat); m.position.copy(pos); scene.add(m); arrows.push({ m, v: vel.clone(), o, t: 0 });
-      }
-      function clearArrows() { arrows.forEach(a => scene.remove(a.m)); arrows.length = 0; }
-      function arrowsUpdate(dt) {
-        for (let i = arrows.length - 1; i >= 0; i--) {
-          const a = arrows[i]; a.t += dt; a.v.y -= 16 * dt; let dead = false;
-          const n = Math.max(1, Math.ceil(a.v.length() * dt / .35));
-          for (let s = 0; s < n && !dead; s++) {
-            const p = a.m.position.addScaledVector(a.v, dt / n);
-            if (solid(p.x, p.y, p.z)) { dead = true; break; }
-            if (a.o === 'p' && bot.alive && hb(bot.pos, p)) {
-              bot.hp -= 6; knock(bot, a.v.x, a.v.z, 6); msg('🏹 Colpito!', 600);
-              if (bot.hp <= 0) killBot(); dead = true;
-            } else if (a.o === 'b' && P.alive && hb(P.pos, p)) { hurt(4); knock(P, a.v.x, a.v.z, 6); dead = true; }
-          }
-          a.m.lookAt(a.m.position.x + a.v.x, a.m.position.y + a.v.y, a.m.position.z + a.v.z);
-          if (dead || a.t > 6 || a.m.position.y < -40) { scene.remove(a.m); arrows.splice(i, 1); }
-        }
-      }
-      function knock(e, dx, dz, pw, up = 6.5) {
-        const l = Math.hypot(dx, dz) || 1; e.vel.x = dx / l * pw; e.vel.z = dz / l * pw; e.vel.y = Math.max(e.vel.y, up); e.kb = .45; e.ground = false;
-      }
       function spawnBot() { bot.pos.set(hitMode ? 4.5 : bridge ? 40.5 : 35.5, 1.01, .5); bot.vel.set(0, 0, 0); bot.hp = 20; bot.alive = true; bot.g.visible = true; }
       function killBot() { bot.alive = false; bot.g.visible = false; bot.rt = hitMode ? 1.5 : 4; msg('Bot eliminato!'); if (!bedAlive.red) end(true); }
       spawnBot();
@@ -943,10 +901,10 @@
       function botUpdate(dt) {
         const b = bot;
         if (!b.alive) { if (bedAlive.red) { b.rt -= dt; if (b.rt <= 0) spawnBot(); } return; }
-        b.t += dt; b.cd -= dt; b.bt -= dt;
+        b.t += dt; b.cd -= dt;
         const dp = Math.hypot(P.pos.x - b.pos.x, P.pos.z - b.pos.z), dyp = Math.abs(P.pos.y - b.pos.y);
         let tx = P.pos.x, tz = P.pos.z;
-        if (dp < 1.8 && dyp < 1.5 && b.cd <= 0) { b.cd = 1; hurt(3); knock(P, P.pos.x - b.pos.x, P.pos.z - b.pos.z, 9.5); }
+        if (dp < 1.8 && dyp < 1.5 && b.cd <= 0) { b.cd = 1; hurt(3); }
         b.vel.x += ((tx - b.pos.x) * .1); b.vel.z += ((tz - b.pos.z) * .1);
         phys(b, dt); if (b.pos.y < -25) { killBot(); return; }
         b.g.position.copy(b.pos); b.g.updateMatrixWorld(true);
@@ -987,7 +945,7 @@
         }
         if (!t) return;
         if (t.bot) {
-          bot.hp -= SW[sw].d; knock(bot, -Math.sin(yaw), -Math.cos(yaw), SW[sw].kb);
+          bot.hp -= SW[sw].d;
           if (bot.hp <= 0) killBot();
         } else if (t.block) { dmg(t.block, 1, true); }
       }
@@ -1062,7 +1020,7 @@
       document.getElementById('btnMenu').onclick = () => { document.getElementById('end').hidden = true; document.getElementById('menu').hidden = false; };
 
       function resetWorld() {
-        clearArrows(); blocks.forEach(m => scene.remove(m)); blocks.clear(); buildMap();
+        blocks.forEach(m => scene.remove(m)); blocks.clear(); buildMap();
         spawnBot(); respawn(); paused = false; shopOpen = false;
         document.getElementById('shop').hidden = true; document.getElementById('end').hidden = true; document.getElementById('start').hidden = true;
         lock();
@@ -1085,7 +1043,7 @@
           } else {
             respT -= dt; if (respT <= 0) { if (bedAlive.blue) respawn(); else end(false); }
           }
-          arrowsUpdate(dt); botUpdate(dt);
+          botUpdate(dt);
         }
         cam.position.set(P.pos.x, P.pos.y + 1.6, P.pos.z); cam.rotation.set(pitch, yaw, 0); cam.updateMatrixWorld();
         updateTarget(); hud(); ren.render(scene, cam);
@@ -1093,7 +1051,6 @@
       requestAnimationFrame(bwLoop);
     }
 
-    /* AUTH & HUB */
     function apriHub() {
       document.getElementById('authView').style.display = "none";
       document.getElementById('supportView').style.display = "none";
@@ -1101,7 +1058,6 @@
       document.getElementById('parkour3dView').style.display = "none";
       document.getElementById('hubView').style.display = "block";
       caricaInterfaccia();
-      caricaStatisticheRealiGiochi();
       avviaPresenceHeartbeat();
     }
 
