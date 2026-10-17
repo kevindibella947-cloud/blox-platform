@@ -41,13 +41,14 @@
     .btn-admin { background: #9333ea; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
     .btn-support { background: #3b82f6; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
     .btn-shop { background: #f59e0b; border: none; color: black; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    .btn-logout { background: #ef4444; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+    .btn-logout { background: #ef4444; border: none; color: white; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
     main { flex: 1; padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; z-index: 10; }
-    .auth-card, .support-card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; max-width: 400px; margin: 40px auto; text-align: center; }
+    .auth-card, .support-card, .room-selector-card { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 12px; max-width: 400px; margin: 40px auto; text-align: center; }
     .support-card { max-width: 600px; text-align: left; display: none; }
+    .room-selector-card { display: none; border-color: #a855f7; }
     h2 { margin-bottom: 8px; color: #a855f7; }
-    input, textarea { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; margin-bottom: 10px; outline: none; }
+    input, textarea, select { width: 100%; padding: 12px; background: #0b0b0e; border: 1px solid #272736; border-radius: 6px; color: white; margin-bottom: 10px; outline: none; }
     .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, #9333ea, #3b82f6); border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
 
     .hub-view { display: none; }
@@ -58,19 +59,24 @@
 
     .avatar-3d-box { width: 120px; height: 120px; background: rgba(0,0,0,0.3); border-radius: 50%; border: 2px solid #a855f7; overflow: hidden; }
 
+    .game-view { display: none; }
+    .card-game { background: #16161e; border: 1px solid #272736; padding: 30px; border-radius: 16px; max-width: 520px; margin: 0 auto; text-align: center; }
+    .click-btn { padding: 20px 40px; font-size: 1.5rem; font-weight: bold; color: white; background: linear-gradient(145deg, #007bff, #0056b3); border: none; border-radius: 50px; cursor: pointer; margin: 15px 0; }
+    .claim-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #3b82f6, #9333ea); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; margin-bottom: 10px; }
+
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center; padding: 15px; }
     .modal { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 600px; padding: 20px; max-height: 80vh; overflow-y: auto; }
     .modal-captcha { background: #16161e; border: 1px solid #a855f7; border-radius: 12px; width: 100%; max-width: 360px; padding: 25px; text-align: center; }
     .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
     .shop-item-card { background: #0b0b0e; border: 1px solid #272736; border-radius: 10px; padding: 15px; text-align: center; }
 
-    .account-item, .ticket-item { background: #0b0b0e; border: 1px solid #272736; padding: 10px 15px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+    .account-item, .ticket-item, .leaderboard-item { background: #0b0b0e; border: 1px solid #272736; padding: 10px 15px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
     .ticket-item { flex-direction: column; align-items: flex-start; gap: 5px; }
     .btn-give { padding: 5px 10px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 11px; }
     .btn-give-coin { background: #eab308; color: black; }
     .btn-give-pbux { background: #3b82f6; color: white; }
 
-    /* STILI BEDWARS INTEGRATO */
+    /* VISTA BEDWARS INTERGRATA */
     #bedwarsView { display: none; position: fixed; inset: 0; background: #87ceeb; z-index: 90; font-family: system-ui, sans-serif; color: #fff; user-select: none; }
     #bedwarsView canvas { display: block; cursor: none; width: 100%; height: 100%; }
     .bw-ui { position: fixed; pointer-events: none; }
@@ -135,9 +141,49 @@
       <h2>🕹️ Esperienze Disponibili</h2>
       <div class="games-grid">
         <div class="game-card">
-          <h3>🛏️ BedWars 3D (Completa)</h3>
-          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Gioca a BedWars 3D con il motore voxel originale integrato[cite: 3, 4]!</p>
+          <h3>🏃‍♂️ Infinite Parkour 3D</h3>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Salta sulle piattaforme e gioca nelle stanze multiplayer!</p>
+          <button class="btn-play" onclick="mostraSelettoreStanze()">GIOCA ORA</button>
+        </div>
+        <div class="game-card">
+          <h3>🛏️ BedWars 3D</h3>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Proteggi il tuo letto e combatti nell'isola voxel 3D[cite: 3, 4]!</p>
           <button class="btn-play" onclick="avviaBedwarsGame()">GIOCA ORA</button>
+        </div>
+        <div class="game-card">
+          <h3>🖱️ Platabux Clicker</h3>
+          <p style="font-size: 12px; color: #9aa4b8; margin: 8px 0;">Fai 10.000 click per vincere 500 Platabux e scalare la classifica!</p>
+          <button class="btn-play" onclick="avviaClickerGame()">GIOCA ORA</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="room-selector-card" id="roomSelectorView">
+      <h3 style="color:#a855f7; margin-bottom:10px;">🌐 Seleziona Stanza Multiplayer</h3>
+      <p style="font-size:13px; color:#9aa4b8; margin-bottom:20px;">Scegli la stanza per giocare:</p>
+      <select id="selectedRoomId" style="margin-bottom:15px;">
+        <option value="room_1">Stanza 1 (Lobby Principale)</option>
+        <option value="room_2">Stanza 2 (Pro)</option>
+        <option value="room_3">Stanza 3 (Speedrun)</option>
+      </select>
+      <button class="btn-main" onclick="entraNellaStanzaParkour()">ENTRA NELLA STANZA</button>
+      <button class="btn-main" style="background:none; border:1px solid #3b82f6; margin-top:10px;" onclick="apriHub()">Indietro</button>
+    </div>
+
+    <div class="game-view" id="gameView">
+      <div class="card-game">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+          <span style="font-weight:bold; color:#3b82f6;">Platabux Clicker</span>
+          <button class="btn-main" style="width:auto; padding:5px 12px;" onclick="apriHub()">⬅️ Hub</button>
+        </div>
+        <div style="font-size:2rem; font-weight:bold; margin-bottom:10px;">Punti: <span id="clickScore">0</span></div>
+        <button class="click-btn" onclick="faiClick()">CLICCAMI!</button>
+        <button class="claim-btn" id="claimBtn" onclick="riscattaPlatabux()">🎁 RISCATTA +500 PLATABUX! 🎁</button>
+        <button class="btn-main" style="background:#22c55e;" onclick="salvaPunteggio()">💾 Salva in Classifica</button>
+        
+        <div style="margin-top:20px; border-top:1px solid #272736; padding-top:15px; text-align:left;">
+          <h4 style="color:#a855f7; margin-bottom:10px; text-align:center;">🏆 Classifica TOP 5</h4>
+          <div id="leaderboardList"></div>
         </div>
       </div>
     </div>
@@ -188,7 +234,6 @@
     </div>
   </div>
 
-  <!-- VISTA FULLSCREEN BEDWARS ORIGINALE INTEGRATA -->
   <div id="bedwarsView">
     <button class="btn-close-bedwars" onclick="chiudiBedwars()">⬅️ Esci da BedWars</button>
     <div class="bw-ui" id="bw-res">🔩 Ferro <b id="bw-fe">0</b> · 🟨 Oro <b id="bw-go">0</b></div>
@@ -227,6 +272,8 @@
     let currentUser = localStorage.getItem('bloxi_session');
     let pendingUserLogin = null;
     let userEquip = { hat: false, sword: false };
+    let clickerScore = 0, unrewardedClicks = 0;
+    const TARGET_CLICKS = 10000, REWARD_PLATABUX = 500;
 
     function sanitizeKey(k) { return k ? k.trim().toLowerCase().replace(/[.#$\[\]]/g, "_") : ""; }
 
@@ -325,6 +372,52 @@
       });
     }
 
+    function mostraSelettoreStanze() {
+      document.getElementById('hubView').style.display = "none";
+      document.getElementById('roomSelectorView').style.display = "block";
+    }
+    function entraNellaStanzaParkour() {
+      alert("Entrato nella stanza multiplayer!");
+      apriHub();
+    }
+
+    function avviaClickerGame() {
+      document.getElementById('hubView').style.display = "none";
+      document.getElementById('gameView').style.display = "block";
+      clickerScore = 0; unrewardedClicks = 0;
+      document.getElementById('clickScore').textContent = clickerScore;
+      caricaClassificaClicker();
+    }
+    function faiClick() {
+      clickerScore++; unrewardedClicks++;
+      document.getElementById('clickScore').textContent = clickerScore;
+      if (unrewardedClicks >= TARGET_CLICKS) document.getElementById('claimBtn').style.display = "block";
+    }
+    function riscattaPlatabux() {
+      dbRef.ref('users/' + sanitizeKey(currentUser) + '/platabux').transaction((p) => (p || 0) + REWARD_PLATABUX, (err, ok) => {
+        if (ok) { alert("+500 Platabux riscattati!"); unrewardedClicks = 0; document.getElementById('claimBtn').style.display = "none"; caricaInterfaccia(); }
+      });
+    }
+    function salvaPunteggio() {
+      dbRef.ref('leaderboard/' + sanitizeKey(currentUser)).set({ name: currentUser, score: clickerScore }, () => {
+        alert("Punteggio salvato in classifica!");
+      });
+    }
+    function caricaClassificaClicker() {
+      dbRef.ref('leaderboard').on('value', (snap) => {
+        const list = snap.val() || {};
+        const container = document.getElementById('leaderboardList');
+        container.innerHTML = "";
+        let arr = Object.values(list).sort((a,b) => b.score - a.score).slice(0, 5);
+        arr.forEach((item, idx) => {
+          const div = document.createElement('div');
+          div.className = "leaderboard-item";
+          div.innerHTML = `<span>#${idx+1} ${item.name}</span><span>${item.score} pt</span>`;
+          container.appendChild(div);
+        });
+      });
+    }
+
     function apriSupporto() {
       document.getElementById('authView').style.display = "none";
       document.getElementById('hubView').style.display = "none";
@@ -387,7 +480,7 @@
       });
     }
 
-    /* MOTORE COMPLETO BEDWARS 3D (INCORPORATO)[cite: 3, 4] */
+    /* MOTORE BEDWARS INTEGRATO[cite: 3, 4] */
     let bwInitialized = false;
     function avviaBedwarsGame() {
       document.getElementById('bedwarsView').style.display = "block";
@@ -408,17 +501,6 @@
       let bridge = false, hitMode = false, side = 0, combo = 0, comboT = 0, mode = 'bot', charge = 0;
       const score = { b: 0, r: 0 }, hits = { me: 0, bot: 0 }, WINS = 5, HITS = 100;
       const SW = [{ d: 4, kb: 9, cd: .42, r: 4 }, { d: 5, kb: 10, cd: .38, r: 4.3 }, { d: 6, kb: 11, cd: .34, r: 4.6 }, { d: 8, kb: 12.5, cd: .3, r: 5 }];
-
-      const Net = {
-        id: 'p_' + Math.random().toString(36).slice(2, 8), room: 'room1', db: null, t: 0, remote: new Map(),
-        init(cfg) {},
-        ref(p) { return null; },
-        pushPlayer(s) {},
-        pushBed(team, alive) {},
-        pushBlock(op, x, y, z, type) {},
-        pushEvent(ev) {},
-        tick(dt) {}
-      };
 
       const scene = new T.Scene(); scene.background = new T.Color(0x87ceeb); scene.fog = new T.Fog(0x87ceeb, 40, 120);
       const cam = new T.PerspectiveCamera(75, innerWidth / innerHeight, .1, 200); cam.rotation.order = 'YXZ'; scene.add(cam);
@@ -526,3 +608,376 @@
       }
       function bwDie(r) { combo = 0; P.alive = false; P.vel.set(0, 0, 0); if (bedAlive.blue) { respT = 3; bwMsg(r + ' Respawn in 3s...', 3000); } else bwEnd(false); }
       function bwRespawn() {
+        const q = hitMode ? [-4.5, -Math.PI / 2] : bridge && side ? [40.5, Math.PI / 2] : [1.5, -Math.PI / 2];
+        P.pos.set(q[0], 1.01, .5); P.vel.set(0, 0, 0); P.hp = 20; P.alive = true; yaw = q[1]; combo = 0; bwMsg('Respawn!');
+      }
+      function bwEnd(win) {
+        if (state !== 'play') return;
+        state = 'over';
+        document.getElementById('bw-endT').textContent = win ? '🏆 Vittoria!' : '☠️ Sconfitta';
+        document.getElementById('bw-end').hidden = false;
+        document.exitPointerLock && document.exitPointerLock();
+      }
+
+      function mkBot() {
+        const g = new T.Group(), cols = { sk: 0xf1c27d, sh: 0xdd2222, pn: 0x2b3a8a, hr: 0x3b2417, sw: 0xcccccc, bw: 0x8a5a2b }, ms = {};
+        for (const k in cols) ms[k] = new T.MeshLambertMaterial({ color: cols[k] });
+        g.rotation.order = 'YXZ';
+        const box = (w, h, d, m, x, y, z, p) => { const o = new T.Mesh(new T.BoxGeometry(w, h, d), ms[m]); o.position.set(x, y, z); (p || g).add(o); return o; };
+        const piv = (x, y, z) => { const p = new T.Group(); p.position.set(x, y, z); g.add(p); return p; };
+        box(.55, .7, .28, 'sh', 0, 1.05, 0);
+        const head = piv(0, 1.4, 0); box(.5, .5, .5, 'sk', 0, .25, 0, head); box(.52, .14, .52, 'hr', 0, .5, 0, head);
+        const lA = piv(-.4, 1.38, 0), rA = piv(.4, 1.38, 0);
+        box(.22, .7, .22, 'sk', 0, -.33, 0, lA); box(.22, .7, .22, 'sk', 0, -.33, 0, rA);
+        const lL = piv(-.14, .7, 0), rL = piv(.14, .7, 0);
+        box(.25, .7, .25, 'pn', 0, -.35, 0, lL); box(.25, .7, .25, 'pn', 0, -.35, 0, rL);
+        const sw = box(.06, .06, .6, 'sw', 0, -.6, .3, rA), bw = box(.05, .55, .05, 'bw', 0, -.6, .3, lA); bw.visible = false;
+        scene.add(g); g.userData = { ms, head, lA, rA, lL, rL, sw, bw }; return g;
+      }
+
+      const bot = { pos: new T.Vector3(), vel: new T.Vector3(), hp: 20, alive: false, g: mkBot(), t: 0, cd: 0, bt: 0, rt: 0, ground: false };
+      const arrows = [], arrowGeo = new T.BoxGeometry(.05, .05, .55), arrowMat = new T.MeshLambertMaterial({ color: 0xddddcc });
+      const hb = (e, p) => Math.abs(p.x - e.x) < .45 && Math.abs(p.z - e.z) < .45 && p.y > e.y && p.y < e.y + 1.9;
+
+      function shoot(pos, vel, o) {
+        const m = new T.Mesh(arrowGeo, arrowMat); m.position.copy(pos); scene.add(m);
+        arrows.push({ m, v: vel.clone(), o, t: 0 });
+      }
+      function clearArrows() { arrows.forEach(a => scene.remove(a.m)); arrows.length = 0; }
+      function fireBow() {
+        if (inv.arrows <= 0) { bwMsg('Frecce finite! Compra altre frecce nel negozio (B)'); return; }
+        const d = cam.getWorldDirection(new T.Vector3()), pw = .35 + .65 * charge;
+        inv.arrows--; shoot(cam.position.clone().addScaledVector(d, .6), d.multiplyScalar(46 * pw), 'p');
+      }
+      function botShoot() {
+        const b = bot; if (!b.alive || !P.alive) return;
+        const o = new T.Vector3(b.pos.x, b.pos.y + 1.5, b.pos.z), dist = Math.hypot(P.pos.x - o.x, P.pos.z - o.z), tt = dist / 34;
+        const aim = new T.Vector3(P.pos.x + P.vel.x * tt, P.pos.y + 1.2 + 8 * tt * tt, P.pos.z + P.vel.z * tt);
+        shoot(o, aim.sub(o).normalize().multiplyScalar(34), 'b');
+      }
+      function arrowsUpdate(dt) {
+        for (let i = arrows.length - 1; i >= 0; i--) {
+          const a = arrows[i]; a.t += dt; a.v.y -= 16 * dt; let dead = false;
+          const n = Math.max(1, Math.ceil(a.v.length() * dt / .35));
+          for (let s = 0; s < n && !dead; s++) {
+            const p = a.m.position.addScaledVector(a.v, dt / n);
+            if (solid(p.x, p.y, p.z)) { dead = true; break; }
+            if (a.o === 'p') {
+              if (bot.alive && hb(bot.pos, p)) {
+                bot.hp -= 6; knock(bot, a.v.x, a.v.z, 6);
+                if (bot.hp <= 0) killBot(); dead = true;
+              }
+            } else if (P.alive && hb(P.pos, p)) { bwHurt(4); knock(P, a.v.x, a.v.z, 6); dead = true; }
+          }
+          a.m.lookAt(a.m.position.x + a.v.x, a.m.position.y + a.v.y, a.m.position.z + a.v.z);
+          if (dead || a.t > 6 || a.m.position.y < -40) { scene.remove(a.m); arrows.splice(i, 1); }
+        }
+      }
+      function botAnim(dt) {
+        const b = bot, u = b.g.userData, sp = Math.hypot(b.vel.x, b.vel.z);
+        b.ph = (b.ph || 0) + sp * dt * 2.4; const am = Math.min(1, sp / 3) * .9 * (b.ground ? 1 : .3);
+        u.lL.rotation.x = Math.sin(b.ph) * am; u.rL.rotation.x = -Math.sin(b.ph) * am;
+        let ra = Math.sin(b.ph) * am * .8, la = -Math.sin(b.ph) * am * .8;
+        b.atk = Math.max(0, (b.atk || 0) - dt); if (b.atk > 0) ra = -Math.sin(b.atk / .25 * Math.PI) * 2.2 - .2;
+        u.rA.rotation.x = ra; u.lA.rotation.x = la; b.g.rotation.x = b.kb > 0 ? -.3 : 0;
+      }
+      function knock(e, dx, dz, pw, up = 6.5) {
+        const l = Math.hypot(dx, dz) || 1; e.vel.x = dx / l * pw; e.vel.z = dz / l * pw; e.vel.y = Math.max(e.vel.y, up); e.kb = .45; e.ground = false;
+      }
+      function botHits() {
+        hits.bot++; combo = 0; document.getElementById('bw-hurt').style.opacity = .4;
+        setTimeout(() => document.getElementById('bw-hurt').style.opacity = 0, 120);
+        bwSt(); if (hits.bot >= HITS) bwEnd(false);
+      }
+      function spawnBot() { bot.pos.set(hitMode ? 4.5 : bridge ? 40.5 : 35.5, 1.01, .5); bot.vel.set(0, 0, 0); bot.hp = 20; bot.alive = true; bot.g.visible = true; }
+      function killBot() { bot.alive = false; bot.g.visible = false; bot.rt = hitMode ? 1.5 : 4; bwMsg('Bot nemico eliminato!'); if (!bedAlive.red) bwEnd(true); }
+      spawnBot();
+
+      function botUpdate(dt) {
+        const b = bot;
+        if (!b.alive) { if (bedAlive.red) { b.rt -= dt; if (b.rt <= 0) spawnBot(); } return; }
+        b.t += dt; b.cd -= dt; b.bt -= dt;
+        const dp = Math.hypot(P.pos.x - b.pos.x, P.pos.z - b.pos.z), dyp = Math.abs(P.pos.y - b.pos.y);
+        let tx, tz, mode = 'guard';
+        if (P.alive && dp < (hitMode ? 80 : bridge ? 4 : 10) && dyp < 4) { tx = P.pos.x; tz = P.pos.z; mode = 'chase'; }
+        else if (bridge) { tx = -3.8; tz = .5; mode = 'dash'; }
+        let dx = 0, dz = 0;
+        if (tx !== undefined) { dx = tx - b.pos.x; dz = tz - b.pos.z; const l = Math.hypot(dx, dz) || 1; dx /= l; dz /= l; if (l < 1.2) dx = dz = 0; }
+        if (mode === 'chase' && dp < 1.8 && dyp < 1.5 && b.cd <= 0) {
+          b.cd = hitMode ? .7 : 1; b.atk = .25;
+          if (hitMode) botHits(); else bwHurt(3);
+          knock(P, P.pos.x - b.pos.x, P.pos.z - b.pos.z, 9.5);
+        }
+        b.kb = Math.max(0, (b.kb || 0) - dt);
+        const spd = (mode === 'chase' ? 4.4 : 3.6);
+        b.vel.x += (dx * spd - b.vel.x) * .1; b.vel.z += (dz * spd - b.vel.z) * .1;
+        phys(b, dt); if (b.pos.y < -25) { killBot(); return; }
+        b.g.position.copy(b.pos);
+        let fa = (dx || dz) ? Math.atan2(dx, dz) : null;
+        if (fa !== null) { let d = fa - b.g.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); b.g.rotation.y += d * Math.min(1, dt * 12); }
+        botAnim(dt); b.g.updateMatrixWorld(true);
+      }
+
+      const hl = new T.LineSegments(new T.EdgesGeometry(new T.BoxGeometry(1.01, 1.01, 1.01)), new T.LineBasicMaterial({ color: 0 })); scene.add(hl);
+      function rayBlocks(d) {
+        const o = cam.position; let x = Math.floor(o.x), y = Math.floor(o.y), z = Math.floor(o.z);
+        const sx = Math.sign(d.x), sy = Math.sign(d.y), sz = Math.sign(d.z);
+        const dx = d.x ? Math.abs(1 / d.x) : Infinity, dy = d.y ? Math.abs(1 / d.y) : Infinity, dz = d.z ? Math.abs(1 / d.z) : Infinity;
+        let tx = d.x > 0 ? (x + 1 - o.x) * dx : (o.x - x) * dx, ty = d.y > 0 ? (y + 1 - o.y) * dy : (o.y - y) * dy, tz = d.z > 0 ? (z + 1 - o.z) * dz : (o.z - z) * dz;
+        let t = 0, n = [0, 0, 0];
+        while (t <= 6) {
+          const m = blocks.get(x + ',' + y + ',' + z); if (m) return { block: m, normal: new T.Vector3(n[0], n[1], n[2]), t };
+          if (tx < ty && tx < tz) { x += sx; t = tx; tx += dx; n = [-sx, 0, 0]; }
+          else if (ty < tz) { y += sy; t = ty; ty += dy; n = [0, -sy, 0]; }
+          else { z += sz; t = tz; tz += dz; n = [0, 0, -sz]; }
+        }
+        return null;
+      }
+      function updateTarget() {
+        const d = cam.getWorldDirection(new T.Vector3()), r = rayBlocks(d); target = r;
+        if (bot.alive) {
+          const c = new T.Vector3(bot.pos.x, bot.pos.y + .9, bot.pos.z).sub(cam.position), p = c.dot(d);
+          if (p > 0 && p < SW[sw].r && (!r || p < r.t) && c.sub(d.clone().multiplyScalar(p)).length() < .75) target = { bot: 1 };
+        }
+        hl.visible = !!(target && target.block); if (hl.visible) hl.position.copy(target.block.position);
+      }
+
+      function act() {
+        if (state !== 'play' || !P.alive || cd > 0 || paused || shopOpen || slot === 4) return;
+        const t = target, att = slot === 0 && t && t.bot; cd = Math.max(cd, -.1) + (slot > 0 ? .07 : att ? SW[sw].cd : .16); swing = 1;
+        if (slot > 0) {
+          const ty = BL[slot]; if (inv[ty] <= 0) { bwMsg('Blocchi finiti! Apri il negozio (B)'); return; }
+          if (!t || !t.block) return; const u = t.block.userData, n = t.normal, x = u.x + n.x, y = u.y + n.y, z = u.z + n.z;
+          if (blocks.has(x + ',' + y + ',' + z) || y > 45) return;
+          setBlock(x, y, z, ty); inv[ty]--; return;
+        }
+        if (!t) return;
+        if (t.bot) {
+          const S = SW[sw], crit = !P.ground && P.vel.y < 0, m = crit ? 1.5 : 1, kb = S.kb * (crit ? 1.25 : 1);
+          if (hitMode) { hits.me += crit ? 2 : 1; combo++; bwSt(); if (hits.me >= HITS) bwEnd(true); }
+          else bot.hp -= S.d * m;
+          knock(bot, -Math.sin(yaw), -Math.cos(yaw), kb);
+          if (!hitMode && bot.hp <= 0) killBot();
+        } else if (t.block) { dmg(t.block, pick ? 2 : 1, true); }
+      }
+
+      let mtt;
+      function bwMsg(t, ms = 2000) { document.getElementById('bw-msg').textContent = t; clearTimeout(mtt); mtt = setTimeout(() => document.getElementById('bw-msg').textContent = '', ms); }
+      function bwSt() {
+        document.getElementById('bw-st').innerHTML = bridge ? '🔵 Tu ' + score.b + ' - ' + score.r + ' Bot 🔴<br>Primo a ' + WINS + ' punti' : hitMode ? '🥊 Tu ' + hits.me + ' - ' + hits.bot + ' Bot<br>Primo a ' + HITS + ' colpi' : 'Tuo letto: ' + (bedAlive.blue ? '✅' : '❌') + '<br>Letto nemico: ' + (bedAlive.red ? '✅' : '❌');
+      }
+      bwSt();
+
+      const bwBar = document.getElementById('bw-bar'); bwBar.innerHTML = '';
+      ['⚔️ Spada', 'Lana', 'Pietra', 'Legno', '🏹 Arco'].forEach((n, i) => {
+        const d = document.createElement('div'); d.className = 'bw-sl'; d.innerHTML = (i + 1) + ' ' + n + '<br><b></b>'; bwBar.appendChild(d);
+      });
+      function hud() {
+        document.getElementById('bw-fe').textContent = inv.fe; document.getElementById('bw-go').textContent = inv.go;
+        document.getElementById('bw-hp').style.width = Math.max(0, P.hp) / 20 * 100 + '%';
+        [...bwBar.children].forEach((e, i) => { e.classList.toggle('on', i === slot); e.lastChild.textContent = i === 4 ? inv.arrows : i ? inv[BL[i]] : 'T' + (sw + 1); });
+      }
+
+      const swordM = new T.Mesh(new T.BoxGeometry(.08, .08, .8), new T.MeshLambertMaterial({ color: 0xc89b5a })); swordM.position.set(.35, -.3, -.7);
+      const blockM = new T.Mesh(new T.BoxGeometry(.3, .3, .3), M.wool); blockM.position.set(.35, -.3, -.6);
+      const dk = new T.MeshLambertMaterial({ color: 0x4a2f14 }), grd = new T.Mesh(new T.BoxGeometry(.28, .07, .07), dk), hnd = new T.Mesh(new T.BoxGeometry(.07, .07, .22), dk);
+      grd.position.z = .4; hnd.position.z = .52; swordM.add(grd, hnd);
+      
+      const bowM = new T.Mesh(new T.BoxGeometry(.05, .62, .05), new T.MeshLambertMaterial({ color: 0x8a5a2b }));
+      const bstr = new T.Mesh(new T.BoxGeometry(.012, .58, .012), new T.MeshBasicMaterial({ color: 0xffffff }));
+      bstr.position.z = .07; bowM.add(bstr); bowM.position.set(.3, -.25, -.6); bowM.rotation.z = .15;
+      cam.add(bowM, swordM, blockM);
+
+      function selectSlot(i) { slot = i; swordM.visible = i === 0; blockM.visible = i > 0 && i < 4; bowM.visible = i === 4; if (i > 0 && i < 4) blockM.material = M[BL[i]]; charge = 0; }
+      selectSlot(0);
+
+      const ITEMS = [
+        { n: 'Frecce ×8', c: { go: 3 }, f: () => inv.arrows += 8 },
+        { n: 'Lana ×16', c: { fe: 4 }, f: () => inv.wool += 16 },
+        { n: 'Pietra ×12', c: { fe: 12 }, f: () => inv.stone += 12 },
+        { n: 'Legno ×12', c: { go: 6 }, f: () => inv.wood += 12 },
+        { n: 'Mela dorata (+10 vita)', c: { go: 3 }, f: () => P.hp = Math.min(20, P.hp + 10) }
+      ];
+      function shopRender() {
+        document.getElementById('bw-items').innerHTML = ITEMS.map((it, i) => {
+          const c = it.c, ok = inv.fe >= (c.fe || 0) && inv.go >= (c.go || 0);
+          return '<button data-i="' + i + '" ' + (ok ? '' : 'disabled') + '>' + it.n + ' — ' + (c.fe ? c.fe + ' 🔩' : '') + (c.go ? c.go + ' 🟨' : '') + '</button>';
+        }).join('') + '<div style="margin-top:8px">🔩 ' + inv.fe + ' · 🟨 ' + inv.go + '</div>';
+      }
+      document.getElementById('bw-items').onclick = e => {
+        const b = e.target.closest('button'); if (!b || b.disabled) return;
+        const it = ITEMS[b.dataset.i]; inv.fe -= it.c.fe || 0; inv.go -= it.c.go || 0; it.f(); shopRender(); hud();
+      };
+      
+      function lock() { try { ren.domElement.requestPointerLock(); } catch (e) {} }
+      function toggleShop() {
+        if (state !== 'play' || paused || bridge || hitMode) return;
+        shopOpen = !shopOpen; document.getElementById('bw-shop').hidden = !shopOpen;
+        if (shopOpen) { document.exitPointerLock && document.exitPointerLock(); shopRender(); } else lock();
+      }
+      document.getElementById('bw-closeShop').onclick = toggleShop;
+
+      document.addEventListener('keydown', e => {
+        if (document.getElementById('bedwarsView').style.display === "none") return;
+        if (e.code === 'KeyB' || (e.code === 'Escape' && shopOpen)) { toggleShop(); return; }
+        if (shopOpen) return; k[e.code] = 1; const n = +e.key; if (n >= 1 && n <= 5) selectSlot(n - 1);
+      });
+      document.addEventListener('keyup', e => { delete k[e.code]; });
+      document.addEventListener('wheel', e => { if (!paused && !shopOpen && document.getElementById('bedwarsView').style.display !== "none") selectSlot((slot + (e.deltaY > 0 ? 1 : 4)) % 5); });
+
+      const cv = ren.domElement; let mx = innerWidth / 2, my = innerHeight / 2;
+      cv.addEventListener('mousedown', e => { if (!document.pointerLockElement && !paused && !shopOpen) lock(); if (e.button === 0) { down = 1; act(); } });
+      addEventListener('mouseup', e => { if (e.button === 0) down = 0; });
+      addEventListener('mousemove', e => {
+        if (document.getElementById('bedwarsView').style.display === "none") return;
+        const dx = e.movementX || (e.clientX - mx), dy = e.movementY || (e.clientY - my); mx = e.clientX; my = e.clientY;
+        if (!paused && !shopOpen && state === 'play') {
+          yaw -= dx * sensVal; pitch = Math.max(-1.5, Math.min(1.5, pitch - dy * sensVal));
+        }
+      });
+
+      function bwEnter(m, room) {
+        mode = m; bridge = m === 'bridge'; hitMode = m === 'hits'; bwResetWorld();
+        if (m === 'bot' || m === 'bridge' || m === 'hits') { spawnBot(); }
+        else { bot.alive = false; bot.g.visible = false; }
+        document.getElementById('bw-modeInfo').textContent = bridge ? 'Bridge Duel: primo a ' + WINS : hitMode ? 'Sfida Colpi: primo a ' + HITS : '1 vs Bot';
+        document.getElementById('bw-menu').hidden = true; document.getElementById('bw-start').hidden = false;
+      }
+      document.getElementById('bw-mBot').onclick = () => bwEnter('bot');
+      document.getElementById('bw-mBr').onclick = () => bwEnter('bridge');
+      document.getElementById('bw-mHits').onclick = () => bwEnter('hits');
+      document.getElementById('bw-m1v1').onclick = () => bwEnter('1v1');
+
+      document.getElementById('bw-btnPlay').onclick = () => { document.getElementById('bw-start').hidden = true; paused = false; charge = 0; lock(); };
+      document.getElementById('bw-btnAgain').onclick = () => { bwResetWorld(); };
+      document.getElementById('bw-btnMenu').onclick = () => { document.getElementById('bw-end').hidden = true; document.getElementById('bw-menu').hidden = false; };
+
+      function bwResetWorld() {
+        clearArrows(); blocks.forEach(m => scene.remove(m)); blocks.clear(); buildMap();
+        gens.forEach(g => { g.m.visible = !bridge && !hitMode; g.fe = g.go = g.ft = g.gt = 0; });
+        bwRespawn(); pitch = 0; hits.me = hits.bot = 0; score.b = score.r = 0;
+        Object.assign(inv, { fe: 0, go: 0, wool: bridge || hitMode ? 64 : 16, arrows: 12 });
+        selectSlot(0); bedAlive.blue = bedAlive.red = true; bwSt();
+        state = 'play'; respT = 0; down = 0; shopOpen = false; paused = false;
+        document.getElementById('bw-shop').hidden = true; document.getElementById('bw-end').hidden = true; document.getElementById('bw-start').hidden = true;
+        lock();
+      }
+
+      let sensVal = .0042;
+      document.getElementById('bw-sens').oninput = e => { sensVal = .0007 * e.target.value; };
+
+      let last = performance.now();
+      function bwLoop(now) {
+        if (document.getElementById('bedwarsView').style.display === "none") return;
+        requestAnimationFrame(bwLoop);
+        const dt = Math.min(.05, (now - last) / 1000); last = now;
+        if (!paused && state === 'play') {
+          cd -= dt; P.kb = Math.max(0, (P.kb || 0) - dt); swing = Math.max(0, swing - dt * 5);
+          if (!bridge && !hitMode) {
+            gens.forEach(g => {
+              g.ft += dt; g.gt += dt;
+              if (g.ft >= g.fi) { g.ft = 0; g.fe = Math.min(g.fe + 1, 40); }
+              if (g.gt >= g.gi) { g.gt = 0; g.go = Math.min(g.go + 1, 12); }
+              g.m.rotation.y += dt * 2;
+              if (P.alive && Math.hypot(P.pos.x - g.x - .5, P.pos.z - g.z - .5) < 5 && (g.fe || g.go)) {
+                inv.fe += g.fe; inv.go += g.go; g.fe = g.go = 0;
+              }
+            });
+          }
+          if (P.alive) {
+            const f = (k.KeyW ? 1 : 0) - (k.KeyS ? 1 : 0), s = (k.KeyD ? 1 : 0) - (k.KeyA ? 1 : 0);
+            const cr = k.ShiftLeft || k.ShiftRight, sp = cr ? 2.3 : 5.2, l = Math.hypot(f, s) || 1, a = Math.min(1, dt * 12);
+            P.vel.x += ((-Math.sin(yaw) * f + Math.cos(yaw) * s) / l * sp - P.vel.x) * a;
+            P.vel.z += ((-Math.cos(yaw) * f - Math.sin(yaw) * s) / l * sp - P.vel.z) * a;
+            if (k.Space && P.ground) P.vel.y = cr ? 7 : 9;
+            phys(P, dt); if (P.pos.y < -25) bwDie('Sei caduto nel vuoto!');
+            for (let i = 0; i < 4 && down; i++) act();
+            if (slot === 4 && !shopOpen) { if (down) charge = Math.min(1, charge + dt / .9); else { if (charge > .15) fireBow(); charge = 0; } } else charge = 0;
+          } else {
+            respT -= dt; if (respT <= 0) { if (bedAlive.blue) bwRespawn(); else bwEnd(false); }
+          }
+          arrowsUpdate(dt); botUpdate(dt);
+        }
+        cam.position.set(P.pos.x, P.pos.y + 1.6, P.pos.z); cam.rotation.set(pitch, yaw, 0); cam.updateMatrixWorld();
+        updateTarget(); hud();
+        swordM.rotation.x = -Math.sin(swing * Math.PI) * 1.4; swordM.rotation.z = Math.sin(swing * Math.PI) * .6;
+        ren.render(scene, cam);
+      }
+      requestAnimationFrame(bwLoop);
+    }
+
+    /* AUTH & NAVIGAZIONE GLOBALE */
+    function apriHub() {
+      document.getElementById('authView').style.display = "none";
+      document.getElementById('supportView').style.display = "none";
+      document.getElementById('roomSelectorView').style.display = "none";
+      document.getElementById('gameView').style.display = "none";
+      document.getElementById('hubView').style.display = "block";
+      caricaInterfaccia();
+    }
+    function cambiaModalita() {
+      isLoginMode = !isLoginMode;
+      document.getElementById('title').textContent = isLoginMode ? "BLOX PLATFORM" : "REGISTRAZIONE";
+      document.getElementById('subtitle').textContent = isLoginMode ? "Accedi o registrati" : "Crea un nuovo account";
+      document.getElementById('submitBtn').textContent = isLoginMode ? "ACCEDI" : "REGISTRATI";
+    }
+    function inviaForm() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      if (!user || !pass) return alert("Compila tutti i campi!");
+      const userKey = sanitizeKey(user);
+
+      dbRef.ref('users/' + userKey).once('value', (snap) => {
+        const uData = snap.val();
+        if (isLoginMode) {
+          if (!uData || uData.password !== pass) return alert("Credenziali errate!");
+          if (uData.role === "owner" || uData.role === "admin") {
+            pendingUserLogin = user; document.getElementById('captchaModal').style.display = "flex"; return;
+          }
+          completaLogin(user);
+        } else {
+          if (uData) return alert("Utente già esistente!");
+          dbRef.ref('users/' + userKey).set({ username: user, password: pass, coins: 1000, platabux: 500, role: "user", captcha: "1234" }, () => completaLogin(user));
+        }
+      });
+    }
+    function confermaCaptchaPopup() {
+      const code = document.getElementById('popupCaptchaInput').value.trim();
+      dbRef.ref('users/' + sanitizeKey(pendingUserLogin)).once('value', (snap) => {
+        const u = snap.val();
+        if (u && u.captcha === code) {
+          document.getElementById('captchaModal').style.display = "none";
+          completaLogin(pendingUserLogin);
+        } else {
+          alert("Codice Captcha errato!");
+        }
+      });
+    }
+    function completaLogin(user) {
+      localStorage.setItem('bloxi_session', user);
+      currentUser = user; apriHub();
+    }
+    function caricaInterfaccia() {
+      if (!currentUser) return;
+      dbRef.ref('users/' + sanitizeKey(currentUser)).on('value', (snap) => {
+        const u = snap.val(); if (!u) return;
+        userEquip = u.equip || { hat: false, sword: false };
+        document.getElementById('statsHeader').style.display = "flex";
+        document.getElementById('userHeader').style.display = "flex";
+        document.getElementById('usernameDisplay').textContent = currentUser;
+        document.getElementById('welcomeUser').textContent = currentUser;
+        document.getElementById('coinDisplay').textContent = u.coins || 0;
+        document.getElementById('platabuxDisplay').textContent = u.platabux || 0;
+
+        if (u.role === "owner" || u.role === "admin") {
+          document.getElementById('adminTagDisplay').style.display = "inline-block";
+          document.getElementById('adminBtn').style.display = (currentUser === OWNER_NAME) ? "inline-block" : "none";
+        }
+        setTimeout(() => caricaAvatar3D('avatarHubContainer'), 100);
+      });
+    }
+    function logout() { localStorage.removeItem('bloxi_session'); location.reload(); }
+    if (currentUser) apriHub();
+  </script>
+</body>
+</html>
