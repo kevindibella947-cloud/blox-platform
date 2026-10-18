@@ -147,9 +147,9 @@
       <p id="subtitle" style="font-size:12px; color:#9aa4b8; margin-bottom:15px;">Accedi o registrati</p>
       <input type="text" id="username" placeholder="Nickname...">
       <input type="password" id="password" placeholder="Password...">
-      <button class="btn-main" id="submitBtn" onclick="inviaForm()">ACCEDI</button>
+      <button class="btn-main" id="submitBtn" onclick="window.inviaForm()">ACCEDI</button>
       <div style="margin-top:15px; font-size:12px; color:#9aa4b8;">
-        Non hai un account? <span style="color:#3b82f6; cursor:pointer; text-decoration:underline;" onclick="cambiaModalita()">Registrati</span>
+        Non hai un account? <span style="color:#3b82f6; cursor:pointer; text-decoration:underline;" onclick="window.cambiaModalita()">Registrati</span>
       </div>
       <div id="msg" style="margin-top:10px; font-size:12px; display:none;"></div>
     </div>
@@ -174,7 +174,7 @@
             <span>📅 15/10/2025</span>
             <span>🟢 <b id="stat_active">1</b> attivi</span>
           </div>
-          <button class="btn-play" onclick="incrementaStatEGioca('parkour', entraNellaStanzaParkour)">GIOCA ORA</button>
+          <button class="btn-play" onclick="window.incrementaStatEGioca('parkour', entraNellaStanzaParkour)">GIOCA ORA</button>
         </div>
         <div class="game-card">
           <h3>🛏️ BedWars 3D</h3>
@@ -185,7 +185,7 @@
             <span>📅 01/10/2025</span>
             <span>🟢 <b id="stat_active2">1</b> attivi</span>
           </div>
-          <button class="btn-play" onclick="incrementaStatEGioca('bedwars', avviaBedwarsGame)">GIOCA ORA</button>
+          <button class="btn-play" onclick="window.incrementaStatEGioca('bedwars', avviaBedwarsGame)">GIOCA ORA</button>
         </div>
         <div class="game-card">
           <h3>🖱️ Platabux Clicker</h3>
@@ -196,7 +196,7 @@
             <span>📅 20/11/2025</span>
             <span>🟢 <b id="stat_active3">1</b> attivi</span>
           </div>
-          <button class="btn-play" onclick="incrementaStatEGioca('clicker', avviaClickerGame)">GIOCA ORA</button>
+          <button class="btn-play" onclick="window.incrementaStatEGioca('clicker', avviaClickerGame)">GIOCA ORA</button>
         </div>
       </div>
     </div>
@@ -378,7 +378,7 @@
       });
     }
 
-    function incrementaStatEGioca(gameKey, callbackFunc) {
+    window.incrementaStatEGioca = function(gameKey, callbackFunc) {
       dbRef.ref('game_stats/' + gameKey + '/views').transaction((v) => (v || 0) + 1, () => {
         callbackFunc();
       });
@@ -1181,13 +1181,14 @@
       avviaPresenceHeartbeat();
     }
 
-    function cambiaModalita() {
+    window.cambiaModalita = function() {
       isLoginMode = !isLoginMode;
       document.getElementById('title').textContent = isLoginMode ? "BLOX PLATFORM" : "REGISTRAZIONE";
       document.getElementById('subtitle').textContent = isLoginMode ? "Accedi o registrati" : "Crea un nuovo account";
       document.getElementById('submitBtn').textContent = isLoginMode ? "ACCEDI" : "REGISTRATI";
     }
-    function inviaForm() {
+    
+    window.inviaForm = function() {
       const user = document.getElementById('username').value.trim();
       const pass = document.getElementById('password').value.trim();
       if (!user || !pass) return alert("Compila tutti i campi!");
@@ -1207,6 +1208,7 @@
         }
       });
     }
+
     function confermaCaptchaPopup() {
       const code = document.getElementById('popupCaptchaInput').value.trim();
       dbRef.ref('users/' + sanitizeKey(pendingUserLogin)).once('value', (snap) => {
