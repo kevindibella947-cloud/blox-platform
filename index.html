@@ -1130,5 +1130,115 @@
       function resetWorld() {
         clearArrows(); blocks.forEach(m => scene.remove(m)); blocks.clear(); buildMap();
         gens.forEach(g => { if (!bridge && !hitMode) setBlock(g.x, 1, g.z, 'stone', false); g.m.visible = !bridge && !hitMode; g.fe = g.go = g.ft = g.gt = 0; });
+        spawnBot(); respawn(); paused = false; shopOpen = false;
+        document.getElementById('shop').hidden = true; document.getElementById('end').hidden = true; document.getElementById('start').hidden = true;
+        lock();
+      }
 
-      
+      let last = performance.now();
+      function bwLoop(now) {
+        if (document.getElementById('bedwarsView').style.display === "none") return;
+        requestAnimationFrame(bwLoop);
+        const dt = Math.min(.05, (now - last) / 1000); last = now;
+        if (!paused && state === 'play') {
+          cd -= dt; swing = Math.max(0, swing - dt * 5);
+          if (!bridge && !hitMode) {
+            gens.forEach(g => {
+              g.ft += dt; g.gt += dt;
+              if (g.ft >= g.fi) { g.ft = 0; g.fe = Math.min(g.fe + 1, 40); }
+              if (g.gt >= g.gi) { g.gt = 0; g.go = Math.min(g.go + 1, 12); }
+              if (P.alive && Math.hypot(P.pos.x - g.x - .5, P.pos.z - g.z - .5) < 5 && Math.abs(P.pos.y - 1) < 4 && (g.fe || g.go)) {
+                inv.fe += g.fe; inv.go += g.go; g.fe = g.go = 0;
+              }
+            });
+          }
+          if (P.alive) {
+            const f = (k.KeyW || k.ArrowUp ? 1 : 0) - (k.KeyS || k.ArrowDown ? 1 : 0), s = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0);
+            P.vel.x += ((-Math.sin(yaw) * f + Math.cos(yaw) * s) * 5.2 - P.vel.x) * .2;
+            P.vel.z += ((-Math.cos(yaw) * f - Math.sin(yaw) * s) * 5.2 - P.vel.z) * .2;
+            if (k.Space && P.ground) P.vel.y = 9;
+            phys(P, dt); if (P.pos.y < -25) die('Caduto nel vuoto!');
+            for (let i = 0; i < 4 && down; i++) act();
+          } else {
+            respT -= dt; if (respT <= 0) { if (bedAlive.blue) respawn(); else end(false); }
+          }
+          arrowsUpdate(dt); botUpdate(dt);
+        }
+        cam.position.set(P.pos.x, P.pos.y + 1.6, P.pos.z); cam.rotation.set(pitch, yaw, 0); cam.updateMatrixWorld();
+        updateTarget(); hud(); swordM.rotation.x = -Math.sin(swing * Math.PI) * 1.4; swordM.rotation.z = Math.sin(swing * Math.PI) * .6; ren.render(scene, cam);
+      }
+      requestAnimationFrame(bwLoop);
+    }
+
+    function apriHub() {
+      document.getElementById('authView').style.display = "none";
+      document.getElementById('supportView').style.display = "none";
+      document.getElementById('gameView').style.display = "none";
+      document.getElementById('parkour3dView').style.display = "none";
+      document.getElementById('bedwarsView').style.display = "none";
+      document.getElementById('hubView').style.display = "block";
+      caricaInterfaccia();
+      avviaPresenceHeartbeat();
+    }
+
+    function cambiaModalita() {
+      isLoginMode = !isLoginMode;
+      document.getElementById('title').textContent = isLoginMode ? "BLOX PLATFORM" : "REGISTRAZIONE";
+      document.getElementById('subtitle').textContent = isLoginMode ? "Accedi o registrati" : "Crea un nuovo account";
+      document.getElementById('submitBtn').textContent = isLoginMode ? "ACCEDI" : "REGISTRATI";
+    }
+    function inviaForm() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      if (!user || !pass) return alert("Compila tutti i campi!");
+      const userKey = sanitizeKey(user);
+
+      dbRef.ref('users/' + userKey).once('value', (snap) => {
+        const uData = snap.val();
+        if (isLoginMode) {
+          if (!uData || uData.password !== pass) return alert("Credenziali errate!");
+          if (uData.role === "owner" || uData.role === "admin") {
+            pendingUserLogin = user; document.getElementById('captchaModal').style.display = "flex"; return;
+          }
+          completaLogin(user);
+        } else {
+          if (uData) return alert("Utente già esistente!");
+          dbRef.ref('users/' + userKey).set({ username: user, password: pass, coins: 1000, platabux: 500, role: "user", captcha: "1234" }, () => completaLogin(user));
+        }
+      });
+    }
+    function confermaCaptchaPopup() {
+      const code = document.getElementById('popupCaptchaInput').value.trim();
+      dbRef.ref('users/' + sanitizeKey(pendingUserLogin)).once('value', (snap) => {
+        const u = snap.val();
+        if (u && u.captcha === code) {
+          document.getElementById('captchaModal').style.display = "none";
+          completaLogin(pendingUserLogin);
+        } else { alert("Codice Captcha errato!"); }
+      });
+    }
+    function completaLogin(user) { localStorage.setItem('bloxi_session', user); currentUser = user; apriHub(); }
+    function caricaInterfaccia() {
+      if (!currentUser) return;
+      dbRef.ref('users/' + sanitizeKey(currentUser)).on('value', (snap) => {
+        const u = snap.val(); if (!u) return;
+        userEquip = u.equip || { hat: false, sword: false };
+        document.getElementById('statsHeader').style.display = "flex";
+        document.getElementById('userHeader').style.display = "flex";
+        document.getElementById('usernameDisplay').textContent = currentUser;
+        const wUser = document.getElementById('welcomeUser'); if(wUser) wUser.textContent = currentUser;
+        document.getElementById('coinDisplay').textContent = u.coins || 0;
+        document.getElementById('platabuxDisplay').textContent = u.platabux || 0;
+
+        if (u.role === "owner" || u.role === "admin") {
+          document.getElementById('adminTagDisplay').style.display = "inline-block";
+          document.getElementById('adminBtn').style.display = (currentUser === OWNER_NAME) ? "inline-block" : "none";
+        }
+        setTimeout(() => caricaAvatar3D('avatarHubContainer'), 100);
+      });
+    }
+    function logout() { localStorage.removeItem('bloxi_session'); location.reload(); }
+    if (currentUser) apriHub();
+  </script>
+</body>
+</html>
