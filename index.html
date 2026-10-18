@@ -1130,3 +1130,5 @@
       function resetWorld() {
         clearArrows(); blocks.forEach(m => scene.remove(m)); blocks.clear(); buildMap();
         gens.forEach(g => { if (!bridge && !hitMode) setBlock(g.x, 1, g.z, 'stone', false); g.m.visible = !bridge && !hitMode; g.fe = g.go = g.ft = g.gt = 0; });
+
+      
